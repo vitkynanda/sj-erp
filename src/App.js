@@ -160,7 +160,7 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         <Route path="/authentication/sign-in" element={<SignIn />} />
-        <Route path="/" element={<Navigate to="/authentication/sign-in" />} />
+        <Route path="/" element={<Navigate to="/dashboard" />} />
         <Route path="/not-found" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/not-found" />} />
         {getRoutes(routes)}
