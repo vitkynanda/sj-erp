@@ -6,8 +6,11 @@ import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 
 import { useState } from "react";
+import SelectOption from "examples/SelectOption";
+import { useGlobalStore } from "store";
 
 const UserForm = ({ type = "Create", submitHandler }) => {
+  const { roles } = useGlobalStore();
   const [values, setValues] = useState({
     username: "",
     password: "",
@@ -19,6 +22,8 @@ const UserForm = ({ type = "Create", submitHandler }) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
+
+  console.log(values);
 
   const submitWithValidation = () => {
     const isValidInput = validateInputField(values);
@@ -39,8 +44,10 @@ const UserForm = ({ type = "Create", submitHandler }) => {
         <MDTypography variant="h6">{type ? type.toUpperCase() : "Title"}</MDTypography>
         <Divider />
       </MDBox>
-      {Object.entries(values).map(([key, val]) => {
-        return (
+      {Object.entries(values).map(([key, val]) =>
+        key === "role_id" ? (
+          <SelectOption label={key} options={roles} onSelect={handlerChange} />
+        ) : (
           <MDInput
             variant="outlined"
             error={!val && type !== "detail"}
@@ -58,8 +65,8 @@ const UserForm = ({ type = "Create", submitHandler }) => {
             fullWidth
             onChange={handlerChange}
           />
-        );
-      })}
+        )
+      )}
       {type !== "detail" && (
         <MDBox textAlign="right" sx={{ mt: 3 }}>
           <MDButton onClick={submitWithValidation} color="info" variant="gradient">
