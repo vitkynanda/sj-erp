@@ -12,23 +12,22 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import usersTableData from "layouts/users/data/usersTableData";
 import { useGlobalStore } from "store";
 import { useEffect } from "react";
 import LoadingBackdrop from "components/UI/LoadingBackdrop";
 import ModalForm from "examples/ModalForm";
 import MDButton from "components/MDButton";
-import CustomForm from "examples/Forms/CustomForm";
-import { createUser } from "utils/input";
+import useData from "./data/bankTableData";
+import BasicForm from "examples/Forms/BasicForm";
+import { createBank } from "utils/input";
 
-function Users() {
-  const { columns } = usersTableData();
-
-  const { users: rows, getUsers, addUser, setOpenModal } = useGlobalStore();
+function Banks() {
+  const { columns } = useData();
+  const { banks: rows, getBanks, addBank, setOpenModal } = useGlobalStore();
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getBanks();
+  }, [getBanks]);
 
   return (
     <>
@@ -53,16 +52,16 @@ function Users() {
                   alignItems="center"
                 >
                   <MDTypography variant="h6" color="white">
-                    Users Table
+                    Banks Table
                   </MDTypography>
                   <MDButton
                     onClick={() =>
                       setOpenModal({
                         open: true,
-                        form: CustomForm,
+                        form: BasicForm,
                         title: "Create",
-                        handler: addUser,
-                        input: createUser,
+                        handler: addBank,
+                        input: createBank,
                       })
                     }
                     variant="gradient"
@@ -84,10 +83,9 @@ function Users() {
             </Grid>
           </Grid>
         </MDBox>
-        {/* <Footer /> */}
       </DashboardLayout>
     </>
   );
 }
 
-export default Users;
+export default Banks;

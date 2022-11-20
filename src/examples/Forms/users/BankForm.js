@@ -4,32 +4,19 @@ import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
-
 import { useState } from "react";
-import SelectOption from "examples/SelectOption";
-import { useGlobalStore } from "store";
 
-const UserForm = ({ type = "Create", submitHandler }) => {
-  const { roles } = useGlobalStore();
-  const [values, setValues] = useState({
-    username: "",
-    password: "",
-    role_id: "",
-    phone_number: "",
-  });
+const B = ({ type = "create", input = {}, submitHandler }) => {
+  const [values, setValues] = useState(input);
 
   const handlerChange = (e) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
 
-  console.log(values);
-
   const submitWithValidation = () => {
     const isValidInput = validateInputField(values);
-    if (isValidInput) {
-      submitHandler(values);
-    }
+    if (isValidInput) submitHandler(values);
   };
 
   return (
@@ -44,29 +31,25 @@ const UserForm = ({ type = "Create", submitHandler }) => {
         <MDTypography variant="h6">{type ? type.toUpperCase() : "Title"}</MDTypography>
         <Divider />
       </MDBox>
-      {Object.entries(values).map(([key, val]) =>
-        key === "role_id" ? (
-          <SelectOption label={key} options={roles} onSelect={handlerChange} />
-        ) : (
-          <MDInput
-            variant="outlined"
-            error={!val && type !== "detail"}
-            InputProps={{
-              readOnly: type === "detail",
-            }}
-            sx={{ my: 1 }}
-            placeholder={formatKey(key)}
-            label={formatKey(key)}
-            key={key}
-            name={key}
-            value={val}
-            type={inputType(key)}
-            size="small"
-            fullWidth
-            onChange={handlerChange}
-          />
-        )
-      )}
+      {Object.entries(values).map(([key, val]) => (
+        <MDInput
+          variant="outlined"
+          error={!val && type !== "detail"}
+          InputProps={{
+            readOnly: type === "detail",
+          }}
+          sx={{ my: 1 }}
+          placeholder={formatKey(key)}
+          label={formatKey(key)}
+          key={key}
+          name={key}
+          value={val}
+          type={inputType(key)}
+          size="small"
+          fullWidth
+          onChange={handlerChange}
+        />
+      ))}
       {type !== "detail" && (
         <MDBox textAlign="right" sx={{ mt: 3 }}>
           <MDButton onClick={submitWithValidation} color="info" variant="gradient">
@@ -78,4 +61,4 @@ const UserForm = ({ type = "Create", submitHandler }) => {
   );
 };
 
-export default UserForm;
+export default BankForm;

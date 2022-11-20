@@ -30,6 +30,7 @@ import Users from "layouts/users";
 
 // @mui icons
 import Icon from "@mui/material/Icon";
+import Banks from "layouts/bank";
 
 const routes = [
   {
@@ -47,6 +48,14 @@ const routes = [
     icon: <Icon fontSize="small">people</Icon>,
     route: "/users",
     component: <Users />,
+  },
+  {
+    type: "collapse",
+    name: "Banks",
+    key: "banks",
+    icon: <Icon fontSize="small">account_balance</Icon>,
+    route: "/banks",
+    component: <Banks />,
   },
   // {
   //   type: "collapse",
