@@ -28,7 +28,6 @@ import bgImage from "assets/images/bg-sign-in-basic.jpeg";
 
 // Global Store
 import { useGlobalStore } from "store";
-import LoadingBackdrop from "components/UI/LoadingBackdrop";
 
 function Basic() {
   const { loginHandler } = useGlobalStore();
@@ -49,7 +48,6 @@ function Basic() {
 
   return (
     <>
-      <LoadingBackdrop />
       <BasicLayout image={bgImage}>
         <Card>
           <MDBox

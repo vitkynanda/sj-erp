@@ -7,10 +7,8 @@ import { validateInputField, inputType, formatKey } from "utils";
 
 import { useState } from "react";
 import SelectOption from "examples/SelectOption";
-import { useGlobalStore } from "store";
 
-const CustomForm = ({ title, input = {}, submitHandler }) => {
-  const { roles } = useGlobalStore();
+const CustomForm = ({ title, input = {}, submitHandler, optionFields, optionFieldList }) => {
   const [values, setValues] = useState(input);
 
   const handlerChange = (e) => {
@@ -38,8 +36,13 @@ const CustomForm = ({ title, input = {}, submitHandler }) => {
         <Divider />
       </MDBox>
       {Object.entries(values).map(([key, val]) =>
-        key === "role_id" ? (
-          <SelectOption key={key} label={key} options={roles} onSelect={handlerChange} />
+        optionFields.includes(key) ? (
+          <SelectOption
+            key={key}
+            label={key}
+            options={optionFieldList.find((opt) => opt.name === key).value}
+            onSelect={handlerChange}
+          />
         ) : (
           <MDInput
             variant="outlined"

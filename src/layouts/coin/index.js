@@ -12,22 +12,18 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import usersTableData from "layouts/users/data/usersTableData";
 import { useGlobalStore } from "store";
 import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
-import MDButton from "components/MDButton";
-import CustomForm from "examples/Forms/CustomForm";
-import { createUser } from "utils/input";
+import useData from "./data/coinTableData";
 
-function Users() {
-  const { columns } = usersTableData();
-
-  const { users: rows, getUsers, addUser, setOpenModal, roles } = useGlobalStore();
+function Coins() {
+  const { columns } = useData();
+  const { coins: rows, getCoins } = useGlobalStore();
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getCoins();
+  }, [getCoins]);
 
   return (
     <>
@@ -51,33 +47,8 @@ function Users() {
                   alignItems="center"
                 >
                   <MDTypography variant="h6" color="white">
-                    Users Table
+                    Coins Table
                   </MDTypography>
-                  <MDButton
-                    onClick={() =>
-                      setOpenModal({
-                        open: true,
-                        form: CustomForm,
-                        title: "Create",
-                        handler: addUser,
-                        input: createUser,
-                        optionFields: ["role_id"],
-                        optionFieldList: [
-                          {
-                            name: "role_id",
-                            value: roles.map((t) => ({
-                              key: t.role_name,
-                              value: t.role_id,
-                            })),
-                          },
-                        ],
-                      })
-                    }
-                    variant="gradient"
-                    color="secondary"
-                  >
-                    Create
-                  </MDButton>
                 </MDBox>
                 <MDBox pt={3}>
                   <DataTable
@@ -92,10 +63,9 @@ function Users() {
             </Grid>
           </Grid>
         </MDBox>
-        {/* <Footer /> */}
       </DashboardLayout>
     </>
   );
 }
 
-export default Users;
+export default Coins;

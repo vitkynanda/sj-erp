@@ -2,18 +2,18 @@ import { Icon, IconButton, Menu, MenuItem } from "@mui/material";
 import MDBox from "components/MDBox";
 import { useMaterialUIController } from "context";
 import BasicForm from "examples/Forms/BasicForm";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useGlobalStore } from "store";
+import EditIcon from "@mui/icons-material/Edit";
 
-const ActionMenu = ({ row }) => {
+const ActionBank = ({ row }) => {
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
-  const { setOpenModal, updateBank, updateBalance } = useGlobalStore();
+  const { setOpenModal, updateBank, updateBalanceBank } = useGlobalStore();
   const [menu, setMenu] = useState(null);
   const openMenu = ({ currentTarget }) => {
     setMenu(currentTarget);
   };
-  console.log(row.original.bank_id);
   const closeMenu = (type) => {
     setMenu(null);
     if (type === "balance")
@@ -23,11 +23,11 @@ const ActionMenu = ({ row }) => {
         form: BasicForm,
         input: {
           bank_id: row.original.bank_id,
-          balance: row.original.balance,
+          balance: "",
           type: "",
         },
         notRenderFields: ["bank_id"],
-        handler: updateBalance,
+        handler: updateBalanceBank,
       });
     setOpenModal({
       open: true,
@@ -54,8 +54,14 @@ const ActionMenu = ({ row }) => {
       open={Boolean(menu)}
       onClose={closeMenu}
     >
-      <MenuItem onClick={() => closeMenu("balance")}>Update Balance</MenuItem>
-      <MenuItem onClick={closeMenu}>Update Bank Data</MenuItem>
+      <MenuItem onClick={() => closeMenu("balance")}>
+        <EditIcon sx={{ mr: 1 }} />
+        Update Balance
+      </MenuItem>
+      <MenuItem onClick={closeMenu}>
+        <EditIcon sx={{ mr: 1 }} />
+        Update Bank Data
+      </MenuItem>
     </Menu>
   );
   return (
@@ -73,4 +79,4 @@ const ActionMenu = ({ row }) => {
   );
 };
 
-export default ActionMenu;
+export default ActionBank;

@@ -4,11 +4,20 @@ import { useGlobalStore } from "store";
 
 const ModalForm = () => {
   const {
-    modal: { open, form: Form, handler, title, input, disableFields, notRenderFields },
+    modal: {
+      open,
+      form: Form,
+      handler,
+      title,
+      input,
+      disableFields,
+      notRenderFields,
+      optionFields,
+      optionFieldList,
+    },
     setOpenModal,
   } = useGlobalStore();
 
-  console.log(handler);
   const setOpen = (payload) => setOpenModal({ open: payload });
   return (
     <>
@@ -21,6 +30,8 @@ const ModalForm = () => {
               input={input}
               disableFields={disableFields}
               notRenderFields={notRenderFields}
+              optionFields={optionFields}
+              optionFieldList={optionFieldList}
             />
           )}
         </MDBox>

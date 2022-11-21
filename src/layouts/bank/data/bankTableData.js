@@ -1,7 +1,7 @@
 import { Chip } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import { useMaterialUIController } from "context";
-import ActionMenu from "examples/ActionMenu";
+import ActionBank from "examples/Actions/ActionBank";
 
 export default function useData() {
   const [controller] = useMaterialUIController();
@@ -41,22 +41,24 @@ export default function useData() {
       },
       {
         Header: "STATUS",
-        accessor: "status",
+        accessor: "active",
         align: "left",
-        Cell: ({ value }) => (
-          <Chip
-            fontSize={13}
-            label={value ? "active" : "inactive"}
-            color={value ? "success" : undefined}
-            sx={{ color: darkMode ? "#fff" : "inherit" }}
-          />
-        ),
+        Cell: ({ value }) => {
+          return (
+            <Chip
+              fontSize={13}
+              label={value ? "active" : "inactive"}
+              color={value ? "success" : undefined}
+              sx={{ color: darkMode && value ? "#fff" : "#000" }}
+            />
+          );
+        },
       },
       {
         Header: "ACTION",
         accessor: "action",
         align: "left",
-        Cell: (rowData) => <ActionMenu row={rowData.row} />,
+        Cell: (rowData) => <ActionBank row={rowData.row} />,
       },
     ],
 

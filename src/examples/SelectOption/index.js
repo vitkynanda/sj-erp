@@ -17,12 +17,9 @@ export default function SelectOption({ label = "", options = [], onSelect = () =
     <FormControl sx={{ minWidth: 120, my: 1 }} size="small">
       <InputLabel sx={{ display: "absolute" }}>{formatKey(label)}</InputLabel>
       <Select value={value} sx={{ height: 37 }} name={label} onChange={handleChange}>
-        <MenuItem value="Role Id">
-          <em>None</em>
-        </MenuItem>
         {options.map((opt) => (
-          <MenuItem key={opt.role_id} value={opt.role_id}>
-            {opt.role_name}
+          <MenuItem key={opt.key} value={opt.value}>
+            {opt.key}
           </MenuItem>
         ))}
       </Select>

@@ -1,19 +1,18 @@
-import { Divider } from "@mui/material";
+import { Checkbox, Divider, FormControlLabel } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
+import SelectOption from "examples/SelectOption";
 
 const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderFields = [] }) => {
   const [values, setValues] = useState(input);
 
-  console.log(input);
-
   const handlerChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    const { name, value, checked } = e.target;
+    setValues({ ...values, [name]: name === "active" ? checked : value });
   };
 
   const submitWithValidation = () => {
@@ -35,7 +34,26 @@ const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderF
       </MDBox>
       {Object.entries(values).map(
         ([key, val]) =>
-          !notRenderFields.includes(key) && (
+          !notRenderFields.includes(key) &&
+          (key === "active" ? (
+            <FormControlLabel
+              control={<Checkbox checked={val} />}
+              label={formatKey(key)}
+              onChange={handlerChange}
+              name={key}
+              key={key}
+            />
+          ) : key === "type" ? (
+            <SelectOption
+              key={key}
+              label={key}
+              options={[
+                { key: "PLUS", value: "PLUS" },
+                { key: "MINUS", value: "MINUS" },
+              ]}
+              onSelect={handlerChange}
+            />
+          ) : (
             <MDInput
               variant="outlined"
               error={!val}
@@ -53,7 +71,7 @@ const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderF
               fullWidth
               onChange={handlerChange}
             />
-          )
+          ))
       )}
 
       <MDBox textAlign="right" sx={{ mt: 3 }}>

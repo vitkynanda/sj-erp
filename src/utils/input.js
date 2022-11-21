@@ -10,11 +10,11 @@ export const createBank = {
   account_name: "",
   category: "",
   account_number: "",
-  balance: 0,
-  active: "",
+  balance: "",
   ibanking: "",
   code_access: "",
   pin: "",
+  active: false,
 };
 
 export const updateBalanceBank = {
@@ -28,8 +28,19 @@ export const updateBankData = {
   account_name: "",
   account_number: "",
   category: "",
-  active: false,
   ibanking: "",
   code_access: "",
   pin: "",
+  active: false,
+};
+
+export const createTransaction = {
+  player_name: "",
+  player_id: "",
+  bank_player: "",
+  account_number: "",
+  bank_id: "",
+  type_id: "",
+  ammount: "",
+  admin_fee: "",
 };

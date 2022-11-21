@@ -28,8 +28,6 @@ const convertBase64 = (type, val) => {
   return atob(val);
 };
 
-const themeStorage = localStorage.getItem("themeStorage");
-
 const updateThemeStorage = (key, val) => {
   let currentStorage = JSON.parse(themeStorage);
   if (!currentStorage) currentStorage = {};
@@ -71,12 +69,22 @@ const formatKey = (key) =>
     .join(" ");
 
 const inputType = (val) => {
-  return val.includes("id") || val.includes("index") || val.includes("number")
+  return val.includes("id") ||
+    val.includes("index") ||
+    val.includes("number") ||
+    val.includes("balance")
     ? "number"
     : val.includes("password")
     ? "password"
     : "text";
 };
+
+const toastErrorMessage = (res) =>
+  (typeof res.error === "string" ? res.error : `${res.error[0].field}, ${res.error[0].message}`) ||
+  res.message ||
+  "Something went wrong";
+const themeStorage = localStorage.getItem("themeStorage");
+const successStatus = [200, 201];
 
 export {
   formatDate,
@@ -87,5 +95,7 @@ export {
   formatKey,
   upperFirstChar,
   validateInputField,
+  toastErrorMessage,
   themeStorage,
+  successStatus,
 };

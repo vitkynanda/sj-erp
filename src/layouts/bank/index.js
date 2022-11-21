@@ -14,7 +14,6 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import { useGlobalStore } from "store";
 import { useEffect } from "react";
-import LoadingBackdrop from "components/UI/LoadingBackdrop";
 import ModalForm from "examples/ModalForm";
 import MDButton from "components/MDButton";
 import useData from "./data/bankTableData";
@@ -31,7 +30,6 @@ function Banks() {
 
   return (
     <>
-      <LoadingBackdrop />
       <ModalForm />
       <DashboardLayout>
         <DashboardNavbar />

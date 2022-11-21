@@ -11,6 +11,7 @@ import MDBox from "components/MDBox";
 
 // Material Dashboard 2 React context
 import { useMaterialUIController, setLayout } from "context";
+import LoadingBackdrop from "components/UI/LoadingBackdrop";
 
 function PageLayout({ background, children }) {
   const [, dispatch] = useMaterialUIController();
@@ -28,6 +29,7 @@ function PageLayout({ background, children }) {
       bgColor={background}
       sx={{ overflowX: "hidden" }}
     >
+      <LoadingBackdrop />
       {children}
     </MDBox>
   );

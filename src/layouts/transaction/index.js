@@ -12,22 +12,28 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import DataTable from "examples/Tables/DataTable";
 
 // Data
-import usersTableData from "layouts/users/data/usersTableData";
 import { useGlobalStore } from "store";
 import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
+import useData from "./data/transactionDataTable";
 import MDButton from "components/MDButton";
+import { createTransaction } from "utils/input";
 import CustomForm from "examples/Forms/CustomForm";
-import { createUser } from "utils/input";
 
-function Users() {
-  const { columns } = usersTableData();
-
-  const { users: rows, getUsers, addUser, setOpenModal, roles } = useGlobalStore();
+function Transactions() {
+  const { columns } = useData();
+  const {
+    transactions: rows = [],
+    getTransactions,
+    setOpenModal,
+    addTransaction,
+    banks,
+    transactionsType,
+  } = useGlobalStore();
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    getTransactions();
+  }, [getTransactions]);
 
   return (
     <>
@@ -51,30 +57,34 @@ function Users() {
                   alignItems="center"
                 >
                   <MDTypography variant="h6" color="white">
-                    Users Table
+                    Transactions Table
                   </MDTypography>
                   <MDButton
+                    color="secondary"
+                    variant="gradient"
                     onClick={() =>
                       setOpenModal({
                         open: true,
                         form: CustomForm,
-                        title: "Create",
-                        handler: addUser,
-                        input: createUser,
-                        optionFields: ["role_id"],
+                        title: "Create Transaction",
+                        handler: addTransaction,
+                        input: createTransaction,
+                        optionFields: ["type_id", "bank_id"],
                         optionFieldList: [
                           {
-                            name: "role_id",
-                            value: roles.map((t) => ({
-                              key: t.role_name,
-                              value: t.role_id,
+                            name: "type_id",
+                            value: transactionsType.map((t) => ({
+                              key: t.type_transaction,
+                              value: t.type_id,
                             })),
+                          },
+                          {
+                            name: "bank_id",
+                            value: banks.map((b) => ({ key: b.bank_name, value: b.bank_id })),
                           },
                         ],
                       })
                     }
-                    variant="gradient"
-                    color="secondary"
                   >
                     Create
                   </MDButton>
@@ -92,10 +102,9 @@ function Users() {
             </Grid>
           </Grid>
         </MDBox>
-        {/* <Footer /> */}
       </DashboardLayout>
     </>
   );
 }
 
-export default Users;
+export default Transactions;

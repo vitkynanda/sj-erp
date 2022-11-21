@@ -31,6 +31,8 @@ import Users from "layouts/users";
 // @mui icons
 import Icon from "@mui/material/Icon";
 import Banks from "layouts/bank";
+import Coins from "layouts/coin";
+import Transactions from "layouts/transaction";
 
 const routes = [
   {
@@ -51,11 +53,27 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Banks",
-    key: "banks",
+    name: "Bank",
+    key: "bank",
     icon: <Icon fontSize="small">account_balance</Icon>,
-    route: "/banks",
+    route: "/bank",
     component: <Banks />,
+  },
+  {
+    type: "collapse",
+    name: "Coin",
+    key: "coin",
+    icon: <Icon fontSize="small">paid</Icon>,
+    route: "/coin",
+    component: <Coins />,
+  },
+  {
+    type: "collapse",
+    name: "Transaction",
+    key: "transaction",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/transaction",
+    component: <Transactions />,
   },
   // {
   //   type: "collapse",

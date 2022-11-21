@@ -37,6 +37,14 @@ import SignIn from "layouts/authentication/sign-in";
 import { ToastContainer } from "react-toastify";
 import useAuthListener from "hooks/use-auth-listener";
 import { useGlobalStore } from "store";
+import { themeStorage } from "utils";
+import {
+  setTransparentSidenav,
+  setWhiteSidenav,
+  setFixedNavbar,
+  setSidenavColor,
+  setDarkMode,
+} from "context";
 
 export default function App() {
   useAuthListener();
@@ -56,6 +64,22 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const { pathname } = useLocation();
 
+  const initUITheme = () => {
+    if (themeStorage) {
+      const {
+        sidenavColor: sidenavColorSt,
+        darkMode: darkModeSt,
+        fixedNavbar: fixedNavbarSt,
+        transparentSidenav: transparentSidenavSt,
+        whiteSidenav: whiteSidenavSt,
+      } = JSON.parse(themeStorage);
+      if (transparentSidenavSt !== undefined) setTransparentSidenav(dispatch, transparentSidenavSt);
+      if (whiteSidenavSt !== undefined) setWhiteSidenav(dispatch, whiteSidenavSt);
+      if (darkModeSt !== undefined) setDarkMode(dispatch, darkModeSt);
+      if (fixedNavbarSt !== undefined) setFixedNavbar(dispatch, fixedNavbarSt);
+      if (sidenavColorSt !== undefined) setSidenavColor(dispatch, sidenavColorSt);
+    }
+  };
   // Open sidenav when mouse enter on mini sidenav
   const handleOnMouseEnter = () => {
     if (miniSidenav && !onMouseEnter) {
@@ -85,6 +109,11 @@ export default function App() {
     document.documentElement.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [pathname]);
+
+  useEffect(() => {
+    initUITheme();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const getRoutes = (allRoutes) =>
     allRoutes.map((route) => {
