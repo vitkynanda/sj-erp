@@ -1,4 +1,5 @@
 import MDTypography from "components/MDTypography";
+import { currencyFormat } from "utils";
 export default function useData() {
   return {
     columns: [
@@ -9,14 +10,13 @@ export default function useData() {
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
       {
-        Header: "BANK PLAYER",
+        Header: "REKENING PLAYER",
         accessor: "bank_player",
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
-
       {
-        Header: "ACCOUNT NUMBER",
+        Header: "ACCOUNT NUMBER PLAYER",
         accessor: "account_number",
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
@@ -31,19 +31,31 @@ export default function useData() {
         Header: "AMOUNT",
         accessor: "ammount",
         align: "left",
+        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
+      },
+      {
+        Header: "ADMIN FEE",
+        accessor: "admin_fee",
+        align: "left",
+        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
+      },
+      {
+        Header: "TRANSACTION TO",
+        accessor: "bank_name",
+        align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
       },
       {
-        Header: "BALANCE COIN",
+        Header: "LAST BALANCE COIN",
         accessor: "last_balance_coin",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
       },
       {
-        Header: "BALANCE BANK",
+        Header: "LAST BALANCE BANK",
         accessor: "last_balance_bank",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
       },
     ],
 
