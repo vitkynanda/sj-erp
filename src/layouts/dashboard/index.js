@@ -16,12 +16,19 @@ import reportsBarChartData from "layouts/dashboard/data/reportsBarChartData";
 import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 
 // Dashboard components
-import Projects from "layouts/dashboard/components/Projects";
-import OrdersOverview from "layouts/dashboard/components/OrdersOverview";
+// import Projects from "layouts/dashboard/components/Projects";
+import LogsActivity from "layouts/dashboard/components/LogsActivity";
+import { useEffect } from "react";
+import { useGlobalStore } from "store";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
+  const { getLogs, logs } = useGlobalStore();
 
+  useEffect(() => {
+    getLogs();
+  }, [getLogs]);
+  console.log(logs);
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -130,11 +137,11 @@ function Dashboard() {
         </MDBox>
         <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={6} lg={8}>
+            {/* <Grid item xs={12} md={6} lg={8}>
               <Projects />
-            </Grid>
-            <Grid item xs={12} md={6} lg={4}>
-              <OrdersOverview />
+            </Grid> */}
+            <Grid item xs={12} md={12} lg={12}>
+              <LogsActivity />
             </Grid>
           </Grid>
         </MDBox>

@@ -32,7 +32,11 @@ function Transactions() {
   } = useGlobalStore();
 
   useEffect(() => {
-    getTransactions();
+    let params = {};
+    const dateStorage = JSON.parse(localStorage.getItem("date"));
+    if (dateStorage?.start) params["dateFrom"] = dateStorage.start;
+    if (dateStorage?.end) params["dateTo"] = dateStorage.end;
+    getTransactions(params);
   }, [getTransactions]);
 
   return (
@@ -80,7 +84,9 @@ function Transactions() {
                           },
                           {
                             name: "bank_id",
-                            value: banks.map((b) => ({ key: b.bank_name, value: b.bank_id })),
+                            value: banks
+                              .filter((b) => b.active)
+                              .map((b) => ({ key: b.bank_name, value: b.bank_id })),
                           },
                         ],
                       })
@@ -96,6 +102,8 @@ function Transactions() {
                     entriesPerPage={false}
                     showTotalEntries={false}
                     noEndBorder
+                    withDateFilter={true}
+                    canSearch={true}
                   />
                 </MDBox>
               </Card>

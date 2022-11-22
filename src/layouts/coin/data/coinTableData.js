@@ -14,7 +14,7 @@ export default function useData() {
         Header: "BALANCE",
         accessor: "balance",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
       },
 
       {
