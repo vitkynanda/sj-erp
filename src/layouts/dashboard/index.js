@@ -20,15 +20,18 @@ import reportsLineChartData from "layouts/dashboard/data/reportsLineChartData";
 import LogsActivity from "layouts/dashboard/components/LogsActivity";
 import { useEffect } from "react";
 import { useGlobalStore } from "store";
+import { currencyFormat } from "utils";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
-  const { getLogs, logs } = useGlobalStore();
+  const { getLogs, logs, getDashboard, dashboards } = useGlobalStore();
 
   useEffect(() => {
     getLogs();
-  }, [getLogs]);
+    getDashboard();
+  }, [getLogs, getDashboard]);
   console.log(logs);
+  console.log(dashboards)
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -38,28 +41,18 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="dark"
-                icon="weekend"
-                title="Bookings"
-                count={281}
-                percentage={{
-                  color: "success",
-                  amount: "+55%",
-                  label: "than lask week",
-                }}
+                icon="paid"
+                title="COIN GAME"
+                count={currencyFormat("ID", dashboards?.coin?.balance) ?? "-"}
               />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
-                icon="leaderboard"
-                title="Today's Users"
-                count="2,300"
-                percentage={{
-                  color: "success",
-                  amount: "+3%",
-                  label: "than last month",
-                }}
+                icon="wallet"
+                title="DEPOSIT"
+                count={dashboards?.transaction_value?.length > 0 && dashboards?.transaction_value.find((item) => item.value === "DEPOSIT").total}
               />
             </MDBox>
           </Grid>
@@ -67,29 +60,19 @@ function Dashboard() {
             <MDBox mb={1.5}>
               <ComplexStatisticsCard
                 color="success"
-                icon="store"
-                title="Revenue"
-                count="34k"
-                percentage={{
-                  color: "success",
-                  amount: "+1%",
-                  label: "than yesterday",
-                }}
+                icon="wallet"
+                title="WITHDRAW"
+                count={dashboards?.transaction_value?.length > 0 && dashboards?.transaction_value.find((item) => item.value === "WITHDRAW").total}
               />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-              <ComplexStatisticsCard
+            <ComplexStatisticsCard
                 color="primary"
-                icon="person_add"
-                title="Followers"
-                count="+91"
-                percentage={{
-                  color: "success",
-                  amount: "",
-                  label: "Just updated",
-                }}
+                icon="money"
+                title="BONUS"
+                count={dashboards?.transaction_value?.length > 0 && dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total}
               />
             </MDBox>
           </Grid>

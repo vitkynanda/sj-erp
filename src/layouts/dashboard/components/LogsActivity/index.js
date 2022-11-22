@@ -23,6 +23,7 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 import { useGlobalStore } from "store";
+import { formatDateID } from "utils";
 
 function LogsActivity() {
   const { logs } = useGlobalStore();
@@ -39,7 +40,7 @@ function LogsActivity() {
             color={log.is_transaction ? "success" : "info"}
             icon={log.is_transaction ? "paid" : "notifications"}
             title={`${log.description.charAt(0).toUpperCase() + log.description.slice(1)}`}
-            dateTime={new Date(log.created_at).toLocaleString()}
+            dateTime={formatDateID(log.created_at)}
           />
         ))}
       </MDBox>

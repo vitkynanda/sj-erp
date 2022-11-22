@@ -20,6 +20,7 @@ import { getTransactionType } from "services/api/transaction";
 import { addNewTransaction } from "services/api/transaction";
 import { formatDate } from "utils";
 import { getLogData } from "services/api/dashboard";
+import { getDashboardData } from "services/api/dashboard";
 
 export const useGlobalStore = create((set, get) => ({
   //   state
@@ -32,6 +33,7 @@ export const useGlobalStore = create((set, get) => ({
   logs: [],
   transactions: [],
   transactionsType: [],
+  dashboards : {},
   modal: {
     open: false,
     handler: () => {},
@@ -245,4 +247,15 @@ export const useGlobalStore = create((set, get) => ({
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },
+
+  getDashboard : async () => {
+    const params = {};
+    if (get().date.start) params["dateFrom"] = get().date.start;
+    if (get().date.end) params["dateTo"] = get().date.end;
+    set({ loading: { status: true, message: "Getting Data Dashboard..." } });
+    const res = await getDashboardData(new URLSearchParams(params).toString());
+    if (successStatus.includes(res.statusCode)) set({ dashboards: res.data.dashboard });
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  }
 }));
