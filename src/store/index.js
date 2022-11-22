@@ -16,9 +16,10 @@ import { toastErrorMessage } from "utils";
 import { updateBalanceCoin } from "services/api/coin";
 import { getAllCoins } from "services/api/coin";
 import { getAllTransactions } from "services/api/transaction";
-import { formatDate } from "utils";
 import { getTransactionType } from "services/api/transaction";
 import { addNewTransaction } from "services/api/transaction";
+import { formatDate } from "utils";
+import { getLogData } from "services/api/dashboard";
 
 export const useGlobalStore = create((set, get) => ({
   //   state
@@ -28,6 +29,7 @@ export const useGlobalStore = create((set, get) => ({
   roles: [],
   banks: [],
   coins: [],
+  logs: [],
   transactions: [],
   transactionsType: [],
   modal: {
@@ -40,12 +42,11 @@ export const useGlobalStore = create((set, get) => ({
     notRenderFields: [],
     optionFields: [],
   },
+  date: JSON.parse(localStorage.getItem("date")) || { start: "", end: "" },
   selectedData: {},
   defaulParamsTransaction: {
     limit: 10,
     offset: 0,
-    dateFrom: formatDate(new Date()),
-    dateTo: formatDate(new Date()),
   },
 
   // synchronus reducers
@@ -59,6 +60,20 @@ export const useGlobalStore = create((set, get) => ({
         ...payload,
       },
     }),
+  setDate: (payload) => {
+    localStorage.setItem("date", JSON.stringify(payload));
+    set({ date: payload });
+  },
+  filterDate: async () => {
+    let paramsVal = {};
+    if (get().date.start) paramsVal["dateFrom"] = get().date.start;
+    if (get().date.end) paramsVal["dateTo"] = get().date.end;
+
+    await get().getTransactions(paramsVal);
+  },
+
+  setParams: (payload) => set({ defaulParamsTransaction: { ...payload } }),
+
   logoutHandler: (cb) => {
     set({ userLoggedIn: {} });
     Cookies.remove("token");
@@ -174,10 +189,17 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
-  getTransactions: async () => {
-    const params = new URLSearchParams(get().defaulParamsTransaction).toString();
+  getTransactions: async (paramsVal) => {
+    const params = {
+      ...get().defaulParamsTransaction,
+      ...paramsVal,
+    };
+    if ((!params["dateTo"] || params["dateFrom"]) && localStorage.getItem("date")) {
+      params["dateFrom"] = get().date.start;
+      params["dateTo"] = get().date.end || formatDate(new Date());
+    }
     set({ loading: { status: true, message: "Getting Transactions Data..." } });
-    const res = await getAllTransactions(params);
+    const res = await getAllTransactions(new URLSearchParams(params).toString());
     if (successStatus.includes(res.statusCode)) {
       if (get().transactionsType.length === 0) await get().getTransactionType();
       if (get().banks.length === 0) await get().getBanks();
@@ -207,6 +229,19 @@ export const useGlobalStore = create((set, get) => ({
       toast.success("Balance Coin updated successfully");
       await get().getTransactions();
     }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  getLogs: async (paramsVal) => {
+    const params = {
+      ...get().defaulParamsTransaction,
+      ...paramsVal,
+    };
+    set({ loading: { status: true, message: "Getting Log Data..." } });
+    const res = await getLogData(new URLSearchParams(params).toString());
+
+    if (successStatus.includes(res.statusCode)) set({ logs: res.data.log });
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },

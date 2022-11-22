@@ -1,18 +1,3 @@
-/**
-=========================================================
-* Material Dashboard 2 React - v2.1.0
-=========================================================
-
-* Product Page: https://www.creative-tim.com/product/material-dashboard-react
-* Copyright 2022 Creative Tim (https://www.creative-tim.com)
-
-Coded by www.creative-tim.com
-
- =========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-*/
-
 import { useMemo, useEffect, useState } from "react";
 
 // prop-types is a library for typechecking of props
@@ -38,6 +23,11 @@ import MDPagination from "components/MDPagination";
 // Material Dashboard 2 React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
+import { Stack } from "@mui/material";
+import CustomDatePicker from "components/DatePicker";
+import { useGlobalStore } from "store";
+import MDButton from "components/MDButton";
+import { getTransactionType } from "services/api/transaction";
 
 function DataTable({
   entriesPerPage,
@@ -47,6 +37,9 @@ function DataTable({
   pagination,
   isSorted,
   noEndBorder,
+  withDateFilter = false,
+  withPagination = false,
+  withLimit = true,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
@@ -79,6 +72,8 @@ function DataTable({
     setGlobalFilter,
     state: { pageIndex, pageSize, globalFilter },
   } = tableInstance;
+
+  const { filterDate, getTransactions } = useGlobalStore();
 
   // Set the default value for the entries per page when component mounts
   useEffect(() => setPageSize(defaultValue || 10), [defaultValue, setPageSize]);
@@ -147,16 +142,50 @@ function DataTable({
 
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
-      {entriesPerPage || canSearch ? (
-        <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-          {entriesPerPage && (
+      <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
+        {canSearch ? (
+          <MDBox width="12rem">
+            <MDInput
+              placeholder="Search..."
+              value={search}
+              size="small"
+              fullWidth
+              onChange={({ currentTarget }) => {
+                setSearch(search);
+                onSearchChange(currentTarget.value);
+              }}
+            />
+          </MDBox>
+        ) : (
+          <MDBox display="flex" alignItems="center">
+            <Autocomplete
+              disableClearable
+              value={pageSize.toString()}
+              options={entries}
+              onChange={(_, newValue) => {
+                setEntriesPerPage(parseInt(newValue, 10));
+                getTransactions({ limit: newValue });
+              }}
+              size="small"
+              sx={{ width: "5rem" }}
+              renderInput={(params) => <MDInput {...params} />}
+            />
+            <MDTypography variant="caption" color="secondary">
+              &nbsp;&nbsp;entries per page
+            </MDTypography>
+          </MDBox>
+        )}
+
+        <Stack spacing={3} direction="row" alignItems="center">
+          {withLimit && canSearch && (
             <MDBox display="flex" alignItems="center">
               <Autocomplete
                 disableClearable
                 value={pageSize.toString()}
                 options={entries}
-                onChange={(event, newValue) => {
+                onChange={(_, newValue) => {
                   setEntriesPerPage(parseInt(newValue, 10));
+                  getTransactions({ limit: newValue });
                 }}
                 size="small"
                 sx={{ width: "5rem" }}
@@ -167,22 +196,18 @@ function DataTable({
               </MDTypography>
             </MDBox>
           )}
-          {canSearch && (
-            <MDBox width="12rem" ml="auto">
-              <MDInput
-                placeholder="Search..."
-                value={search}
-                size="small"
-                fullWidth
-                onChange={({ currentTarget }) => {
-                  setSearch(search);
-                  onSearchChange(currentTarget.value);
-                }}
-              />
+
+          {withDateFilter && (
+            <MDBox display="flex" justifyContent="end" alignItems="center" gap={3}>
+              <CustomDatePicker label="Start" type="start" />
+              <CustomDatePicker label="End" type="end" />
+              <MDButton onClick={() => filterDate()} color="info" variant="gradient">
+                Filter
+              </MDButton>
             </MDBox>
           )}
-        </MDBox>
-      ) : null}
+        </Stack>
+      </MDBox>
       <Table {...getTableProps()}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup) => (
@@ -234,7 +259,7 @@ function DataTable({
             </MDTypography>
           </MDBox>
         )}
-        {pageOptions.length > 1 && (
+        {/* {pageOptions.length > 1 && (
           <MDPagination
             variant={pagination.variant ? pagination.variant : "gradient"}
             color={pagination.color ? pagination.color : "info"}
@@ -261,7 +286,7 @@ function DataTable({
               </MDPagination>
             )}
           </MDPagination>
-        )}
+        )} */}
       </MDBox>
     </TableContainer>
   );
