@@ -1,5 +1,13 @@
 import { toast } from "react-toastify";
-import { format } from 'date-fns'
+import { format } from "date-fns";
+import * as XLSX from "xlsx";
+
+export const exportExcel = (data) => {
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.json_to_sheet(data);
+  XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+  XLSX.writeFile(wb, "export.xlsx");
+};
 
 const formatDate = (value, type) => {
   var d = new Date(value),
@@ -87,18 +95,17 @@ const toastErrorMessage = (res) =>
 const themeStorage = localStorage.getItem("themeStorage");
 const successStatus = [200, 201];
 
-
 const formatDateID = (date) => {
   const dateJS = new Date(date);
-  return format(dateJS, 'EEE, dd LLL yyyy, HH:mm')
-}
+  return format(dateJS, "EEE, dd LLL yyyy, HH:mm");
+};
 
 const currencyFormat = (format, number, withDecimal = true) => {
   let result = 0;
-  if (typeof number === 'number'){
-    if(withDecimal) {
+  if (typeof number === "number") {
+    if (withDecimal) {
       result = new Intl.NumberFormat(format, {
-        minimumFractionDigits : 2,
+        minimumFractionDigits: 2,
         maximumFractionDigits: 2,
       }).format(number);
     } else {
@@ -107,12 +114,12 @@ const currencyFormat = (format, number, withDecimal = true) => {
   }
 
   switch (format) {
-    case 'ID':
+    case "ID":
       return `Rp${result}`;
     default:
       return result;
   }
-}
+};
 
 export {
   formatDate,

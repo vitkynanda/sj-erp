@@ -24,14 +24,13 @@ import { currencyFormat } from "utils";
 
 function Dashboard() {
   const { sales, tasks } = reportsLineChartData;
-  const { getLogs, logs, getDashboard, dashboards } = useGlobalStore();
+  const { getLogs, getDashboard, dashboards } = useGlobalStore();
 
   useEffect(() => {
     getLogs();
     getDashboard();
   }, [getLogs, getDashboard]);
-  console.log(logs);
-  console.log(dashboards)
+
   return (
     <DashboardLayout>
       <DashboardNavbar />
@@ -52,7 +51,10 @@ function Dashboard() {
               <ComplexStatisticsCard
                 icon="wallet"
                 title="DEPOSIT"
-                count={dashboards?.transaction_value?.length > 0 && dashboards?.transaction_value.find((item) => item.value === "DEPOSIT").total}
+                count={
+                  dashboards?.transaction_value?.length > 0 &&
+                  dashboards?.transaction_value.find((item) => item.value === "DEPOSIT").total
+                }
               />
             </MDBox>
           </Grid>
@@ -62,17 +64,23 @@ function Dashboard() {
                 color="success"
                 icon="wallet"
                 title="WITHDRAW"
-                count={dashboards?.transaction_value?.length > 0 && dashboards?.transaction_value.find((item) => item.value === "WITHDRAW").total}
+                count={
+                  dashboards?.transaction_value?.length > 0 &&
+                  dashboards?.transaction_value.find((item) => item.value === "WITHDRAW").total
+                }
               />
             </MDBox>
           </Grid>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
-            <ComplexStatisticsCard
+              <ComplexStatisticsCard
                 color="primary"
                 icon="money"
                 title="BONUS"
-                count={dashboards?.transaction_value?.length > 0 && dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total}
+                count={
+                  dashboards?.transaction_value?.length > 0 &&
+                  dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total
+                }
               />
             </MDBox>
           </Grid>

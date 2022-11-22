@@ -11,7 +11,6 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableContainer from "@mui/material/TableContainer";
 import TableRow from "@mui/material/TableRow";
-import Icon from "@mui/material/Icon";
 import Autocomplete from "@mui/material/Autocomplete";
 
 // Material Dashboard 2 React components
@@ -23,23 +22,24 @@ import MDPagination from "components/MDPagination";
 // Material Dashboard 2 React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
-import { Stack } from "@mui/material";
 import CustomDatePicker from "components/DatePicker";
-import { useGlobalStore } from "store";
 import MDButton from "components/MDButton";
-import { getTransactionType } from "services/api/transaction";
+import FileDownloadIcon from "@mui/icons-material/FileDownload";
+import { IconButton, Stack } from "@mui/material";
+import { useGlobalStore } from "store";
+import { exportExcel } from "utils";
 
 function DataTable({
   entriesPerPage,
   canSearch,
   showTotalEntries,
   table,
-  pagination,
   isSorted,
   noEndBorder,
   withDateFilter = false,
-  withPagination = false,
   withLimit = true,
+  pagination,
+  withPagination = false,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
@@ -63,11 +63,12 @@ function DataTable({
     rows,
     page,
     pageOptions,
-    canPreviousPage,
-    canNextPage,
-    gotoPage,
-    nextPage,
-    previousPage,
+    // canPreviousPage,
+    // canNextPage,
+    // nextPage,
+    // previousPage,
+    // gotoPage,
+
     setPageSize,
     setGlobalFilter,
     state: { pageIndex, pageSize, globalFilter },
@@ -82,26 +83,26 @@ function DataTable({
   const setEntriesPerPage = (value) => setPageSize(value);
 
   // Render the paginations
-  const renderPagination = pageOptions.map((option) => (
-    <MDPagination
-      item
-      key={option}
-      onClick={() => gotoPage(Number(option))}
-      active={pageIndex === option}
-    >
-      {option + 1}
-    </MDPagination>
-  ));
+  // const renderPagination = pageOptions.map((option) => (
+  //   <MDPagination
+  //     item
+  //     key={option}
+  //     onClick={() => gotoPage(Number(option))}
+  //     active={pageIndex === option}
+  //   >
+  //     {option + 1}
+  //   </MDPagination>
+  // ));
 
-  // Handler for the input to set the pagination index
-  const handleInputPagination = ({ target: { value } }) =>
-    value > pageOptions.length || value < 0 ? gotoPage(0) : gotoPage(Number(value));
+  // // Handler for the input to set the pagination index
+  // const handleInputPagination = ({ target: { value } }) =>
+  //   value > pageOptions.length || value < 0 ? gotoPage(0) : gotoPage(Number(value));
 
-  // Customized page options starting from 1
-  const customizedPageOptions = pageOptions.map((option) => option + 1);
+  // // Customized page options starting from 1
+  // const customizedPageOptions = pageOptions.map((option) => option + 1);
 
-  // Setting value for the pagination input
-  const handleInputPaginationValue = ({ target: value }) => gotoPage(Number(value.value - 1));
+  // // Setting value for the pagination input
+  // const handleInputPaginationValue = ({ target: value }) => gotoPage(Number(value.value - 1));
 
   // Search input value state
   const [search, setSearch] = useState(globalFilter);
@@ -197,15 +198,20 @@ function DataTable({
             </MDBox>
           )}
 
-          {withDateFilter && (
-            <MDBox display="flex" justifyContent="end" alignItems="center" gap={3}>
-              <CustomDatePicker label="Start" type="start" />
-              <CustomDatePicker label="End" type="end" />
-              <MDButton onClick={() => filterDate()} color="info" variant="gradient">
-                Filter
-              </MDButton>
-            </MDBox>
-          )}
+          <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
+            {withDateFilter && (
+              <>
+                <CustomDatePicker label="Start" type="start" />
+                <CustomDatePicker label="End" type="end" />
+                <MDButton onClick={() => filterDate()} color="info" variant="gradient">
+                  Filter
+                </MDButton>
+              </>
+            )}
+            <IconButton onClick={() => exportExcel(table.rows)}>
+              <FileDownloadIcon />
+            </IconButton>
+          </MDBox>
         </Stack>
       </MDBox>
       <Table {...getTableProps()}>
