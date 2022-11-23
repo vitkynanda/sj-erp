@@ -15,6 +15,7 @@ const callApi = async ({ url, method, payload, customURL }) => {
   }
 
   try {
+    console.log(process.env.REACT_APP_BASE_URL_DEV);
     const res = await fetch(`${customURL || process.env.REACT_APP_BASE_URL_DEV + url}`, {
       method,
       headers,
