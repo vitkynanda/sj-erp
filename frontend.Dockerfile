@@ -3,11 +3,11 @@ FROM node:16.13.0 as builder
 WORKDIR /usr/src/app/
 USER root
 COPY package.json ./
-RUN npm install --force
+RUN yarn install:clean
 
 COPY ./ ./
 
-RUN npm run build
+RUN yarn build
 
 FROM nginx:latest
 
