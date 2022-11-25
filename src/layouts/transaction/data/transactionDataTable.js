@@ -1,4 +1,5 @@
 import MDTypography from "components/MDTypography";
+import { formatDateID } from "utils";
 import { currencyFormat } from "utils";
 export default function useData() {
   return {
@@ -46,16 +47,16 @@ export default function useData() {
         Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
       },
       {
-        Header: "LAST BALANCE COIN",
-        accessor: "last_balance_coin",
+        Header: "CREATED BY",
+        accessor: "created_by",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
       {
-        Header: "LAST BALANCE BANK",
-        accessor: "last_balance_bank",
+        Header: "CREATED AT",
+        accessor: "created_at",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{formatDateID(value)}</MDTypography>,
       },
     ],
 

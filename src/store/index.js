@@ -251,8 +251,10 @@ export const useGlobalStore = create((set, get) => ({
 
   getDashboard: async () => {
     const params = {};
-    if (get().date.start) params["dateFrom"] = get().date.start;
-    if (get().date.end) params["dateTo"] = get().date.end;
+    if (!params["dateTo"] || !params["dateFrom"] || localStorage.getItem("date")) {
+      params["dateFrom"] = get().date.start || "2022-11-01";
+      params["dateTo"] = get().date.end || formatDate(new Date());
+    }
     set({ loading: { status: true, message: "Getting Data Dashboard..." } });
     const res = await getDashboardData(new URLSearchParams(params).toString());
     if (successStatus.includes(res.statusCode)) set({ dashboards: res.data.dashboard });

@@ -95,6 +95,7 @@ const toastErrorMessage = (res) =>
 
 const formatDateID = (date) => {
   const dateJS = new Date(date);
+  console.log(dateJS);
   return format(dateJS, "EEE, dd LLL yyyy, HH:mm");
 };
 

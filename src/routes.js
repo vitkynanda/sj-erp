@@ -45,11 +45,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Users",
-    key: "users",
-    icon: <Icon fontSize="small">people</Icon>,
-    route: "/users",
-    component: <Users />,
+    name: "Transaction",
+    key: "transaction",
+    icon: <Icon fontSize="small">receipt_long</Icon>,
+    route: "/transaction",
+    component: <Transactions />,
   },
   {
     type: "collapse",
@@ -69,11 +69,11 @@ const routes = [
   },
   {
     type: "collapse",
-    name: "Transaction",
-    key: "transaction",
-    icon: <Icon fontSize="small">receipt_long</Icon>,
-    route: "/transaction",
-    component: <Transactions />,
+    name: "Users",
+    key: "users",
+    icon: <Icon fontSize="small">people</Icon>,
+    route: "/users",
+    component: <Users />,
   },
   // {
   //   type: "collapse",
