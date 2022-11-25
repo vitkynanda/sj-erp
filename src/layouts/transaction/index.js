@@ -103,6 +103,8 @@ function Transactions() {
                     showTotalEntries={false}
                     noEndBorder
                     withDateFilter={true}
+                    withPagination={true}
+                    withLimit={true}
                     canSearch={true}
                   />
                 </MDBox>

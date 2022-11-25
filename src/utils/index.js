@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 import { format } from "date-fns";
 import * as XLSX from "xlsx";
 
-export const exportExcel = (data) => {
+const exportExcel = (data) => {
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.json_to_sheet(data);
   XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
@@ -92,8 +92,6 @@ const toastErrorMessage = (res) =>
   (typeof res.error === "string" ? res.error : `${res.error[0].field}, ${res.error[0].message}`) ||
   res.message ||
   "Something went wrong";
-const themeStorage = localStorage.getItem("themeStorage");
-const successStatus = [200, 201];
 
 const formatDateID = (date) => {
   const dateJS = new Date(date);
@@ -121,6 +119,10 @@ const currencyFormat = (format, number, withDecimal = true) => {
   }
 };
 
+const themeStorage = localStorage.getItem("themeStorage");
+
+const successStatus = [200, 201];
+
 export {
   formatDate,
   responseHandler,
@@ -135,4 +137,5 @@ export {
   currencyFormat,
   themeStorage,
   successStatus,
+  exportExcel,
 };

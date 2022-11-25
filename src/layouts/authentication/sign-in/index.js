@@ -38,7 +38,7 @@ function Basic() {
   const handleSubmmit = (e) => {
     e.preventDefault();
     if (userData.username && userData.password)
-      loginHandler({ ...userData }, () => navigate("/dashboard"));
+      loginHandler({ ...userData }, (route) => navigate(route));
   };
 
   const handleChange = (e) => {

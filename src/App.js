@@ -45,6 +45,7 @@ import {
   setSidenavColor,
   setDarkMode,
 } from "context";
+import Transactions from "layouts/transaction";
 
 export default function App() {
   useAuthListener();
@@ -114,27 +115,26 @@ export default function App() {
     initUITheme();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  console.log(userLoggedIn.role !== "Admin");
 
   const getRoutes = (allRoutes) =>
-    allRoutes.map((route) => {
-      if (route.collapse) {
-        return getRoutes(route.collapse);
-      }
-
-      if (route.route) {
-        if (!route.route.includes("authentication")) {
+    userLoggedIn.role === "ADMIN" ? (
+      allRoutes.map((route) => {
+        if (route.route) {
           return (
             <Route element={<ProtectedRoute />} key={route.key}>
               <Route exact path={route.route} element={route.component} />
             </Route>
           );
-        } else {
-          return <Route exact path={route.route} element={route.component} key={route.key} />;
         }
-      }
 
-      return null;
-    });
+        return null;
+      })
+    ) : (
+      <Route element={<ProtectedRoute />}>
+        <Route exact path="/transaction" element={<Transactions />} />
+      </Route>
+    );
 
   const configsButton = (
     <MDBox
@@ -178,7 +178,11 @@ export default function App() {
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
             brandName="ERP SALJU88"
-            routes={routes}
+            routes={
+              userLoggedIn.role === "ADMIN"
+                ? routes
+                : routes.filter((route) => route.route === "/transaction")
+            }
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />
@@ -189,7 +193,10 @@ export default function App() {
       {layout === "vr" && <Configurator />}
       <Routes>
         <Route path="/authentication/sign-in" element={<SignIn />} />
-        <Route path="/" element={<Navigate to="/dashboard" />} />
+        <Route
+          path="/"
+          element={<Navigate to={userLoggedIn.role === "ADMIN" ? "/dashboard" : "/transaction"} />}
+        />
         <Route path="/not-found" element={<NotFound />} />
         <Route path="*" element={<Navigate to="/not-found" />} />
         {getRoutes(routes)}

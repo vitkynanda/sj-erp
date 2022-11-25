@@ -33,7 +33,8 @@ export const useGlobalStore = create((set, get) => ({
   logs: [],
   transactions: [],
   transactionsType: [],
-  dashboards : {},
+  dashboards: {},
+  totalTransactionsData: 0,
   modal: {
     open: false,
     handler: () => {},
@@ -90,7 +91,7 @@ export const useGlobalStore = create((set, get) => ({
       toast.success("Login successfully");
       Cookies.set("token", convertBase64("encode", res.data.token));
       set({ userLoggedIn: jwt_decode(res.data.token) });
-      cb();
+      cb(get().userLoggedIn.role === "ADMIN" ? "/dashboard" : "/transaction");
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
@@ -196,8 +197,8 @@ export const useGlobalStore = create((set, get) => ({
       ...get().defaulParamsTransaction,
       ...paramsVal,
     };
-    if ((!params["dateTo"] || params["dateFrom"]) && localStorage.getItem("date")) {
-      params["dateFrom"] = get().date.start;
+    if (!params["dateTo"] || !params["dateFrom"] || localStorage.getItem("date")) {
+      params["dateFrom"] = get().date.start || "2022-11-01";
       params["dateTo"] = get().date.end || formatDate(new Date());
     }
     set({ loading: { status: true, message: "Getting Transactions Data..." } });
@@ -205,7 +206,7 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) {
       if (get().transactionsType.length === 0) await get().getTransactionType();
       if (get().banks.length === 0) await get().getBanks();
-      set({ transactions: res.data.transaction });
+      set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
@@ -228,7 +229,7 @@ export const useGlobalStore = create((set, get) => ({
     });
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
-      toast.success("Balance Coin updated successfully");
+      toast.success("Transaction added successfully");
       await get().getTransactions();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
@@ -248,7 +249,7 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
-  getDashboard : async () => {
+  getDashboard: async () => {
     const params = {};
     if (get().date.start) params["dateFrom"] = get().date.start;
     if (get().date.end) params["dateTo"] = get().date.end;
@@ -257,5 +258,5 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) set({ dashboards: res.data.dashboard });
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
-  }
+  },
 }));
