@@ -6,10 +6,13 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { formatDate } from "utils";
 import { DatePicker } from "@mui/x-date-pickers";
 import { useGlobalStore } from "store";
+import { useMaterialUIController } from "context";
 
 export default function CustomDatePicker({ label, type }) {
   const { date, setDate } = useGlobalStore();
 
+  const [controller] = useMaterialUIController();
+  const { darkMode } = controller;
   const updateFn = (newValue) => {
     const formatVal = formatDate(newValue);
     if (type === "start") return setDate({ [type]: formatVal, end: null });
@@ -33,7 +36,12 @@ export default function CustomDatePicker({ label, type }) {
         }}
         renderInput={(params) => {
           return (
-            <TextField {...params} sx={{ width: 200, color: "white" }} size="small" error={false} />
+            <TextField
+              {...params}
+              sx={{ width: 200, svg: { color: darkMode ? "#fff" : "inherit" } }}
+              size="small"
+              error={false}
+            />
           );
         }}
       />

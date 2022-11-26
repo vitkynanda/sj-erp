@@ -32,19 +32,23 @@ export default function useData() {
         Header: "AMOUNT",
         accessor: "ammount",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
+        Cell: ({ value }) => (
+          <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>
+        ),
       },
       {
         Header: "ADMIN FEE",
         accessor: "admin_fee",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
+        Cell: ({ value }) => (
+          <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>
+        ),
       },
       {
         Header: "TRANSACTION TO",
         accessor: "bank_name",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
       {
         Header: "CREATED BY",
@@ -57,14 +61,6 @@ export default function useData() {
         accessor: "created_at",
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{formatDateID(value)}</MDTypography>,
-      },
-    ],
-
-    rows: [
-      {
-        author: "",
-        function: "",
-        status: "",
       },
     ],
   };

@@ -1,4 +1,5 @@
 import MDTypography from "components/MDTypography";
+import { formatDateID } from "utils";
 
 export default function data() {
   return {
@@ -19,9 +20,7 @@ export default function data() {
         Header: "created at",
         accessor: "created_at",
         align: "left",
-        Cell: ({ value }) => (
-          <MDTypography fontSize={13}>{new Date(value).toLocaleString()}</MDTypography>
-        ),
+        Cell: ({ value }) => <MDTypography fontSize={13}>{formatDateID(value)}</MDTypography>,
       },
     ],
 
