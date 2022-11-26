@@ -46,7 +46,15 @@ const updateThemeStorage = (key, val) => {
 };
 
 const validateInputField = (input) => {
-  const mandatoryList = ["username", "password", "role_id", "phone_number"];
+  const mandatoryList = [
+    "username",
+    "password",
+    "role_id",
+    "phone_number",
+    "bank_name",
+    "account_number",
+    "category",
+  ];
 
   const validate = (input, message) => {
     for (let [key, val] of Object.entries(input)) {
