@@ -21,6 +21,9 @@ import { addNewTransaction } from "services/api/transaction";
 import { formatDate } from "utils";
 import { getLogData } from "services/api/dashboard";
 import { getDashboardData } from "services/api/dashboard";
+import { getAllPlayers } from "services/api/players";
+import { addNewPlayer } from "services/api/players";
+import { addBankAccountPlayer } from "services/api/players";
 
 export const useGlobalStore = create((set, get) => ({
   //   state
@@ -31,6 +34,7 @@ export const useGlobalStore = create((set, get) => ({
   banks: [],
   coins: [],
   logs: [],
+  players: [],
   transactions: [],
   transactionsType: [],
   dashboards: {},
@@ -155,7 +159,6 @@ export const useGlobalStore = create((set, get) => ({
       await get().getBanks();
       set({ modal: { open: false } });
     }
-    console.log(typeof res.error);
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },
@@ -197,7 +200,7 @@ export const useGlobalStore = create((set, get) => ({
       ...get().defaulParamsTransaction,
       ...paramsVal,
     };
-    if (!params["dateTo"] || !params["dateFrom"] || localStorage.getItem("date")) {
+    if (!params["dateTo"] || !params["dateFrom"] || !localStorage.getItem("date")) {
       params["dateFrom"] = get().date.start || "2022-11-01";
       params["dateTo"] = get().date.end || formatDate(new Date());
     }
@@ -251,13 +254,45 @@ export const useGlobalStore = create((set, get) => ({
 
   getDashboard: async () => {
     const params = {};
-    if (!params["dateTo"] || !params["dateFrom"] || localStorage.getItem("date")) {
+    if (!params["dateTo"] || !params["dateFrom"] || !localStorage.getItem("date")) {
       params["dateFrom"] = get().date.start || "2022-11-01";
       params["dateTo"] = get().date.end || formatDate(new Date());
     }
     set({ loading: { status: true, message: "Getting Data Dashboard..." } });
     const res = await getDashboardData(new URLSearchParams(params).toString());
     if (successStatus.includes(res.statusCode)) set({ dashboards: res.data.dashboard });
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  getPlayers: async () => {
+    set({ loading: { status: true, message: "Getting Players Data..." } });
+    const res = await getAllPlayers();
+    if (successStatus.includes(res.statusCode)) set({ players: res.data.list_player });
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  addPlayer: async (payload) => {
+    set({ loading: { status: true, message: "Adding New Player..." } });
+    const res = await addNewPlayer(payload);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Player added successfully");
+      await get().getPlayers();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  addBankAccount: async (payload) => {
+    set({ loading: { status: true, message: "Adding Bank Account Player..." } });
+    const res = await addBankAccountPlayer(payload);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Bank Account added successfully");
+      await get().getPlayers();
+    }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },

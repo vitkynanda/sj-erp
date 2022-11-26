@@ -25,9 +25,10 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 import CustomDatePicker from "components/DatePicker";
 import MDButton from "components/MDButton";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { Icon, IconButton, Stack } from "@mui/material";
+import { Icon, Stack } from "@mui/material";
 import { useGlobalStore } from "store";
 import { exportExcel } from "utils";
+import ThemedIconButton from "components/UI/ThemedIconButton";
 
 function DataTable({
   entriesPerPage,
@@ -106,8 +107,6 @@ function DataTable({
   const nextPage = totalTransactionsData > offset && limit === rows.length;
   const prevPage = currentPage > 1;
 
-  console.log(limit, offset);
-
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
@@ -177,9 +176,9 @@ function DataTable({
                 </MDButton>
               </>
             )}
-            <IconButton onClick={() => exportExcel(table.rows)}>
-              <FileDownloadIcon />
-            </IconButton>
+            <ThemedIconButton onClick={() => exportExcel(table.rows)}>
+              <FileDownloadIcon sx={{ color: "inherit" }} />
+            </ThemedIconButton>
           </MDBox>
         </Stack>
       </MDBox>

@@ -14,6 +14,7 @@ Coded by www.creative-tim.com
 */
 
 // @mui material components
+import { Skeleton, Stack } from "@mui/material";
 import Card from "@mui/material/Card";
 
 // Material Dashboard 2 React components
@@ -26,7 +27,7 @@ import { useGlobalStore } from "store";
 import { formatDateID } from "utils";
 
 function LogsActivity() {
-  const { logs } = useGlobalStore();
+  const { logs, loading } = useGlobalStore();
   return (
     <Card sx={{ height: "100%" }}>
       <MDBox pt={3} px={3}>
@@ -34,15 +35,26 @@ function LogsActivity() {
           Logs Activity
         </MDTypography>
       </MDBox>
-      <MDBox p={2}>
-        {logs?.map((log) => (
-          <TimelineItem
-            color={log.is_transaction ? "success" : "info"}
-            icon={log.is_transaction ? "paid" : "notifications"}
-            title={`${log.description.charAt(0).toUpperCase() + log.description.slice(1)}`}
-            dateTime={formatDateID(log.created_at)}
-          />
-        ))}
+
+      <MDBox p={2} gap={2}>
+        {!loading.status ? (
+          logs?.map((log) => (
+            <TimelineItem
+              color={log.is_transaction ? "success" : "info"}
+              icon={log.is_transaction ? "paid" : "notifications"}
+              title={`${log.description.charAt(0).toUpperCase() + log.description.slice(1)}`}
+              dateTime={formatDateID(log.created_at)}
+            />
+          ))
+        ) : (
+          <Stack spacing={1.5}>
+            {Array(10)
+              .fill()
+              .map((_, idx) => (
+                <Skeleton key={idx} variant="rounded" height={50} />
+              ))}
+          </Stack>
+        )}
       </MDBox>
     </Card>
   );

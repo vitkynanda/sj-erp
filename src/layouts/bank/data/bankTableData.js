@@ -1,12 +1,8 @@
 import { Chip } from "@mui/material";
 import MDTypography from "components/MDTypography";
-import { useMaterialUIController } from "context";
 import ActionBank from "examples/Actions/ActionBank";
 
 export default function useData() {
-  const [controller] = useMaterialUIController();
-  const { darkMode } = controller;
-
   return {
     columns: [
       {
@@ -49,7 +45,7 @@ export default function useData() {
               fontSize={13}
               label={value ? "active" : "inactive"}
               color={value ? "success" : undefined}
-              sx={{ color: darkMode && value ? "#fff" : "#000" }}
+              sx={{ color: value ? "#fff" : "inherit" }}
             />
           );
         },
@@ -59,14 +55,6 @@ export default function useData() {
         accessor: "action",
         align: "left",
         Cell: (rowData) => <ActionBank row={rowData.row} />,
-      },
-    ],
-
-    rows: [
-      {
-        author: "",
-        function: "",
-        status: "",
       },
     ],
   };

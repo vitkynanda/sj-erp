@@ -115,7 +115,6 @@ export default function App() {
     initUITheme();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(userLoggedIn.role !== "Admin");
 
   const getRoutes = (allRoutes) =>
     userLoggedIn.role === "ADMIN" ? (

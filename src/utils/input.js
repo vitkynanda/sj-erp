@@ -44,3 +44,18 @@ export const createTransaction = {
   ammount: "",
   admin_fee: "",
 };
+
+export const createPlayer = {
+  player_id: "",
+  player_name: "",
+  bank_name: "",
+  account_number: "",
+  category: "",
+};
+
+export const addBankPlayer = {
+  // player_id: "",
+  bank_name: "",
+  account_number: "",
+  category: "",
+};

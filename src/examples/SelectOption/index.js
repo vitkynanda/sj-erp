@@ -14,9 +14,15 @@ export default function SelectOption({ label = "", options = [], onSelect = () =
   };
 
   return (
-    <FormControl sx={{ minWidth: 120, my: 1 }} size="small">
-      <InputLabel sx={{ display: "absolute" }}>{formatKey(label)}</InputLabel>
-      <Select value={value} sx={{ height: 37 }} name={label} onChange={handleChange}>
+    <FormControl sx={{ my: 1 }} fullWidth size="small">
+      <InputLabel>{formatKey(label)}</InputLabel>
+      <Select
+        value={value}
+        sx={{ height: 37 }}
+        name={label}
+        onChange={handleChange}
+        label={formatKey(label)}
+      >
         {options.map((opt) => (
           <MenuItem key={opt.key} value={opt.value}>
             {opt.key}
