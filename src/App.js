@@ -46,6 +46,7 @@ import {
   setDarkMode,
 } from "context";
 import Transactions from "layouts/transaction";
+import Players from "layouts/players";
 
 export default function App() {
   useAuthListener();
@@ -131,6 +132,7 @@ export default function App() {
       })
     ) : (
       <Route element={<ProtectedRoute />}>
+        <Route exact path="/players" element={<Players />} />
         <Route exact path="/transaction" element={<Transactions />} />
       </Route>
     );
