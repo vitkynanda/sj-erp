@@ -5,9 +5,15 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import { useGlobalStore } from "store";
 import BasicForm from "examples/Forms/BasicForm";
 import { addBankPlayer } from "utils/input";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import PaidIcon from '@mui/icons-material/Paid';
+import CustomForm from "examples/Forms/CustomForm";
+import { createTransaction } from "utils/input";
 
 export default function useData() {
-  const { setOpenModal, addBankAccount } = useGlobalStore();
+  const { setOpenModal, addBankAccount, addTransaction, banks, transactionsType} = useGlobalStore();
+
   return {
     columns: [
       {
@@ -58,6 +64,42 @@ export default function useData() {
         align: "left",
         Cell: ({ row }) => {
           return (
+            <>
+            <Tooltip title="Add Transaction">
+              <ThemedIconButton
+                onClick={() => {
+                setOpenModal({
+                  open: true,
+                  form: CustomForm,
+                  title: "ADD TRANSACTION",
+                  handler: addTransaction,
+                  input: {...createTransaction, player_name: row.original.player_name, player_id: row.original.player_id},
+                  notRenderFields: ["player_id", "player_name", "account_number"],
+                  optionFields: ["bank_player_id", "bank_id", "type_id"],
+                  optionFieldList: [
+                    {
+                      name: "bank_player_id",
+                      value: row.original.bank_player.map((b) => ({ key: b.bank_name + " - " + b.account_number, value: b.bank_player_id })),
+                    },
+                    {
+                      name: "bank_id",
+                      value: banks
+                        .filter((b) => b.active)
+                        .map((b) => ({ key: b.bank_name + " - " +b.account_number, value: b.bank_id })),
+                    },
+                    {
+                      name: "type_id",
+                      value: transactionsType.map((t) => ({
+                        key: t.type_transaction,
+                        value: t.type_id,
+                      })),
+                    },
+                  ],
+                })
+              }}>
+                <AddCircleIcon />
+              </ThemedIconButton>
+            </Tooltip>
             <Tooltip title="Add Bank Account">
               <ThemedIconButton
                 onClick={() => {
@@ -74,6 +116,7 @@ export default function useData() {
                 <AddCardIcon />
               </ThemedIconButton>
             </Tooltip>
+            </>
           );
         },
       },

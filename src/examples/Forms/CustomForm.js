@@ -8,7 +8,7 @@ import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
 import SelectOption from "examples/SelectOption";
 
-const CustomForm = ({ title, input = {}, submitHandler, optionFields, optionFieldList }) => {
+const CustomForm = ({ title, input = {}, submitHandler, optionFields, optionFieldList, notRenderFields = [] }) => {
   const [values, setValues] = useState(input);
 
   const handlerChange = (e) => {
@@ -23,6 +23,7 @@ const CustomForm = ({ title, input = {}, submitHandler, optionFields, optionFiel
     }
   };
 
+  console.log(notRenderFields);
   return (
     <MDBox
       component="form"
@@ -36,7 +37,8 @@ const CustomForm = ({ title, input = {}, submitHandler, optionFields, optionFiel
         <Divider />
       </MDBox>
       {Object.entries(values).map(([key, val]) =>
-        optionFields.includes(key) ? (
+      !notRenderFields.includes(key) &&
+        (optionFields.includes(key) ? (
           <SelectOption
             key={key}
             label={key}
@@ -58,9 +60,8 @@ const CustomForm = ({ title, input = {}, submitHandler, optionFields, optionFiel
             fullWidth
             onChange={handlerChange}
           />
-        )
+        ))
       )}
-
       <MDBox textAlign="right" sx={{ mt: 3 }}>
         <MDButton onClick={submitWithValidation} color="info" variant="gradient">
           Submit

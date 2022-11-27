@@ -66,7 +66,7 @@ function Players() {
                     variant="gradient"
                     color="secondary"
                   >
-                    Create
+                    Create New Players
                   </MDButton>
                 </MDBox>
                 <MDBox pt={3}>

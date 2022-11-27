@@ -19,6 +19,8 @@ const ModalForm = () => {
   } = useGlobalStore();
 
   const setOpen = (payload) => setOpenModal({ open: payload });
+
+  console.log(notRenderFields);
   return (
     <>
       <MDModal open={open} setOpen={setOpen}>

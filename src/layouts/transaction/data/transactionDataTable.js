@@ -12,13 +12,13 @@ export default function useData() {
       },
       {
         Header: "REKENING PLAYER",
-        accessor: "bank_player",
+        accessor: "bank_player_name",
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
       {
         Header: "ACCOUNT NUMBER PLAYER",
-        accessor: "account_number",
+        accessor: "account_number_player",
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },

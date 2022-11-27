@@ -16,19 +16,12 @@ import { useGlobalStore } from "store";
 import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
 import useData from "./data/transactionDataTable";
-import MDButton from "components/MDButton";
-import { createTransaction } from "utils/input";
-import CustomForm from "examples/Forms/CustomForm";
 
 function Transactions() {
   const { columns } = useData();
   const {
     transactions: rows = [],
-    getTransactions,
-    setOpenModal,
-    addTransaction,
-    banks,
-    transactionsType,
+    getTransactions
   } = useGlobalStore();
 
   useEffect(() => {
@@ -63,7 +56,7 @@ function Transactions() {
                   <MDTypography variant="h6" color="white">
                     Transactions Table
                   </MDTypography>
-                  <MDButton
+                  {/* <MDButton
                     color="secondary"
                     variant="gradient"
                     onClick={() =>
@@ -93,7 +86,7 @@ function Transactions() {
                     }
                   >
                     Create
-                  </MDButton>
+                  </MDButton> */}
                 </MDBox>
                 <MDBox pt={3}>
                   <DataTable

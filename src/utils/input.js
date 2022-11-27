@@ -35,10 +35,7 @@ export const updateBankData = {
 };
 
 export const createTransaction = {
-  player_name: "",
-  player_id: "",
-  bank_player: "",
-  account_number: "",
+  bank_player_id: "",
   bank_id: "",
   type_id: "",
   ammount: "",

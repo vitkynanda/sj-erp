@@ -225,6 +225,7 @@ export const useGlobalStore = create((set, get) => ({
 
   addTransaction: async (payload) => {
     set({ loading: { status: true, message: "Adding New Transaction..." } });
+    console.log(payload);
     const res = await addNewTransaction({
       ...payload,
       ammount: Number(payload.ammount),
@@ -268,6 +269,12 @@ export const useGlobalStore = create((set, get) => ({
   getPlayers: async () => {
     set({ loading: { status: true, message: "Getting Players Data..." } });
     const res = await getAllPlayers();
+    if (successStatus.includes(res.statusCode)) {
+      if (get().transactionsType.length === 0) await get().getTransactionType();
+      if (get().banks.length === 0) await get().getBanks();
+      set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     if (successStatus.includes(res.statusCode)) set({ players: res.data.list_player });
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
