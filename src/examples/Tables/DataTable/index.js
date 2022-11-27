@@ -22,7 +22,7 @@ import MDPagination from "components/MDPagination";
 // Material Dashboard 2 React example components
 import DataTableHeadCell from "examples/Tables/DataTable/DataTableHeadCell";
 import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
-import CustomDatePicker from "components/DatePicker";
+import CustomDatePicker from "examples/DatePicker";
 import MDButton from "components/MDButton";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { Icon, Stack } from "@mui/material";
@@ -40,6 +40,7 @@ function DataTable({
   withDateFilter = false,
   withLimit = false,
   withPagination = false,
+  withExport = false,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
@@ -176,9 +177,11 @@ function DataTable({
                 </MDButton>
               </>
             )}
-            <ThemedIconButton onClick={() => exportExcel(table.rows)}>
-              <FileDownloadIcon sx={{ color: "inherit" }} />
-            </ThemedIconButton>
+            {withExport && (
+              <ThemedIconButton onClick={() => exportExcel(table.rows)}>
+                <FileDownloadIcon sx={{ color: "inherit" }} />
+              </ThemedIconButton>
+            )}
           </MDBox>
         </Stack>
       </MDBox>

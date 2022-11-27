@@ -10,7 +10,6 @@ import { useMaterialUIController } from "context";
 
 export default function CustomDatePicker({ label, type }) {
   const { date, setDate } = useGlobalStore();
-
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
   const updateFn = (newValue) => {

@@ -47,6 +47,7 @@ import {
 } from "context";
 import Transactions from "layouts/transaction";
 import Players from "layouts/players";
+import { filterNonAdminRoutes } from "utils";
 
 export default function App() {
   useAuthListener();
@@ -179,11 +180,7 @@ export default function App() {
             color={sidenavColor}
             brand={(transparentSidenav && !darkMode) || whiteSidenav ? brandDark : brandWhite}
             brandName="ERP SALJU88"
-            routes={
-              userLoggedIn.role === "ADMIN"
-                ? routes
-                : routes.filter((route) => route.route === "/transaction")
-            }
+            routes={userLoggedIn.role === "ADMIN" ? routes : filterNonAdminRoutes(routes)}
             onMouseEnter={handleOnMouseEnter}
             onMouseLeave={handleOnMouseLeave}
           />

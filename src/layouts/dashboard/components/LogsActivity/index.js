@@ -24,6 +24,7 @@ import MDTypography from "components/MDTypography";
 // Material Dashboard 2 React example components
 import TimelineItem from "examples/Timeline/TimelineItem";
 import { useGlobalStore } from "store";
+import { upperFirstChar } from "utils";
 import { formatDateID } from "utils";
 
 function LogsActivity() {
@@ -37,12 +38,12 @@ function LogsActivity() {
       </MDBox>
 
       <MDBox p={2} gap={2}>
-        {!loading.status ? (
+        {!loading.status && logs.length > 0 ? (
           logs?.map((log) => (
             <TimelineItem
               color={log.is_transaction ? "success" : "info"}
               icon={log.is_transaction ? "paid" : "notifications"}
-              title={`${log.description.charAt(0).toUpperCase() + log.description.slice(1)}`}
+              title={upperFirstChar(log.description)}
               dateTime={formatDateID(log.created_at)}
             />
           ))

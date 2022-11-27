@@ -34,7 +34,7 @@ function Dashboard() {
                 color="dark"
                 icon="paid"
                 title="COIN GAME"
-                count={currencyFormat("ID", dashboards?.coin?.balance) ?? "-"}
+                count={currencyFormat("ID", dashboards?.coin?.balance) || "-"}
               />
             </MDBox>
           </Grid>
@@ -44,9 +44,9 @@ function Dashboard() {
                 icon="wallet"
                 title="DEPOSIT"
                 count={
-                  dashboards?.transaction_value?.length > 0
-                    ? dashboards?.transaction_value.find((item) => item.value === "DEPOSIT")?.total
-                    : 0
+                  dashboards?.transaction_value?.length > 0 &&
+                  (dashboards?.transaction_value.find((item) => item.value === "DEPOSIT")?.total ||
+                    0)
                 }
               />
             </MDBox>
@@ -58,9 +58,9 @@ function Dashboard() {
                 icon="wallet"
                 title="WITHDRAW"
                 count={
-                  dashboards?.transaction_value?.length > 0
-                    ? dashboards?.transaction_value.find((item) => item.value === "WITHDRAW")?.total
-                    : 0
+                  dashboards?.transaction_value?.length > 0 &&
+                  (dashboards?.transaction_value.find((item) => item.value === "WITHDRAW")?.total ||
+                    0)
                 }
               />
             </MDBox>
@@ -72,9 +72,8 @@ function Dashboard() {
                 icon="money"
                 title="BONUS"
                 count={
-                  dashboards?.transaction_value?.length > 0
-                    ? dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total
-                    : 0
+                  dashboards?.transaction_value?.length > 0 &&
+                  (dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total || 0)
                 }
               />
             </MDBox>

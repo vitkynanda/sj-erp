@@ -225,7 +225,6 @@ export const useGlobalStore = create((set, get) => ({
 
   addTransaction: async (payload) => {
     set({ loading: { status: true, message: "Adding New Transaction..." } });
-    console.log(payload);
     const res = await addNewTransaction({
       ...payload,
       ammount: Number(payload.ammount),

@@ -32,10 +32,7 @@ const responseHandler = (res, { onSuccess, onError }) => {
     });
 };
 
-const convertBase64 = (type, val) => {
-  if (type === "encode") return btoa(val);
-  return atob(val);
-};
+const convertBase64 = (type, val) => (type === "encode" ? btoa(val) : atob(val));
 
 const updateThemeStorage = (key, val) => {
   let currentStorage = JSON.parse(themeStorage);
@@ -127,6 +124,11 @@ const currencyFormat = (format, number, withDecimal = true) => {
   }
 };
 
+const filterNonAdminRoutes = (routes) =>
+  routes.filter((route) => nonAdminRoutes.includes(route.route));
+
+const nonAdminRoutes = ["/transaction", "/players"];
+
 const themeStorage = localStorage.getItem("themeStorage");
 
 const successStatus = [200, 201];
@@ -146,4 +148,5 @@ export {
   themeStorage,
   successStatus,
   exportExcel,
+  filterNonAdminRoutes,
 };
