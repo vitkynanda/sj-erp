@@ -14,6 +14,9 @@ import LogsActivity from "layouts/dashboard/components/LogsActivity";
 import { useEffect } from "react";
 import { useGlobalStore } from "store";
 import { currencyFormat } from "utils";
+import CustomDatePicker from "examples/DatePicker";
+import MDButton from "components/MDButton";
+import { Stack } from "@mui/material";
 
 function Dashboard() {
   const { getLogs, getDashboard, dashboards } = useGlobalStore();
@@ -27,6 +30,27 @@ function Dashboard() {
     <DashboardLayout>
       <DashboardNavbar />
       <MDBox py={3}>
+        <MDBox
+          sx={(theme) => ({
+            gap: 2,
+            flexDirection: "row",
+            display: "flex",
+            justifyContent: "end",
+            mb: 5,
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+            },
+          })}
+        >
+          <Stack spacing={2} direction="row">
+            <CustomDatePicker label="Start" type="start" width={150} responsive={true} />
+            <CustomDatePicker label="End" type="end" width={150} responsive={true} />
+          </Stack>
+          <MDButton onClick={() => getDashboard()} color="info" variant="gradient">
+            Filter
+          </MDButton>
+        </MDBox>
+
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
@@ -44,9 +68,10 @@ function Dashboard() {
                 icon="wallet"
                 title="DEPOSIT"
                 count={
-                  dashboards?.transaction_value?.length > 0 &&
-                  (dashboards?.transaction_value.find((item) => item.value === "DEPOSIT")?.total ||
-                    0)
+                  dashboards?.transaction_value?.length > 0
+                    ? dashboards?.transaction_value.find((item) => item.value === "DEPOSIT")
+                        ?.total || 0
+                    : 0
                 }
               />
             </MDBox>
@@ -58,9 +83,10 @@ function Dashboard() {
                 icon="wallet"
                 title="WITHDRAW"
                 count={
-                  dashboards?.transaction_value?.length > 0 &&
-                  (dashboards?.transaction_value.find((item) => item.value === "WITHDRAW")?.total ||
-                    0)
+                  dashboards?.transaction_value?.length > 0
+                    ? dashboards?.transaction_value.find((item) => item.value === "WITHDRAW")
+                        ?.total || 0
+                    : 0
                 }
               />
             </MDBox>
@@ -72,14 +98,15 @@ function Dashboard() {
                 icon="money"
                 title="BONUS"
                 count={
-                  dashboards?.transaction_value?.length > 0 &&
-                  (dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total || 0)
+                  dashboards?.transaction_value?.length > 0
+                    ? dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total ||
+                      0
+                    : 0
                 }
               />
             </MDBox>
           </Grid>
         </Grid>
-
         <MDBox>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12} lg={12}>

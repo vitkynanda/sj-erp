@@ -71,11 +71,11 @@ export const useGlobalStore = create((set, get) => ({
     localStorage.setItem("date", JSON.stringify(payload));
     set({ date: payload });
   },
-  filterDate: async () => {
+
+  filterTransactions: async () => {
     let paramsVal = {};
     if (get().date.start) paramsVal["dateFrom"] = get().date.start;
     if (get().date.end) paramsVal["dateTo"] = get().date.end;
-
     await get().getTransactions(paramsVal);
   },
 

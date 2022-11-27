@@ -8,7 +8,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { useGlobalStore } from "store";
 import { useMaterialUIController } from "context";
 
-export default function CustomDatePicker({ label, type }) {
+export default function CustomDatePicker({ label, type, width = 200, responsive = false }) {
   const { date, setDate } = useGlobalStore();
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -37,7 +37,13 @@ export default function CustomDatePicker({ label, type }) {
           return (
             <TextField
               {...params}
-              sx={{ width: 200, svg: { color: darkMode ? "#fff" : "inherit" } }}
+              sx={(theme) => ({
+                width,
+                svg: { color: darkMode ? "#fff" : "inherit" },
+                [theme.breakpoints.down("sm")]: {
+                  width: responsive ? "50%" : width,
+                },
+              })}
               size="small"
               error={false}
             />

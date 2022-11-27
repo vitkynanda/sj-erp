@@ -38,7 +38,7 @@ function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
           <MDTypography variant="button" fontWeight="light" color="text">
             {title}
           </MDTypography>
-          <MDTypography variant="h5">{loading.status ? <Skeleton /> : count}</MDTypography>
+          <MDTypography variant="h5">{loading?.status ? <Skeleton /> : count}</MDTypography>
         </MDBox>
       </MDBox>
       <Divider />
@@ -50,9 +50,9 @@ function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
             fontWeight="bold"
             color={percentage.color}
           >
-            {percentage.amount}
+            {percentage.amount || ""}
           </MDTypography>
-          &nbsp;{percentage.label}
+          &nbsp;{percentage.label || ""}
         </MDTypography>
       </MDBox>
     </Card>
@@ -82,7 +82,7 @@ ComplexStatisticsCard.propTypes = {
     "dark",
   ]),
   title: PropTypes.string.isRequired,
-  count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  // count: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   percentage: PropTypes.shape({
     color: PropTypes.oneOf([
       "primary",

@@ -39,8 +39,9 @@ function LogsActivity() {
 
       <MDBox p={2} gap={2}>
         {!loading.status && logs.length > 0 ? (
-          logs?.map((log) => (
+          logs?.map((log, idx) => (
             <TimelineItem
+              key={idx}
               color={log.is_transaction ? "success" : "info"}
               icon={log.is_transaction ? "paid" : "notifications"}
               title={upperFirstChar(log.description)}

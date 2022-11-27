@@ -69,7 +69,7 @@ function DataTable({
   } = tableInstance;
 
   const {
-    filterDate,
+    filterTransactions,
     getTransactions,
     setParams,
     totalTransactionsData,
@@ -172,7 +172,7 @@ function DataTable({
               <>
                 <CustomDatePicker label="Start" type="start" />
                 <CustomDatePicker label="End" type="end" />
-                <MDButton onClick={() => filterDate()} color="info" variant="gradient">
+                <MDButton onClick={() => filterTransactions()} color="info" variant="gradient">
                   Filter
                 </MDButton>
               </>
