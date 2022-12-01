@@ -21,13 +21,7 @@ const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderF
   };
 
   return (
-    <MDBox
-      component="form"
-      sx={{ minHeight: 250 }}
-      display="flex"
-      justifyContent="space-between"
-      flexDirection="column"
-    >
+    <MDBox component="form" display="flex" justifyContent="space-between" flexDirection="column">
       <MDBox>
         <MDTypography variant="h6">{title ? title.toUpperCase() : "Title"}</MDTypography>
         <Divider />

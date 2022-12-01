@@ -3,30 +3,19 @@ import { toast } from "react-toastify";
 import jwt_decode from "jwt-decode";
 import { login } from "services/api/auth";
 import create from "zustand";
-import { convertBase64 } from "utils";
-import { getAllUsers } from "services/api/users";
-import { addNewUser } from "services/api/users";
-import { getAllRoles } from "services/api/users";
-import { getAllBanks } from "services/api/bank";
-import { addNewBank } from "services/api/bank";
-import { updateBankData } from "services/api/bank";
-import { updateBalanceBank } from "services/api/bank";
-import { successStatus } from "utils";
-import { toastErrorMessage } from "utils";
-import { updateBalanceCoin } from "services/api/coin";
-import { getAllCoins } from "services/api/coin";
-import { getAllTransactions } from "services/api/transaction";
-import { getTransactionType } from "services/api/transaction";
-import { addNewTransaction } from "services/api/transaction";
-import { formatDate } from "utils";
-import { getLogData } from "services/api/dashboard";
-import { getDashboardData } from "services/api/dashboard";
-import { getAllPlayers } from "services/api/players";
-import { addNewPlayer } from "services/api/players";
-import { addBankAccountPlayer } from "services/api/players";
+import { convertBase64, toastErrorMessage, successStatus, formatDate } from "utils";
+import { getAllUsers, addNewUser, deleteUser, getAllRoles } from "services/api/users";
+import { getAllBanks, addNewBank, updateBalanceBank, updateBankData } from "services/api/bank";
+import { getAllPlayers, addBankAccountPlayer, addNewPlayer } from "services/api/players";
+import { getAllCoins, updateBalanceCoin } from "services/api/coin";
+import { getDashboardData, getLogData } from "services/api/dashboard";
+import {
+  getAllTransactions,
+  addNewTransaction,
+  getTransactionType,
+} from "services/api/transaction";
 
-export const useGlobalStore = create((set, get) => ({
-  //   state
+const initialState = {
   loading: { status: false, message: "" },
   userLoggedIn: {},
   users: [],
@@ -55,10 +44,45 @@ export const useGlobalStore = create((set, get) => ({
     limit: 10,
     offset: 0,
   },
+};
+
+export const useGlobalStore = create((set, get) => ({
+  ...initialState,
+  // state
+  // loading: { status: false, message: "" },
+  // userLoggedIn: {},
+  // users: [],
+  // roles: [],
+  // banks: [],
+  // coins: [],
+  // logs: [],
+  // players: [],
+  // transactions: [],
+  // transactionsType: [],
+  // dashboards: {},
+  // totalTransactionsData: 0,
+  // modal: {
+  //   open: false,
+  //   handler: () => {},
+  //   title: "",
+  //   form: null,
+  //   input: {},
+  //   disableFields: [],
+  //   notRenderFields: [],
+  //   optionFields: [],
+  // },
+  // date: JSON.parse(localStorage.getItem("date")) || { start: "", end: "" },
+  // selectedData: {},
+  // defaulParamsTransaction: {
+  //   limit: 10,
+  //   offset: 0,
+  // },
 
   // synchronus reducers
   setUserLoggedIn: (payload) => set({ userLoggedIn: payload }),
   setUsers: (payload) => set({ users: payload }),
+  setDahsboards: (payload) => set({ dashboards: payload }),
+  setCoins: (payload) => set({ coins: payload }),
   setRoles: (payload) => set({ roles: payload }),
   setSelectedData: (payload) => set({ selectedData: payload }),
   setOpenModal: (payload) =>
@@ -82,8 +106,10 @@ export const useGlobalStore = create((set, get) => ({
   setParams: (payload) => set({ defaulParamsTransaction: { ...payload } }),
 
   logoutHandler: (cb) => {
-    set({ userLoggedIn: {} });
+    set({ ...initialState });
     Cookies.remove("token");
+    localStorage.removeItem("date");
+    localStorage.removeItem("themeStorage");
     cb();
   },
 
@@ -101,6 +127,13 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
+  getRoles: async () => {
+    set({ loading: { status: true, message: "Getting Roles Data..." } });
+    const res = await getAllRoles();
+    if (successStatus.includes(res.statusCode)) set({ roles: res.data.list_role });
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+  },
+
   getUsers: async () => {
     set({ loading: { status: true, message: "Getting Users Data..." } });
     const res = await getAllUsers();
@@ -112,19 +145,24 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
-  getRoles: async () => {
-    set({ loading: { status: true, message: "Getting Roles Data..." } });
-    const res = await getAllRoles();
-    if (successStatus.includes(res.statusCode)) set({ roles: res.data.list_role });
-    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
-  },
-
   addUser: async (payload) => {
     set({ loading: { status: true, message: "Adding New User..." } });
     const res = await addNewUser(payload);
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("New User added successfully");
+      await get().getUsers();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  removeUser: async (id) => {
+    set({ loading: { status: true, message: "Deleting User..." } });
+    const res = await deleteUser(id);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("User deleted successfully");
       await get().getUsers();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
@@ -206,11 +244,9 @@ export const useGlobalStore = create((set, get) => ({
     }
     set({ loading: { status: true, message: "Getting Transactions Data..." } });
     const res = await getAllTransactions(new URLSearchParams(params).toString());
-    if (successStatus.includes(res.statusCode)) {
-      if (get().transactionsType.length === 0) await get().getTransactionType();
-      if (get().banks.length === 0) await get().getBanks();
+    if (successStatus.includes(res.statusCode))
       set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
-    }
+
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },

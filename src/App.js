@@ -48,6 +48,7 @@ import {
 import Transactions from "layouts/transaction";
 import Players from "layouts/players";
 import { filterNonAdminRoutes } from "utils";
+import Coins from "layouts/coin";
 
 export default function App() {
   useAuthListener();
@@ -134,6 +135,7 @@ export default function App() {
     ) : (
       <Route element={<ProtectedRoute />}>
         <Route exact path="/players" element={<Players />} />
+        <Route exact path="/coin" element={<Coins />} />
         <Route exact path="/transaction" element={<Transactions />} />
       </Route>
     );

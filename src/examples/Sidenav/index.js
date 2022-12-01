@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // react-router-dom components
 import { useLocation, NavLink } from "react-router-dom";
@@ -31,12 +31,18 @@ import {
   setTransparentSidenav,
   setWhiteSidenav,
 } from "context";
+import { useGlobalStore } from "store";
+import { Skeleton, Stack } from "@mui/material";
+import { getAllCoins } from "services/api/coin";
+import { countTotalBalance } from "utils";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
   const { miniSidenav, transparentSidenav, whiteSidenav, darkMode } = controller;
   const location = useLocation();
   const collapseName = location.pathname.replace("/", "");
+  const { coins, setCoins, userLoggedIn } = useGlobalStore();
+  const [loadBalance, setLoadBalance] = useState(false);
 
   let textColor = "white";
 
@@ -48,6 +54,20 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   const closeSidenav = () => setMiniSidenav(dispatch, true);
 
+  useEffect(() => {
+    if (coins?.length === 0 && collapseName !== "coin" && userLoggedIn?.role) {
+      console.log("executed");
+      const getTotalBalance = async () => {
+        setLoadBalance(true);
+        const res = await getAllCoins();
+        if (res.statusCode === 200) setCoins(res.data.list_coin);
+        setLoadBalance(false);
+      };
+
+      getTotalBalance();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   useEffect(() => {
     // A function that sets the mini state of the sidenav.
     function handleMiniSidenav() {
@@ -158,6 +178,28 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           </MDBox>
         </MDBox>
       </MDBox>
+      <MDBox pb={3} px={4}>
+        <Stack
+          px={4}
+          direction="row"
+          alignItems="center"
+          spacing={0.4}
+          mb={-1}
+          sx={{
+            position: "absolute",
+            backgroundColor: "rgba(255, 255, 255, 0.8)",
+            py: 0.5,
+            px: 2,
+            borderRadius: "0 10px",
+          }}
+        >
+          <Icon sx={{ color: "inherit", fontSize: 11 }}>paid</Icon>
+          <MDTypography sx={{ color: "inherit", fontSize: 11, fontWeight: "bold" }}>
+            {loadBalance ? <Skeleton width={80} /> : `Rp${countTotalBalance(coins)}`}
+          </MDTypography>
+        </Stack>
+      </MDBox>
+
       <Divider
         light={
           (!darkMode && !whiteSidenav && !transparentSidenav) ||
@@ -165,19 +207,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         }
       />
       <List>{renderRoutes}</List>
-      {/* <MDBox p={2} mt="auto">
-        <MDButton
-          component="a"
-          href="https://www.creative-tim.com/product/material-dashboard-pro-react"
-          target="_blank"
-          rel="noreferrer"
-          variant="gradient"
-          color={sidenavColor}
-          fullWidth
-        >
-          upgrade to pro
-        </MDButton>
-      </MDBox> */}
     </SidenavRoot>
   );
 }

@@ -6,4 +6,6 @@ const getAllRoles = () => callApi({ url: "/role", method: "GET" });
 
 const addNewUser = (payload) => callApi({ url: "/user", method: "POST", payload });
 
-export { getAllUsers, addNewUser, getAllRoles };
+const deleteUser = (id) => callApi({ url: `/user/${id}`, method: "DELETE" });
+
+export { getAllUsers, addNewUser, getAllRoles, deleteUser };

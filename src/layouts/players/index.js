@@ -22,7 +22,6 @@ import { createPlayer } from "utils/input";
 
 function Players() {
   const { columns } = playersDataTable();
-
   const { players: rows, getPlayers, addPlayer, setOpenModal } = useGlobalStore();
 
   useEffect(() => {
@@ -73,9 +72,11 @@ function Players() {
                   <DataTable
                     table={{ columns, rows }}
                     isSorted={false}
-                    entriesPerPage={false}
+                    entriesPerPage={true}
                     showTotalEntries={false}
                     noEndBorder
+                    pagination={{}}
+                    canSearch={true}
                   />
                 </MDBox>
               </Card>

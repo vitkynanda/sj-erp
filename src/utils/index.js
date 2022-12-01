@@ -124,10 +124,12 @@ const currencyFormat = (format, number, withDecimal = true) => {
   }
 };
 
+const countTotalBalance = (coins) => coins.reduce((acc, curr) => acc + curr.balance, 0);
+
 const filterNonAdminRoutes = (routes) =>
   routes.filter((route) => nonAdminRoutes.includes(route.route));
 
-const nonAdminRoutes = ["/transaction", "/players"];
+const nonAdminRoutes = ["/transaction", "/players", "/coin"];
 
 const themeStorage = localStorage.getItem("themeStorage");
 
@@ -149,4 +151,5 @@ export {
   successStatus,
   exportExcel,
   filterNonAdminRoutes,
+  countTotalBalance,
 };

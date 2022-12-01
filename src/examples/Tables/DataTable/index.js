@@ -31,6 +31,7 @@ import { exportExcel } from "utils";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 
 function DataTable({
+  showTotalEntries,
   entriesPerPage,
   canSearch,
   table,
@@ -45,7 +46,7 @@ function DataTable({
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
     ? entriesPerPage.entries.map((el) => el.toString())
-    : ["10", "20"];
+    : ["5", "10", "20"];
   const columns = useMemo(() => table.columns, [table]);
   const data = useMemo(() => table.rows, [table]);
 
@@ -57,6 +58,12 @@ function DataTable({
   );
 
   const {
+    pageOptions,
+    canPreviousPage,
+    canNextPage,
+    gotoPage,
+    nextPage,
+    previousPage,
     getTableProps,
     getTableBodyProps,
     headerGroups,
@@ -65,7 +72,7 @@ function DataTable({
     page,
     setPageSize,
     setGlobalFilter,
-    state: { pageSize, globalFilter },
+    state: { pageIndex, pageSize, globalFilter },
   } = tableInstance;
 
   const {
@@ -104,14 +111,46 @@ function DataTable({
 
     return sortedValue;
   };
+
+  // Render the paginations
+  const renderPagination = pageOptions.map((option) => (
+    <MDPagination
+      item
+      key={option}
+      onClick={() => gotoPage(Number(option))}
+      active={pageIndex === option}
+    >
+      {option + 1}
+    </MDPagination>
+  ));
+  // Handler for the input to set the pagination index
+  const handleInputPagination = ({ target: { value } }) =>
+    value > pageOptions.length || value < 0 ? gotoPage(0) : gotoPage(Number(value));
+  // Customized page options starting from 1
+  const customizedPageOptions = pageOptions.map((option) => option + 1);
+  // Setting value for the pagination input
+  const handleInputPaginationValue = ({ target: value }) => gotoPage(Number(value.value - 1));
+
+  // Setting the entries starting point
+  const entriesStart = pageIndex === 0 ? pageIndex + 1 : pageIndex * pageSize + 1;
+  // Setting the entries ending point
+  let entriesEnd;
+  if (pageIndex === 0) {
+    entriesEnd = pageSize;
+  } else if (pageIndex === pageOptions.length - 1) {
+    entriesEnd = rows.length;
+  } else {
+    entriesEnd = pageSize * (pageIndex + 1);
+  }
+
   const currentPage = Math.round(offset / limit + 1);
-  const nextPage = totalTransactionsData > offset && limit === rows.length;
-  const prevPage = currentPage > 1;
+  const nextPageCustom = totalTransactionsData > offset && limit === rows.length;
+  const prevPageCustom = currentPage > 1;
 
   return (
     <TableContainer sx={{ boxShadow: "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-        {canSearch ? (
+        {canSearch && (
           <MDBox width="12rem">
             <MDInput
               placeholder="Search..."
@@ -124,7 +163,9 @@ function DataTable({
               }}
             />
           </MDBox>
-        ) : (
+        )}
+
+        {entriesPerPage && (
           <MDBox display="flex" alignItems="center">
             <Autocomplete
               disableClearable
@@ -132,8 +173,10 @@ function DataTable({
               options={entries}
               onChange={(_, newValue) => {
                 setEntriesPerPage(parseInt(newValue, 10));
-                setParams({ limit: Number(newValue) });
-                getTransactions();
+                if (withLimit) {
+                  setParams({ limit: Number(newValue), offset: 0 });
+                  getTransactions();
+                }
               }}
               size="small"
               sx={{ width: "5rem" }}
@@ -145,46 +188,51 @@ function DataTable({
           </MDBox>
         )}
 
-        <Stack spacing={3} direction="row" alignItems="center">
-          {withLimit && canSearch && (
-            <MDBox display="flex" alignItems="center">
-              <Autocomplete
-                disableClearable
-                value={pageSize.toString()}
-                options={entries}
-                onChange={(_, newValue) => {
-                  setEntriesPerPage(parseInt(newValue, 10));
-                  setParams({ limit: Number(newValue), offset: 0 });
-                  getTransactions();
-                }}
-                size="small"
-                sx={{ width: "5rem" }}
-                renderInput={(params) => <MDInput {...params} />}
-              />
-              <MDTypography variant="caption" color="secondary">
-                &nbsp;&nbsp;entries per page
-              </MDTypography>
-            </MDBox>
-          )}
+        {(withLimit || withDateFilter) && (
+          <Stack spacing={3} direction="row" alignItems="center">
+            {withLimit && canSearch && (
+              <MDBox display="flex" alignItems="center">
+                <Autocomplete
+                  disableClearable
+                  value={pageSize.toString()}
+                  options={entries}
+                  onChange={(_, newValue) => {
+                    setEntriesPerPage(parseInt(newValue, 10));
+                    if (withLimit) {
+                      setParams({ limit: Number(newValue), offset: 0 });
+                      getTransactions();
+                    }
+                  }}
+                  size="small"
+                  sx={{ width: "5rem" }}
+                  renderInput={(params) => <MDInput {...params} />}
+                />
+                <MDTypography variant="caption" color="secondary">
+                  &nbsp;&nbsp;entries per page
+                </MDTypography>
+              </MDBox>
+            )}
 
-          <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
-            {withDateFilter && (
-              <>
-                <CustomDatePicker label="Start" type="start" />
-                <CustomDatePicker label="End" type="end" />
-                <MDButton onClick={() => filterTransactions()} color="info" variant="gradient">
-                  Filter
-                </MDButton>
-              </>
-            )}
-            {withExport && (
-              <ThemedIconButton onClick={() => exportExcel(table.rows)}>
-                <FileDownloadIcon sx={{ color: "inherit" }} />
-              </ThemedIconButton>
-            )}
-          </MDBox>
-        </Stack>
+            <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
+              {withDateFilter && (
+                <>
+                  <CustomDatePicker label="Start" type="start" />
+                  <CustomDatePicker label="End" type="end" />
+                  <MDButton onClick={() => filterTransactions()} color="info" variant="gradient">
+                    Filter
+                  </MDButton>
+                </>
+              )}
+              {withExport && (
+                <ThemedIconButton onClick={() => exportExcel(table.rows)}>
+                  <FileDownloadIcon sx={{ color: "inherit" }} />
+                </ThemedIconButton>
+              )}
+            </MDBox>
+          </Stack>
+        )}
       </MDBox>
+
       <Table {...getTableProps()}>
         <MDBox component="thead">
           {headerGroups.map((headerGroup) => (
@@ -229,12 +277,47 @@ function DataTable({
         alignItems={{ xs: "flex-start", sm: "center" }}
         p={3}
       >
-        {withPagination && (
+        {showTotalEntries && (
+          <MDBox mb={{ xs: 3, sm: 0 }}>
+            <MDTypography variant="button" color="secondary" fontWeight="regular">
+              Showing {entriesStart} to {entriesEnd} of {rows.length} entries
+            </MDTypography>
+          </MDBox>
+        )}
+        {pageOptions.length > 1 && pagination && (
           <MDPagination
             variant={pagination.variant ? pagination.variant : "gradient"}
             color={pagination.color ? pagination.color : "info"}
           >
-            {prevPage && (
+            {canPreviousPage && (
+              <MDPagination item onClick={() => previousPage()}>
+                <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
+              </MDPagination>
+            )}
+            {renderPagination.length > 6 ? (
+              <MDBox width="5rem" mx={1}>
+                <MDInput
+                  inputProps={{ type: "number", min: 1, max: customizedPageOptions.length }}
+                  value={customizedPageOptions[pageIndex]}
+                  onChange={(handleInputPagination, handleInputPaginationValue)}
+                />
+              </MDBox>
+            ) : (
+              renderPagination
+            )}
+            {canNextPage && (
+              <MDPagination item onClick={() => nextPage()}>
+                <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>
+              </MDPagination>
+            )}
+          </MDPagination>
+        )}
+        {withPagination && data.length !== 0 && (
+          <MDPagination
+            variant={pagination.variant ? pagination.variant : "gradient"}
+            color={pagination.color ? pagination.color : "info"}
+          >
+            {prevPageCustom && (
               <MDPagination
                 item
                 onClick={() => {
@@ -245,10 +328,8 @@ function DataTable({
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
               </MDPagination>
             )}
-            <MDTypography fontSize={16} mx={1}>
-              {currentPage}
-            </MDTypography>
-            {nextPage && (
+            <MDPagination item>{currentPage}</MDPagination>
+            {nextPageCustom && (
               <MDPagination
                 item
                 onClick={() => {

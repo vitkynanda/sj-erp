@@ -23,7 +23,8 @@ function Dashboard() {
 
   useEffect(() => {
     getLogs();
-    getDashboard();
+    if (!dashboards?.coin) getDashboard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getLogs, getDashboard]);
 
   return (

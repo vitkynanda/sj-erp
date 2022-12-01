@@ -7,22 +7,26 @@ import { useGlobalStore } from "store";
 import { useMaterialUIController } from "context";
 
 const ActionCoin = ({ row }) => {
-  const { updateBalanceCoin, setOpenModal } = useGlobalStore();
+  const { updateBalanceCoin, setOpenModal, userLoggedIn } = useGlobalStore();
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
 
   return (
     <Stack spacing={2}>
-      <Tooltip title="Update Coin">
+      <Tooltip title={userLoggedIn.role !== "ADMIN" ? "Add Coin Balance" : "Update Coin"}>
         <IconButton
           onClick={() =>
             setOpenModal({
               open: true,
-              title: "Update Coin",
-              input: { coin_id: row.original.coin_id, balance: "", type: "" },
+              title: userLoggedIn.role !== "ADMIN" ? "Add Coin Balance" : "Update Coin",
+              input: {
+                coin_id: row.original.coin_id,
+                balance: "",
+                type: userLoggedIn.role !== "ADMIN" ? "PLUS" : "",
+              },
               form: BasicForm,
               handler: updateBalanceCoin,
-              notRenderFields: ["coin_id"],
+              notRenderFields: userLoggedIn.role !== "ADMIN" ? ["coin_id", "type"] : ["coin_id"],
             })
           }
         >
