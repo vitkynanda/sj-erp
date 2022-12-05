@@ -17,12 +17,11 @@ import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
 import useData from "./data/transactionDataTable";
 
+import FilterTransaction from "examples/Actions/FilterTransaction";
+
 function Transactions() {
   const { columns } = useData();
-  const {
-    transactions: rows = [],
-    getTransactions
-  } = useGlobalStore();
+  const { filteredTransactions: rows = [], getTransactions } = useGlobalStore();
 
   useEffect(() => {
     let params = {};
@@ -56,37 +55,7 @@ function Transactions() {
                   <MDTypography variant="h6" color="white">
                     Transactions Table
                   </MDTypography>
-                  {/* <MDButton
-                    color="secondary"
-                    variant="gradient"
-                    onClick={() =>
-                      setOpenModal({
-                        open: true,
-                        form: CustomForm,
-                        title: "Create Transaction",
-                        handler: addTransaction,
-                        input: createTransaction,
-                        optionFields: ["type_id", "bank_id"],
-                        optionFieldList: [
-                          {
-                            name: "type_id",
-                            value: transactionsType.map((t) => ({
-                              key: t.type_transaction,
-                              value: t.type_id,
-                            })),
-                          },
-                          {
-                            name: "bank_id",
-                            value: banks
-                              .filter((b) => b.active)
-                              .map((b) => ({ key: b.bank_name, value: b.bank_id })),
-                          },
-                        ],
-                      })
-                    }
-                  >
-                    Create
-                  </MDButton> */}
+                  <FilterTransaction />
                 </MDBox>
                 <MDBox pt={3}>
                   <DataTable
@@ -98,6 +67,7 @@ function Transactions() {
                     withDateFilter={true}
                     withPagination={true}
                     withLimit={true}
+                    withExport={true}
                     canSearch={true}
                   />
                 </MDBox>

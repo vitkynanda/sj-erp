@@ -35,6 +35,7 @@ import { useGlobalStore } from "store";
 import { Skeleton, Stack } from "@mui/material";
 import { getAllCoins } from "services/api/coin";
 import { countTotalBalance } from "utils";
+import { currencyFormat } from "utils";
 
 function Sidenav({ color, brand, brandName, routes, ...rest }) {
   const [controller, dispatch] = useMaterialUIController();
@@ -56,7 +57,6 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
 
   useEffect(() => {
     if (coins?.length === 0 && collapseName !== "coin" && userLoggedIn?.role) {
-      console.log("executed");
       const getTotalBalance = async () => {
         setLoadBalance(true);
         const res = await getAllCoins();
@@ -195,7 +195,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
         >
           <Icon sx={{ color: "inherit", fontSize: 11 }}>paid</Icon>
           <MDTypography sx={{ color: "inherit", fontSize: 11, fontWeight: "bold" }}>
-            {loadBalance ? <Skeleton width={80} /> : `Rp${countTotalBalance(coins)}`}
+            {loadBalance ? <Skeleton width={80} /> : currencyFormat("ID", countTotalBalance(coins))}
           </MDTypography>
         </Stack>
       </MDBox>

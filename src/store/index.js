@@ -14,6 +14,8 @@ import {
   addNewTransaction,
   getTransactionType,
 } from "services/api/transaction";
+import { transferBankAmount } from "services/api/bank";
+import { updateTransaction } from "services/api/transaction";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -26,6 +28,8 @@ const initialState = {
   players: [],
   transactions: [],
   transactionsType: [],
+  filteredTransactions: [],
+  filterVal: "Default",
   dashboards: {},
   totalTransactionsData: 0,
   modal: {
@@ -48,43 +52,16 @@ const initialState = {
 
 export const useGlobalStore = create((set, get) => ({
   ...initialState,
-  // state
-  // loading: { status: false, message: "" },
-  // userLoggedIn: {},
-  // users: [],
-  // roles: [],
-  // banks: [],
-  // coins: [],
-  // logs: [],
-  // players: [],
-  // transactions: [],
-  // transactionsType: [],
-  // dashboards: {},
-  // totalTransactionsData: 0,
-  // modal: {
-  //   open: false,
-  //   handler: () => {},
-  //   title: "",
-  //   form: null,
-  //   input: {},
-  //   disableFields: [],
-  //   notRenderFields: [],
-  //   optionFields: [],
-  // },
-  // date: JSON.parse(localStorage.getItem("date")) || { start: "", end: "" },
-  // selectedData: {},
-  // defaulParamsTransaction: {
-  //   limit: 10,
-  //   offset: 0,
-  // },
 
   // synchronus reducers
+  setFilteredTransactions: (payload) => set({ filteredTransactions: payload }),
   setUserLoggedIn: (payload) => set({ userLoggedIn: payload }),
   setUsers: (payload) => set({ users: payload }),
   setDahsboards: (payload) => set({ dashboards: payload }),
   setCoins: (payload) => set({ coins: payload }),
   setRoles: (payload) => set({ roles: payload }),
   setSelectedData: (payload) => set({ selectedData: payload }),
+  setFilterVal: (payload) => set({ filterVal: payload }),
   setOpenModal: (payload) =>
     set({
       modal: {
@@ -98,6 +75,7 @@ export const useGlobalStore = create((set, get) => ({
 
   filterTransactions: async () => {
     let paramsVal = {};
+    set({ filterVal: "Default" });
     if (get().date.start) paramsVal["dateFrom"] = get().date.start;
     if (get().date.end) paramsVal["dateTo"] = get().date.end;
     await get().getTransactions(paramsVal);
@@ -213,6 +191,18 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
+  transferAmount: async (payload) => {
+    set({ loading: { status: true, message: "Transfer Bank Amount..." } });
+    const res = await transferBankAmount({ ...payload, balance: Number(payload.balance) });
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Transfer Bank Amount");
+      await get().getBanks();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
   getCoins: async () => {
     set({ loading: { status: true, message: "Getting Coins Data..." } });
     const res = await getAllCoins();
@@ -269,6 +259,18 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Transaction added successfully");
+      await get().getTransactions();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  updateTransaction: async (payload) => {
+    set({ loading: { status: true, message: "Updating transaction status..." } });
+    const res = await updateTransaction(payload);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Transaction status updated successfully");
       await get().getTransactions();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));

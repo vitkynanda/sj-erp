@@ -1,6 +1,7 @@
 import { Chip } from "@mui/material";
 import MDTypography from "components/MDTypography";
 import ActionBank from "examples/Actions/ActionBank";
+import { currencyFormat } from "utils";
 
 export default function useData() {
   return {
@@ -33,7 +34,9 @@ export default function useData() {
         Header: "BALANCE",
         accessor: "balance",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
+        Cell: ({ value }) => (
+          <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>
+        ),
       },
       {
         Header: "STATUS",

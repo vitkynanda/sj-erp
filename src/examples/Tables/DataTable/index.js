@@ -151,7 +151,7 @@ function DataTable({
     <TableContainer sx={{ boxShadow: "none" }}>
       <MDBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
         {canSearch && (
-          <MDBox width="12rem">
+          <MDBox width="11rem">
             <MDInput
               placeholder="Search..."
               value={search}
@@ -216,8 +216,8 @@ function DataTable({
             <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
               {withDateFilter && (
                 <>
-                  <CustomDatePicker label="Start" type="start" />
-                  <CustomDatePicker label="End" type="end" />
+                  <CustomDatePicker label="Start" type="start" width={150} />
+                  <CustomDatePicker label="End" type="end" width={150} />
                   <MDButton onClick={() => filterTransactions()} color="info" variant="gradient">
                     Filter
                   </MDButton>
