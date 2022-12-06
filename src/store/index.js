@@ -16,6 +16,8 @@ import {
 } from "services/api/transaction";
 import { transferBankAmount } from "services/api/bank";
 import { updateTransaction } from "services/api/transaction";
+import { changePassword } from "services/api/users";
+import { getMutations } from "services/api/bank";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -29,9 +31,11 @@ const initialState = {
   transactions: [],
   transactionsType: [],
   filteredTransactions: [],
+  mutations: [],
   filterVal: "Default",
   dashboards: {},
   totalTransactionsData: 0,
+  openMutation: false,
   modal: {
     open: false,
     handler: () => {},
@@ -62,6 +66,8 @@ export const useGlobalStore = create((set, get) => ({
   setRoles: (payload) => set({ roles: payload }),
   setSelectedData: (payload) => set({ selectedData: payload }),
   setFilterVal: (payload) => set({ filterVal: payload }),
+  setMutations: (payload) => set({ mutations: payload }),
+  setOpenMutation: (payload) => set({ openMutation: payload }),
   setOpenModal: (payload) =>
     set({
       modal: {
@@ -145,6 +151,28 @@ export const useGlobalStore = create((set, get) => ({
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
+  },
+
+  changePassword: async (payload) => {
+    set({ loading: { status: true, message: "Changing User Password..." } });
+    const res = await changePassword(payload);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("User password changed successfully");
+      await get().getUsers();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  getMutations: async (payload) => {
+    let paramsVal = {};
+    paramsVal["date_from"] = get().date.start || "2022-11-01";
+    paramsVal["date_to"] = get().date.end || formatDate(new Date());
+    const res = await getMutations({ ...paramsVal, ...payload });
+    if (successStatus.includes(res.statusCode)) set({ mutations: res.data.mutasi });
+    if (res.statusCode === 404) set({ mutations: [] });
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
   },
 
   getBanks: async () => {
@@ -265,9 +293,9 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
-  updateTransaction: async (payload) => {
+  updateTransaction: async (payload, id) => {
     set({ loading: { status: true, message: "Updating transaction status..." } });
-    const res = await updateTransaction(payload);
+    const res = await updateTransaction(payload, id);
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Transaction status updated successfully");

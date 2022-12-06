@@ -96,11 +96,14 @@ export default function useData() {
                 disabled={row?.original?.status === "COMPLETED"}
                 sx={{ cursor: "pointer" }}
                 onClick={() =>
-                  updateTransaction({
-                    player_id: row.original.player_id,
-                    bank_player_id: row.original.bank_id,
-                    status: "COMPLETED",
-                  })
+                  updateTransaction(
+                    {
+                      player_id: row.original.player_id,
+                      bank_player_id: row.original.bank_id,
+                      status: "COMPLETED",
+                    },
+                    row.original.transaction_id
+                  )
                 }
               >
                 Mark As Completed

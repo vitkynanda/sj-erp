@@ -6,6 +6,9 @@ const getAllRoles = () => callApi({ url: "/role", method: "GET" });
 
 const addNewUser = (payload) => callApi({ url: "/user", method: "POST", payload });
 
+const changePassword = (payload) =>
+  callApi({ url: "/user/change-password", method: "POST", payload });
+
 const deleteUser = (id) => callApi({ url: `/user/${id}`, method: "DELETE" });
 
-export { getAllUsers, addNewUser, getAllRoles, deleteUser };
+export { getAllUsers, addNewUser, getAllRoles, deleteUser, changePassword };

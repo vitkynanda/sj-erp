@@ -5,8 +5,8 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { formatKey } from "utils";
 
-export default function SelectOption({ label = "", options = [], onSelect = () => {} }) {
-  const [value, setValue] = React.useState("");
+export default function SelectOption({ label = "", options = [], onSelect = () => {}, val = "" }) {
+  const [value, setValue] = React.useState(val);
 
   const handleChange = (event) => {
     setValue(event.target.value);

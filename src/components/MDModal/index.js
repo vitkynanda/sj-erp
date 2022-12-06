@@ -13,7 +13,6 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 450,
   borderRadius: 3,
   boxShadow: 24,
   maxHeight: 600,
@@ -22,6 +21,7 @@ const style = {
 };
 
 const BoxResponsive = styled(Box)(({ theme }) => ({
+  minWidth: 450,
   [theme.breakpoints.down("md")]: {
     width: 370,
   },

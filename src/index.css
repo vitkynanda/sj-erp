@@ -8,8 +8,8 @@
 
 /* width */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
 }
 
 /* Track */
@@ -20,13 +20,13 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: gray;
+  background: #b2b2b2;
   border-radius: 10px;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: gray;
+  background: grey;
 }
 
 input::-webkit-outer-spin-button,

@@ -51,6 +51,8 @@ const validateInputField = (input) => {
     "bank_name",
     "account_number",
     "category",
+    "old_password",
+    "new_password",
   ];
 
   const validate = (input, message) => {

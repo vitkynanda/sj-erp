@@ -19,10 +19,12 @@ import MDButton from "components/MDButton";
 import useData from "./data/bankTableData";
 import BasicForm from "examples/Forms/BasicForm";
 import { createBank } from "utils/input";
+import { Stack } from "@mui/material";
+import ModalMutation from "examples/ModalMutation";
 
 function Banks() {
   const { columns } = useData();
-  const { banks: rows, getBanks, addBank, setOpenModal } = useGlobalStore();
+  const { banks: rows, getBanks, addBank, setOpenModal, setOpenMutation } = useGlobalStore();
 
   useEffect(() => {
     getBanks();
@@ -31,6 +33,7 @@ function Banks() {
   return (
     <>
       <ModalForm />
+      <ModalMutation />
       <DashboardLayout>
         <DashboardNavbar />
         <MDBox pt={6} pb={3}>
@@ -52,21 +55,26 @@ function Banks() {
                   <MDTypography variant="h6" color="white">
                     Banks Table
                   </MDTypography>
-                  <MDButton
-                    onClick={() =>
-                      setOpenModal({
-                        open: true,
-                        form: BasicForm,
-                        title: "Create",
-                        handler: addBank,
-                        input: createBank,
-                      })
-                    }
-                    variant="gradient"
-                    color="secondary"
-                  >
-                    Create
-                  </MDButton>
+                  <Stack spacing={2} direction="row">
+                    <MDButton onClick={() => setOpenMutation(true)} variant="outlined" color="#fff">
+                      Mutation
+                    </MDButton>
+                    <MDButton
+                      onClick={() =>
+                        setOpenModal({
+                          open: true,
+                          form: BasicForm,
+                          title: "Create",
+                          handler: addBank,
+                          input: createBank,
+                        })
+                      }
+                      variant="gradient"
+                      color="secondary"
+                    >
+                      Create
+                    </MDButton>
+                  </Stack>
                 </MDBox>
                 <MDBox pt={3}>
                   <DataTable

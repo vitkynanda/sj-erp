@@ -189,7 +189,16 @@ function DataTable({
         )}
 
         {(withLimit || withDateFilter) && (
-          <Stack spacing={3} direction="row" alignItems="center">
+          <Stack
+            spacing={3}
+            direction="row"
+            alignItems="center"
+            sx={(theme) => ({
+              [theme.breakpoints.down("md")]: {
+                display: "none",
+              },
+            })}
+          >
             {withLimit && canSearch && (
               <MDBox display="flex" alignItems="center">
                 <Autocomplete
@@ -232,43 +241,44 @@ function DataTable({
           </Stack>
         )}
       </MDBox>
-
-      <Table {...getTableProps()}>
-        <MDBox component="thead">
-          {headerGroups.map((headerGroup) => (
-            <TableRow {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <DataTableHeadCell
-                  {...column.getHeaderProps(isSorted && column.getSortByToggleProps())}
-                  width={column.width ? column.width : "auto"}
-                  align={column.align ? column.align : "left"}
-                  sorted={setSortedValue(column)}
-                >
-                  {column.render("Header")}
-                </DataTableHeadCell>
-              ))}
-            </TableRow>
-          ))}
-        </MDBox>
-        <TableBody {...getTableBodyProps()}>
-          {page.map((row, key) => {
-            prepareRow(row);
-            return (
-              <TableRow {...row.getRowProps()}>
-                {row.cells.map((cell) => (
-                  <DataTableBodyCell
-                    noBorder={noEndBorder && rows.length - 1 === key}
-                    align={cell.column.align ? cell.column.align : "left"}
-                    {...cell.getCellProps()}
+      <MDBox sx={{ width: "100%", overflow: "auto", height: "100%" }}>
+        <Table {...getTableProps()} width={100}>
+          <MDBox component="thead">
+            {headerGroups.map((headerGroup) => (
+              <TableRow {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <DataTableHeadCell
+                    {...column.getHeaderProps(isSorted && column.getSortByToggleProps())}
+                    width={column.width ? column.width : "auto"}
+                    align={column.align ? column.align : "left"}
+                    sorted={setSortedValue(column)}
                   >
-                    {cell.render("Cell")}
-                  </DataTableBodyCell>
+                    {column.render("Header")}
+                  </DataTableHeadCell>
                 ))}
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+            ))}
+          </MDBox>
+          <TableBody {...getTableBodyProps()}>
+            {page.map((row, key) => {
+              prepareRow(row);
+              return (
+                <TableRow {...row.getRowProps()}>
+                  {row.cells.map((cell) => (
+                    <DataTableBodyCell
+                      noBorder={noEndBorder && rows.length - 1 === key}
+                      align={cell.column.align ? cell.column.align : "left"}
+                      {...cell.getCellProps()}
+                    >
+                      {cell.render("Cell")}
+                    </DataTableBodyCell>
+                  ))}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </MDBox>
 
       <MDBox
         display="flex"

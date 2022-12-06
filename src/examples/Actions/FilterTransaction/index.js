@@ -14,8 +14,9 @@ const FilterTransaction = () => {
 
   const closeMenu = (type) => {
     setMenu(null);
-    setFilterVal(type);
+
     if (type === "Default") return setFilteredTransactions(transactions);
+    setFilterVal(type);
     setFilteredTransactions(
       transactions.filter((trx) => trx.type_transaction === type.toUpperCase())
     );
@@ -39,7 +40,7 @@ const FilterTransaction = () => {
         horizontal: "right",
       }}
       open={Boolean(menu)}
-      onClose={closeMenu}
+      onClose={() => setMenu(null)}
     >
       <MenuItem onClick={() => closeMenu("Default")}>Default</MenuItem>
       <MenuItem onClick={() => closeMenu("Deposit")}>Deposit</MenuItem>
@@ -50,8 +51,18 @@ const FilterTransaction = () => {
   return (
     <MDBox>
       <Stack spacing={1} direction="row" alignItems="center">
-        <MDTypography fontSize={14}>Filtered By {filterVal}</MDTypography>
-        <ThemedIconButton onClick={openMenu}>
+        <MDTypography
+          fontSize={14}
+          sx={(theme) => ({
+            color: "#fff",
+            [theme.breakpoints.down("md")]: {
+              display: "none",
+            },
+          })}
+        >
+          Filtered By {filterVal}
+        </MDTypography>
+        <ThemedIconButton sx={{ color: "#fff" }} onClick={!menu ? openMenu : () => {}}>
           <FilterListIcon />
         </ThemedIconButton>
       </Stack>
