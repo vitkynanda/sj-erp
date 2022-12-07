@@ -23,6 +23,7 @@ const style = {
 const BoxResponsive = styled(Box)(({ theme }) => ({
   minWidth: 450,
   [theme.breakpoints.down("md")]: {
+    minWidth: 370,
     width: 370,
   },
 }));
@@ -50,7 +51,7 @@ export default function MDModal({ open, setOpen, children }) {
             border: controller.darkMode ? "transparent" : "2px solid gray",
           }}
         >
-          <MDBox position="relative" minHeight={240}>
+          <MDBox position="relative">
             <MDBox position="absolute" top={-1} right={2}>
               <IconButton color={controller.darkMode ? "white" : "inherit"} onClick={handleClose}>
                 <Icon>close</Icon>

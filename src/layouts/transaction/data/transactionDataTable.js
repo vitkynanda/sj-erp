@@ -1,11 +1,14 @@
-import { Chip, Stack } from "@mui/material";
-import MDButton from "components/MDButton";
+import { Chip, Stack, Tooltip } from "@mui/material";
 import MDTypography from "components/MDTypography";
+import CustomForm from "examples/Forms/CustomForm";
 import { useGlobalStore } from "store";
 import { formatDateID } from "utils";
 import { currencyFormat } from "utils";
+import CreditScoreIcon from "@mui/icons-material/CreditScore";
+import ThemedIconButton from "components/UI/ThemedIconButton";
 export default function useData() {
-  const { updateTransaction } = useGlobalStore();
+  const { updateTransaction, players, setOpenModal } = useGlobalStore();
+
   return {
     columns: [
       {
@@ -89,25 +92,42 @@ export default function useData() {
         Cell: ({ row }) => {
           return (
             <Stack>
-              <MDButton
-                variant="gradient"
-                color="info"
-                size="small"
-                disabled={row?.original?.status === "COMPLETED"}
-                sx={{ cursor: "pointer" }}
-                onClick={() =>
-                  updateTransaction(
-                    {
-                      player_id: row.original.player_id,
-                      bank_player_id: row.original.bank_id,
-                      status: "COMPLETED",
-                    },
-                    row.original.transaction_id
-                  )
-                }
-              >
-                Mark As Completed
-              </MDButton>
+              <Tooltip title="Update Transaction Status">
+                <span>
+                  <ThemedIconButton
+                    disabled={row?.original?.status === "COMPLETED"}
+                    onClick={() =>
+                      setOpenModal({
+                        open: true,
+                        form: CustomForm,
+                        title: "COMPLETED TRANSACTION",
+                        handler: updateTransaction,
+                        input: {
+                          bank_player_id: "",
+                          status: "COMPLETED",
+                          player_id: row.original.player_id,
+                          id: row.original.transaction_id,
+                        },
+                        notRenderFields: ["player_id", "status", "id"],
+                        optionFields: ["bank_player_id"],
+                        optionFieldList: [
+                          {
+                            name: "bank_player_id",
+                            value: players
+                              .find((pl) => pl.player_id === row.original.player_id)
+                              .bank_player.map((b) => ({
+                                key: b.bank_name + " - " + b.account_number,
+                                value: b.bank_player_id,
+                              })),
+                          },
+                        ],
+                      })
+                    }
+                  >
+                    <CreditScoreIcon />
+                  </ThemedIconButton>
+                </span>
+              </Tooltip>
             </Stack>
           );
         },

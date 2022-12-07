@@ -8,7 +8,13 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { useGlobalStore } from "store";
 import { useMaterialUIController } from "context";
 
-export default function CustomDatePicker({ label, type, width = 200, responsive = false }) {
+export default function CustomDatePicker({
+  label,
+  type,
+  width,
+  responsive = false,
+  fullWidth = false,
+}) {
   const { date, setDate } = useGlobalStore();
   const [controller] = useMaterialUIController();
   const { darkMode } = controller;
@@ -40,8 +46,8 @@ export default function CustomDatePicker({ label, type, width = 200, responsive 
               sx={(theme) => ({
                 width,
                 svg: { color: darkMode ? "#fff" : "inherit" },
-                [theme.breakpoints.down("sm")]: {
-                  width: responsive ? "50%" : width,
+                [theme.breakpoints.down("md")]: {
+                  width: responsive ? "50%" : fullWidth ? "100%" : width,
                 },
               })}
               size="small"

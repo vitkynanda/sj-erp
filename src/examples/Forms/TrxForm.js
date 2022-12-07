@@ -7,7 +7,7 @@ import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
 import SelectOption from "examples/SelectOption";
 
-const CustomForm = ({
+const T = ({
   title,
   input = {},
   submitHandler,
@@ -19,7 +19,13 @@ const CustomForm = ({
 
   const handlerChange = (e) => {
     const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
+    const newVal = {};
+    if (value === "36ceafe0-609b-4b1e-93e2-382817b949cc") {
+      newVal.status = "COMPLETED";
+    } else if (name === "type_id" && value !== "36ceafe0-609b-4b1e-93e2-382817b949cc") {
+      newVal.status = "";
+    }
+    setValues({ ...values, ...newVal, [name]: value });
   };
 
   const submitWithValidation = () => {
@@ -30,7 +36,7 @@ const CustomForm = ({
   return (
     <MDBox
       component="form"
-      sx={{ minHeight: 100 }}
+      sx={{ minHeight: 250 }}
       display="flex"
       justifyContent="space-between"
       flexDirection="column"
@@ -48,6 +54,12 @@ const CustomForm = ({
               label={key}
               options={optionFieldList.find((opt) => opt.name === key).value}
               onSelect={handlerChange}
+              val={val}
+              readOnly={
+                key === "status" &&
+                val === "COMPLETED" &&
+                values.type_id === "36ceafe0-609b-4b1e-93e2-382817b949cc"
+              }
             />
           ) : (
             <MDInput
@@ -75,4 +87,4 @@ const CustomForm = ({
   );
 };
 
-export default CustomForm;
+export default T;

@@ -1,4 +1,4 @@
-import { Divider, Stack, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import { Divider, Table, TableBody, TableCell, TableRow } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDModal from "components/MDModal";
@@ -23,13 +23,26 @@ const ModalMutation = () => {
 
   return (
     <MDModal open={openMutation} setOpen={setOpenMutation}>
-      <MDBox sx={{ pt: 4, px: 2, width: 1000 }}>
+      <MDBox sx={{ pt: 4, px: 2 }}>
         <MDBox>
           <MDTypography variant="h6">ACCOUNT MUTATION</MDTypography>
           <Divider />
         </MDBox>
-        <MDBox display="flex" justifyContent="space-between">
-          <Stack direction="row" alignItems="center" spacing={2} width={400}>
+        <MDBox
+          display="flex"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={(theme) => ({ [theme.breakpoints.down("md")]: { flexDirection: "column", gap: 2 } })}
+        >
+          <MDBox
+            display="flex"
+            alignItems="center"
+            gap={1}
+            sx={(theme) => ({
+              width: "50%",
+              [theme.breakpoints.down("md")]: { flexDirection: "column", width: "100%" },
+            })}
+          >
             <SelectOption
               label="Bank Account"
               options={[
@@ -61,10 +74,21 @@ const ModalMutation = () => {
               onSelect={onSelect}
               val={filter.limit}
             />
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={2}>
-            <CustomDatePicker label="Start" type="start" width={120} />
-            <CustomDatePicker label="End" type="end" width={120} />
+          </MDBox>
+          <MDBox
+            gap={1}
+            sx={(theme) => ({
+              display: "flex",
+              alignItems: "center",
+              [theme.breakpoints.down("md")]: {
+                display: "grid",
+                width: "100%",
+                gap: 2,
+              },
+            })}
+          >
+            <CustomDatePicker label="Start" type="start" width={150} fullWidth={true} />
+            <CustomDatePicker label="End" type="end" width={150} fullWidth={true} />
             <MDButton
               onClick={async () => {
                 setLoading(true);
@@ -80,48 +104,57 @@ const ModalMutation = () => {
             >
               Filter
             </MDButton>
-          </Stack>
+          </MDBox>
         </MDBox>
         {loading ? (
           <MDTypography sx={{ fontSize: 13, textAlign: "center", mt: 1 }}>Loading ...</MDTypography>
         ) : mutations.length > 0 ? (
-          <Table size="small" aria-label="detail">
-            <TableBody>
-              <TableRow>
-                <TableCell>
-                  <MDTypography sx={{ fontSize: 11, fontWeight: 500, color: "#7b809a" }}>
-                    NO.
-                  </MDTypography>
-                </TableCell>
-                {Object.keys(mutations[0]).map(
-                  (title) =>
-                    title !== "mutation_bank_id" && (
-                      <TableCell key={title}>
-                        <MDTypography sx={{ fontSize: 11, fontWeight: 500, color: "#7b809a" }}>
-                          {title.split("_").join(" ").toUpperCase()}
-                        </MDTypography>
-                      </TableCell>
-                    )
-                )}
-              </TableRow>
-              {mutations.map((row, id) => (
-                <TableRow key={id}>
+          <MDBox
+            sx={(theme) => ({
+              width: 1000,
+              [theme.breakpoints.down("md")]: { width: "100%", overflow: "auto" },
+            })}
+          >
+            <Table size="small" aria-label="detail">
+              <TableBody>
+                <TableRow>
                   <TableCell>
-                    <MDTypography sx={{ fontSize: 12 }}>{id + 1}</MDTypography>
+                    <MDTypography sx={{ fontSize: 11, fontWeight: 500, color: "#7b809a" }}>
+                      NO.
+                    </MDTypography>
                   </TableCell>
-                  {Object.entries(row).map(([key, val]) => {
-                    return (
-                      key !== "mutation_bank_id" && (
-                        <TableCell key={val}>
-                          <MDTypography fontSize={12}>{val}</MDTypography>
+                  {Object.keys(mutations[0]).map(
+                    (title) =>
+                      title !== "mutation_bank_id" &&
+                      title !== "bank_id" && (
+                        <TableCell key={title}>
+                          <MDTypography sx={{ fontSize: 11, fontWeight: 500, color: "#7b809a" }}>
+                            {title.split("_").join(" ").toUpperCase()}
+                          </MDTypography>
                         </TableCell>
                       )
-                    );
-                  })}
+                  )}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                {mutations.map((row, id) => (
+                  <TableRow key={id}>
+                    <TableCell>
+                      <MDTypography sx={{ fontSize: 12 }}>{id + 1}</MDTypography>
+                    </TableCell>
+                    {Object.entries(row).map(([key, val]) => {
+                      return (
+                        key !== "mutation_bank_id" &&
+                        key !== "bank_id" && (
+                          <TableCell key={val}>
+                            <MDTypography fontSize={12}>{val}</MDTypography>
+                          </TableCell>
+                        )
+                      );
+                    })}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </MDBox>
         ) : (
           <MDBox pt={2} textAlign="center">
             <MDTypography sx={{ fontSize: 13 }}>No data available</MDTypography>

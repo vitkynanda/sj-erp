@@ -21,7 +21,12 @@ import FilterTransaction from "examples/Actions/FilterTransaction";
 
 function Transactions() {
   const { columns } = useData();
-  const { filteredTransactions: rows = [], getTransactions } = useGlobalStore();
+  const {
+    filteredTransactions: rows = [],
+    getTransactions,
+    players,
+    getPlayers,
+  } = useGlobalStore();
 
   useEffect(() => {
     let params = {};
@@ -29,7 +34,8 @@ function Transactions() {
     if (dateStorage?.start) params["dateFrom"] = dateStorage.start;
     if (dateStorage?.end) params["dateTo"] = dateStorage.end;
     getTransactions(params);
-  }, [getTransactions]);
+    if (players.length === 0) getPlayers("only");
+  }, [getTransactions, getPlayers, players.length]);
 
   return (
     <>

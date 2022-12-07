@@ -278,6 +278,7 @@ export const useGlobalStore = create((set, get) => ({
   },
 
   addTransaction: async (payload) => {
+    if (payload.status === "COMPLETED") return toast.error("Bank Player Id Required");
     set({ loading: { status: true, message: "Adding New Transaction..." } });
     const res = await addNewTransaction({
       ...payload,
@@ -293,9 +294,9 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
-  updateTransaction: async (payload, id) => {
+  updateTransaction: async (payload) => {
     set({ loading: { status: true, message: "Updating transaction status..." } });
-    const res = await updateTransaction(payload, id);
+    const res = await updateTransaction({ ...payload, id: undefined }, payload.id);
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Transaction status updated successfully");
@@ -331,17 +332,15 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
-  getPlayers: async () => {
+  getPlayers: async (type) => {
     set({ loading: { status: true, message: "Getting Players Data..." } });
     const res = await getAllPlayers();
     if (successStatus.includes(res.statusCode)) {
-      if (get().transactionsType.length === 0) await get().getTransactionType();
-      if (get().banks.length === 0) await get().getBanks();
-      set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
+      if (get().transactionsType.length === 0 && !type) await get().getTransactionType();
+      if (get().banks.length === 0 && !type) await get().getBanks();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     if (successStatus.includes(res.statusCode)) set({ players: res.data.list_player });
-    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },
 

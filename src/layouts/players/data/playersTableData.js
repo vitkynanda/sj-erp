@@ -5,9 +5,9 @@ import AddCardIcon from "@mui/icons-material/AddCard";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MDTypography from "components/MDTypography";
 import BasicForm from "examples/Forms/BasicForm";
-import CustomForm from "examples/Forms/CustomForm";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 import { formatDateID } from "utils";
+import TrxForm from "examples/Forms/TrxForm";
 
 export default function useData() {
   const { setOpenModal, addBankAccount, addTransaction, banks, transactionsType } =
@@ -67,7 +67,7 @@ export default function useData() {
                   onClick={() => {
                     setOpenModal({
                       open: true,
-                      form: CustomForm,
+                      form: TrxForm,
                       title: "ADD TRANSACTION",
                       handler: addTransaction,
                       input: {
@@ -76,7 +76,7 @@ export default function useData() {
                         player_id: row.original.player_id,
                       },
                       notRenderFields: ["player_id", "player_name", "account_number"],
-                      optionFields: ["bank_player_id", "bank_id", "type_id"],
+                      optionFields: ["bank_player_id", "bank_id", "type_id", "status"],
                       optionFieldList: [
                         {
                           name: "bank_player_id",
@@ -100,6 +100,13 @@ export default function useData() {
                             key: t.type_transaction,
                             value: t.type_id,
                           })),
+                        },
+                        {
+                          name: "status",
+                          value: [
+                            { key: "PENDING", value: "PENDING" },
+                            { key: "COMPLETED", value: "COMPLETED" },
+                          ],
                         },
                       ],
                     });
