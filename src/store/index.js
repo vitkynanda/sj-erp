@@ -278,7 +278,8 @@ export const useGlobalStore = create((set, get) => ({
   },
 
   addTransaction: async (payload) => {
-    if (payload.status === "COMPLETED") return toast.error("Bank Player Id Required");
+    if (payload.status === "COMPLETED" && payload.bank_player_id === "")
+      return toast.error("Bank Player Id Required");
     set({ loading: { status: true, message: "Adding New Transaction..." } });
     const res = await addNewTransaction({
       ...payload,
