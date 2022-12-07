@@ -56,7 +56,11 @@ function Banks() {
                     Banks Table
                   </MDTypography>
                   <Stack spacing={2} direction="row">
-                    <MDButton onClick={() => setOpenMutation(true)} variant="outlined" color="#fff">
+                    <MDButton
+                      onClick={() => setOpenMutation(true)}
+                      variant="outlined"
+                      color="white"
+                    >
                       Mutation
                     </MDButton>
                     <MDButton

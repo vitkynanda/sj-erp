@@ -156,7 +156,14 @@ const ModalMutation = () => {
             </Table>
           </MDBox>
         ) : (
-          <MDBox pt={2} textAlign="center">
+          <MDBox
+            pt={2}
+            sx={(theme) => ({
+              width: 1000,
+              textAlign: "center",
+              [theme.breakpoints.down("md")]: { width: "100%", overflow: "auto" },
+            })}
+          >
             <MDTypography sx={{ fontSize: 13 }}>No data available</MDTypography>
           </MDBox>
         )}
