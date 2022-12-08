@@ -17,34 +17,40 @@ const ActionBank = ({ row }) => {
     updateBalanceBank,
     banks,
     transferAmount: ta,
+    userLoggedIn,
   } = useGlobalStore();
   const [menu, setMenu] = useState(null);
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
 
   const closeMenu = (type) => {
     setMenu(null);
-    if (type === "balance")
-      return setOpenModal({
+    if (type === "update"){
+      setOpenModal({
         open: true,
-        title: "Update Balance",
+        title: "Update Bank",
+        input: row.original,
+        form: BasicForm,
+        handler: updateBank,
+  
+        notRenderFields: ["bank_id", "balance"],
+      });
+    }
+
+    if(type === "balance"){
+      setOpenModal({
+        open: true,
+        title: userLoggedIn.role === "ADMIN" ? "Update Balance" : "Tambah Balance",
         form: BasicForm,
         input: {
           bank_id: row.original.bank_id,
           balance: "",
-          type: "",
+          type: userLoggedIn.role === "ADMIN" ? "" : "PLUS",
         },
-        notRenderFields: ["bank_id"],
+        notRenderFields: userLoggedIn.role === "ADMIN" ? ["bank_id"] : ["bank_id", "type"],
         handler: updateBalanceBank,
       });
-    setOpenModal({
-      open: true,
-      title: "Update Bank",
-      input: row.original,
-      form: BasicForm,
-      handler: updateBank,
-
-      notRenderFields: ["bank_id", "balance"],
-    });
+    }
+      
   };
 
   const transferAmount = () =>
@@ -55,6 +61,7 @@ const ActionBank = ({ row }) => {
         from_bank_id: row.original.bank_id,
         to_bank_id: "",
         balance: "",
+        admin_fee: ""
       },
       form: CustomForm,
       handler: ta,
@@ -90,12 +97,13 @@ const ActionBank = ({ row }) => {
     >
       <MenuItem onClick={() => closeMenu("balance")}>
         <EditIcon sx={{ mr: 1 }} />
-        Update Balance
+        {userLoggedIn.role === "ADMIN" ? "Update Balance" : "Tambah Balance"}
       </MenuItem>
-      <MenuItem onClick={closeMenu}>
+      {userLoggedIn.role === "ADMIN" && <MenuItem onClick={() => closeMenu("update")}>
         <EditIcon sx={{ mr: 1 }} />
         Update Bank Data
       </MenuItem>
+      }
       <MenuItem onClick={transferAmount}>
         <CurrencyExchangeIcon sx={{ mr: 1 }} />
         Transfer Amount

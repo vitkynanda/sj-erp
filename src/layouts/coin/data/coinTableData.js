@@ -1,5 +1,6 @@
 import MDTypography from "components/MDTypography";
 import ActionCoin from "examples/Actions/ActionCoin";
+import { currencyFormat } from "utils";
 
 export default function useData() {
   return {
@@ -14,7 +15,7 @@ export default function useData() {
         Header: "BALANCE",
         accessor: "balance",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value.toLocaleString()}</MDTypography>,
+        Cell: ({ value }) => <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>,
       },
 
       {

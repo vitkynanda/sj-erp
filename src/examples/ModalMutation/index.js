@@ -7,6 +7,7 @@ import CustomDatePicker from "examples/DatePicker";
 import SelectOption from "examples/SelectOption";
 import { useState } from "react";
 import { useGlobalStore } from "store";
+import { currencyFormat } from "utils";
 
 const ModalMutation = () => {
   const { openMutation, setOpenMutation, banks, getMutations, mutations } = useGlobalStore();
@@ -58,6 +59,7 @@ const ModalMutation = () => {
             <SelectOption
               label="Transaction Type"
               options={[
+                { key: "ALL", value: "" },
                 { key: "CREDIT", value: "CREDIT" },
                 { key: "DEBET", value: "DEBET" },
               ]}
@@ -145,7 +147,7 @@ const ModalMutation = () => {
                         key !== "mutation_bank_id" &&
                         key !== "bank_id" && (
                           <TableCell key={val}>
-                            <MDTypography fontSize={12}>{val}</MDTypography>
+                            <MDTypography fontSize={12}>{key === "ammount" || key === "last_balance" ? currencyFormat("ID", val) : val}</MDTypography>
                           </TableCell>
                         )
                       );

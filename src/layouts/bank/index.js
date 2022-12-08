@@ -24,7 +24,7 @@ import ModalMutation from "examples/ModalMutation";
 
 function Banks() {
   const { columns } = useData();
-  const { banks: rows, getBanks, addBank, setOpenModal, setOpenMutation } = useGlobalStore();
+  const { banks: rows, getBanks, addBank, setOpenModal, setOpenMutation, userLoggedIn } = useGlobalStore();
 
   useEffect(() => {
     getBanks();
@@ -63,7 +63,7 @@ function Banks() {
                     >
                       Mutation
                     </MDButton>
-                    <MDButton
+                    {userLoggedIn.role === "ADMIN" && <MDButton
                       onClick={() =>
                         setOpenModal({
                           open: true,
@@ -77,7 +77,7 @@ function Banks() {
                       color="secondary"
                     >
                       Create
-                    </MDButton>
+                    </MDButton>}
                   </Stack>
                 </MDBox>
                 <MDBox pt={3}>

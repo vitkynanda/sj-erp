@@ -221,7 +221,7 @@ export const useGlobalStore = create((set, get) => ({
 
   transferAmount: async (payload) => {
     set({ loading: { status: true, message: "Transfer Bank Amount..." } });
-    const res = await transferBankAmount({ ...payload, balance: Number(payload.balance) });
+    const res = await transferBankAmount({ ...payload, balance: Number(payload.balance), admin_fee: Number(payload.admin_fee) });
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Transfer Bank Amount");

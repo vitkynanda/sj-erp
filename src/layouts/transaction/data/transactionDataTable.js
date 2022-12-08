@@ -12,6 +12,12 @@ export default function useData() {
   return {
     columns: [
       {
+        Header: "PLAYER ID",
+        accessor: "player_id",
+        align: "left",
+        Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
+      },
+      {
         Header: "PLAYER NAME",
         accessor: "player_name",
         align: "left",
@@ -47,18 +53,18 @@ export default function useData() {
         ),
       },
       {
-        Header: "LAST BALANCE",
+        Header: "LAST BALANCE BANK",
         accessor: "last_balance_bank",
         align: "left",
-        Cell: ({ value }) => (
-          <MDTypography fontSize={13}>{currencyFormat("ID", value)}</MDTypography>
+        Cell: ({row}) => (
+          <MDTypography fontSize={13}>{currencyFormat("ID", row.original.type_transaction === "DEPOSIT" ? row.original.last_balance_bank + row.original.ammount : row.original.type_transaction === "WITHDRAW" ? row.original.last_balance_bank - row.original.ammount : row.original.last_balance_bank)}</MDTypography>
         ),
       },
       {
         Header: "TRANSACTION TO",
         accessor: "bank_name",
         align: "left",
-        Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
+        Cell: ({ row }) => <div><MDTypography fontSize={13}>{row.original.bank_name}</MDTypography><MDTypography fontSize={13}>{row.original.account_number_bank}</MDTypography></div>,
       },
       {
         Header: "STATUS",
@@ -68,7 +74,7 @@ export default function useData() {
           <Chip
             size="small"
             label={value.toLowerCase()}
-            color={value === "COMPLETED" ? "success" : undefined}
+            color={value === "COMPLETED" ? "success" : "warning"}
             sx={{ color: value ? "#fff" : "inherit" }}
           />
         ),
