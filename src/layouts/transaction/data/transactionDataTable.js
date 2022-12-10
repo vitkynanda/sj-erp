@@ -8,7 +8,6 @@ import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 export default function useData() {
   const { updateTransaction, players, setOpenModal } = useGlobalStore();
-
   return {
     columns: [
       {
@@ -56,15 +55,29 @@ export default function useData() {
         Header: "LAST BALANCE BANK",
         accessor: "last_balance_bank",
         align: "left",
-        Cell: ({row}) => (
-          <MDTypography fontSize={13}>{currencyFormat("ID", row.original.type_transaction === "DEPOSIT" ? row.original.last_balance_bank + row.original.ammount : row.original.type_transaction === "WITHDRAW" ? row.original.last_balance_bank - row.original.ammount : row.original.last_balance_bank)}</MDTypography>
+        Cell: ({ row }) => (
+          <MDTypography fontSize={13}>
+            {currencyFormat(
+              "ID",
+              row.original.type_transaction === "DEPOSIT"
+                ? row.original.last_balance_bank + row.original.ammount
+                : row.original.type_transaction === "WITHDRAW"
+                ? row.original.last_balance_bank - row.original.ammount
+                : row.original.last_balance_bank
+            )}
+          </MDTypography>
         ),
       },
       {
         Header: "TRANSACTION TO",
         accessor: "bank_name",
         align: "left",
-        Cell: ({ row }) => <div><MDTypography fontSize={13}>{row.original.bank_name}</MDTypography><MDTypography fontSize={13}>{row.original.account_number_bank}</MDTypography></div>,
+        Cell: ({ row }) => (
+          <div>
+            <MDTypography fontSize={13}>{row.original.bank_name}</MDTypography>
+            <MDTypography fontSize={13}>{row.original.account_number_bank}</MDTypography>
+          </div>
+        ),
       },
       {
         Header: "STATUS",
@@ -96,6 +109,7 @@ export default function useData() {
         accessor: "action",
         align: "center",
         Cell: ({ row }) => {
+          const banks = players.find((pl) => pl.player_id === row.original.player_id);
           return (
             <Stack>
               <Tooltip title="Update Transaction Status">
@@ -119,12 +133,12 @@ export default function useData() {
                         optionFieldList: [
                           {
                             name: "bank_player_id",
-                            value: players
-                              .find((pl) => pl.player_id === row.original.player_id)
-                              .bank_player.map((b) => ({
-                                key: b.bank_name + " - " + b.account_number,
-                                value: b.bank_player_id,
-                              })),
+                            value: banks
+                              ? banks.bank_player.map((b) => ({
+                                  key: b.bank_name + " - " + b.account_number,
+                                  value: b.bank_player_id,
+                                }))
+                              : [],
                           },
                         ],
                       })

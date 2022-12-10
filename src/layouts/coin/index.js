@@ -22,8 +22,8 @@ function Coins() {
   const { coins: rows, getCoins } = useGlobalStore();
 
   useEffect(() => {
-    getCoins();
-  }, [getCoins]);
+    if (rows.length === 0) getCoins();
+  }, [getCoins, rows.length]);
 
   return (
     <>

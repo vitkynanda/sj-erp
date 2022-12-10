@@ -1,4 +1,4 @@
-import { Divider, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import { CircularProgress, Divider, Table, TableBody, TableCell, TableRow } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDModal from "components/MDModal";
@@ -109,7 +109,15 @@ const ModalMutation = () => {
           </MDBox>
         </MDBox>
         {loading ? (
-          <MDTypography sx={{ fontSize: 13, textAlign: "center", mt: 1 }}>Loading ...</MDTypography>
+          <MDBox
+            sx={(theme) => ({
+              width: 1000,
+              textAlign: "center",
+              [theme.breakpoints.down("md")]: { width: "100%" },
+            })}
+          >
+            <CircularProgress color="info" />
+          </MDBox>
         ) : mutations.length > 0 ? (
           <MDBox
             sx={(theme) => ({
@@ -147,7 +155,11 @@ const ModalMutation = () => {
                         key !== "mutation_bank_id" &&
                         key !== "bank_id" && (
                           <TableCell key={val}>
-                            <MDTypography fontSize={12}>{key === "ammount" || key === "last_balance" ? currencyFormat("ID", val) : val}</MDTypography>
+                            <MDTypography fontSize={12}>
+                              {key === "ammount" || key === "last_balance"
+                                ? currencyFormat("ID", val)
+                                : val}
+                            </MDTypography>
                           </TableCell>
                         )
                       );

@@ -18,6 +18,8 @@ import { transferBankAmount } from "services/api/bank";
 import { updateTransaction } from "services/api/transaction";
 import { changePassword } from "services/api/users";
 import { getMutations } from "services/api/bank";
+import { getBonuses } from "services/api/bonus";
+import { addBonus } from "services/api/bonus";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -27,15 +29,15 @@ const initialState = {
   banks: [],
   coins: [],
   logs: [],
+  bonuses: [],
   players: [],
   transactions: [],
   transactionsType: [],
-  filteredTransactions: [],
   mutations: [],
-  filterVal: "Default",
   dashboards: {},
   totalTransactionsData: 0,
   openMutation: false,
+  filterVal: "All",
   modal: {
     open: false,
     handler: () => {},
@@ -48,7 +50,7 @@ const initialState = {
   },
   date: JSON.parse(localStorage.getItem("date")) || { start: "", end: "" },
   selectedData: {},
-  defaulParamsTransaction: {
+  defaulParams: {
     limit: 10,
     offset: 0,
   },
@@ -58,22 +60,24 @@ export const useGlobalStore = create((set, get) => ({
   ...initialState,
 
   // synchronus reducers
-  setFilteredTransactions: (payload) => set({ filteredTransactions: payload }),
   setUserLoggedIn: (payload) => set({ userLoggedIn: payload }),
   setUsers: (payload) => set({ users: payload }),
   setDahsboards: (payload) => set({ dashboards: payload }),
   setCoins: (payload) => set({ coins: payload }),
   setRoles: (payload) => set({ roles: payload }),
   setSelectedData: (payload) => set({ selectedData: payload }),
-  setFilterVal: (payload) => set({ filterVal: payload }),
   setMutations: (payload) => set({ mutations: payload }),
   setOpenMutation: (payload) => set({ openMutation: payload }),
+  setBonuses: (payload) => set({ bonuses: payload }),
+  setFilterVal: (payload) => set({ filterVal: payload }),
+  setParams: (payload) => set({ defaulParams: { ...payload } }),
   setOpenModal: (payload) =>
     set({
       modal: {
         ...payload,
       },
     }),
+
   setDate: (payload) => {
     localStorage.setItem("date", JSON.stringify(payload));
     set({ date: payload });
@@ -81,13 +85,17 @@ export const useGlobalStore = create((set, get) => ({
 
   filterTransactions: async () => {
     let paramsVal = {};
-    set({ filterVal: "Default" });
     if (get().date.start) paramsVal["dateFrom"] = get().date.start;
     if (get().date.end) paramsVal["dateTo"] = get().date.end;
     await get().getTransactions(paramsVal);
   },
 
-  setParams: (payload) => set({ defaulParamsTransaction: { ...payload } }),
+  filterBonuses: async () => {
+    let paramsVal = {};
+    if (get().date.start) paramsVal["dateFrom"] = get().date.start;
+    if (get().date.end) paramsVal["dateTo"] = get().date.end;
+    await get().getBonuses(paramsVal);
+  },
 
   logoutHandler: (cb) => {
     set({ ...initialState });
@@ -221,7 +229,11 @@ export const useGlobalStore = create((set, get) => ({
 
   transferAmount: async (payload) => {
     set({ loading: { status: true, message: "Transfer Bank Amount..." } });
-    const res = await transferBankAmount({ ...payload, balance: Number(payload.balance), admin_fee: Number(payload.admin_fee) });
+    const res = await transferBankAmount({
+      ...payload,
+      balance: Number(payload.balance),
+      admin_fee: Number(payload.admin_fee),
+    });
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Transfer Bank Amount");
@@ -253,7 +265,7 @@ export const useGlobalStore = create((set, get) => ({
 
   getTransactions: async (paramsVal) => {
     const params = {
-      ...get().defaulParamsTransaction,
+      ...get().defaulParams,
       ...paramsVal,
     };
     if (!params["dateTo"] || !params["dateFrom"] || !localStorage.getItem("date")) {
@@ -262,10 +274,11 @@ export const useGlobalStore = create((set, get) => ({
     }
     set({ loading: { status: true, message: "Getting Transactions Data..." } });
     const res = await getAllTransactions(new URLSearchParams(params).toString());
+    if (res.statusCode === 404) set({ transactions: [], totalTransactionsData: 0 });
     if (successStatus.includes(res.statusCode))
       set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
-
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+
     set({ loading: { status: false, message: "" } });
   },
 
@@ -309,7 +322,7 @@ export const useGlobalStore = create((set, get) => ({
 
   getLogs: async (paramsVal) => {
     const params = {
-      ...get().defaulParamsTransaction,
+      ...get().defaulParams,
       ...paramsVal,
     };
     set({ loading: { status: true, message: "Getting Log Data..." } });
@@ -364,6 +377,35 @@ export const useGlobalStore = create((set, get) => ({
       set({ modal: { open: false } });
       toast.success("Bank Account added successfully");
       await get().getPlayers();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  getBonuses: async (paramsVal) => {
+    const params = {
+      ...get().defaulParams,
+      ...paramsVal,
+    };
+    if (!params["dateTo"] || !params["dateFrom"] || !localStorage.getItem("date")) {
+      params["dateFrom"] = get().date.start || "2022-11-01";
+      params["dateTo"] = get().date.end || formatDate(new Date());
+    }
+    set({ loading: { status: true, message: "Getting Bonuses Data..." } });
+    const res = await getBonuses(new URLSearchParams(params).toString());
+    if (res.statusCode === 404) set({ bonuses: [], totalBonusData: 0 });
+    if (successStatus.includes(res.statusCode)) set({ bonuses: res.data.bonus_list });
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  addBonus: async (payload) => {
+    set({ loading: { status: true, message: "Adding New Bonus..." } });
+    const res = await addBonus({ ...payload, ammount: Number(payload.ammount) });
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("New Bonus added successfully");
+      await get().getBonuses();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });

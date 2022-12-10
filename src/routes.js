@@ -29,6 +29,7 @@ import Banks from "layouts/bank";
 import Coins from "layouts/coin";
 import Transactions from "layouts/transaction";
 import Players from "layouts/players";
+import Bonuses from "layouts/bonus";
 
 const routes = [
   {
@@ -46,6 +47,14 @@ const routes = [
     icon: <Icon fontSize="small">receipt_long</Icon>,
     route: "/transaction",
     component: <Transactions />,
+  },
+  {
+    type: "collapse",
+    name: "Bonus",
+    key: "bonus",
+    icon: <Icon fontSize="small">payments</Icon>,
+    route: "/bonus",
+    component: <Bonuses />,
   },
   {
     type: "collapse",

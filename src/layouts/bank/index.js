@@ -24,11 +24,18 @@ import ModalMutation from "examples/ModalMutation";
 
 function Banks() {
   const { columns } = useData();
-  const { banks: rows, getBanks, addBank, setOpenModal, setOpenMutation, userLoggedIn } = useGlobalStore();
+  const {
+    banks: rows,
+    getBanks,
+    addBank,
+    setOpenModal,
+    setOpenMutation,
+    userLoggedIn,
+  } = useGlobalStore();
 
   useEffect(() => {
-    getBanks();
-  }, [getBanks]);
+    if (rows.length === 0) getBanks();
+  }, [getBanks, rows.length]);
 
   return (
     <>
@@ -63,21 +70,23 @@ function Banks() {
                     >
                       Mutation
                     </MDButton>
-                    {userLoggedIn.role === "ADMIN" && <MDButton
-                      onClick={() =>
-                        setOpenModal({
-                          open: true,
-                          form: BasicForm,
-                          title: "Create",
-                          handler: addBank,
-                          input: createBank,
-                        })
-                      }
-                      variant="gradient"
-                      color="secondary"
-                    >
-                      Create
-                    </MDButton>}
+                    {userLoggedIn.role === "ADMIN" && (
+                      <MDButton
+                        onClick={() =>
+                          setOpenModal({
+                            open: true,
+                            form: BasicForm,
+                            title: "Create",
+                            handler: addBank,
+                            input: createBank,
+                          })
+                        }
+                        variant="gradient"
+                        color="secondary"
+                      >
+                        Create
+                      </MDButton>
+                    )}
                   </Stack>
                 </MDBox>
                 <MDBox pt={3}>

@@ -15,19 +15,23 @@ import DataTable from "examples/Tables/DataTable";
 import { useGlobalStore } from "store";
 import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
-import useData from "./data/transactionDataTable";
+import useData from "./data/bonusDataTable";
 
 import FilterTableRow from "examples/Actions/FilterTableRow";
+import MDButton from "components/MDButton";
+import { Stack } from "@mui/material";
+import CustomForm from "examples/Forms/CustomForm";
 
-function Transactions() {
+function Bonuses() {
   const { columns } = useData();
   const {
-    transactions: rows = [],
-    getTransactions,
+    bonuses: rows = [],
+    getBonuses,
     players,
     getPlayers,
-    filterTransactions,
-    totalTransactionsData,
+    totalBonusesData,
+    addBonus,
+    setOpenModal,
     setFilterVal,
   } = useGlobalStore();
 
@@ -36,11 +40,11 @@ function Transactions() {
     const dateStorage = JSON.parse(localStorage.getItem("date"));
     if (dateStorage?.start) params["dateFrom"] = dateStorage.start;
     if (dateStorage?.end) params["dateTo"] = dateStorage.end;
-    if (rows.length === 0) getTransactions(params);
+    if (rows.length === 0) getBonuses(params);
     if (players.length === 0) getPlayers("only");
     setFilterVal("All");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [getTransactions, getPlayers]);
+  }, [getBonuses, getPlayers]);
 
   return (
     <>
@@ -64,12 +68,42 @@ function Transactions() {
                   alignItems="center"
                 >
                   <MDTypography variant="h6" color="white">
-                    Transactions Table
+                    Bonus Table
                   </MDTypography>
-                  <FilterTableRow
-                    handler={getTransactions}
-                    lov={["All", "Deposit", "Withdraw", "Bonus"]}
-                  />
+                  <Stack spacing={1} direction="row">
+                    <FilterTableRow handler={getBonuses} lov={["All", "Rolling", "Cashback"]} />
+                    <MDButton
+                      onClick={() =>
+                        setOpenModal({
+                          open: true,
+                          form: CustomForm,
+                          title: "Create",
+                          handler: addBonus,
+                          input: { type: "", ammount: "" },
+                          optionFields: ["type"],
+                          optionFieldList: [
+                            {
+                              name: "type",
+                              value: [
+                                {
+                                  key: "ROLLING",
+                                  value: "ROLLING",
+                                },
+                                {
+                                  key: "CASHBACK",
+                                  value: "CASHBACK",
+                                },
+                              ],
+                            },
+                          ],
+                        })
+                      }
+                      variant="gradient"
+                      color="secondary"
+                    >
+                      ADD BONUS
+                    </MDButton>
+                  </Stack>
                 </MDBox>
                 <MDBox pt={3}>
                   <DataTable
@@ -83,9 +117,8 @@ function Transactions() {
                     withLimit={true}
                     withExport={true}
                     canSearch={true}
-                    filterFn={filterTransactions}
-                    refetchFn={getTransactions}
-                    totalData={totalTransactionsData}
+                    refetchFn={getBonuses}
+                    totalData={totalBonusesData}
                   />
                 </MDBox>
               </Card>
@@ -97,4 +130,4 @@ function Transactions() {
   );
 }
 
-export default Transactions;
+export default Bonuses;

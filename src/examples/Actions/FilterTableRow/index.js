@@ -1,31 +1,22 @@
 import { Menu, MenuItem, Stack } from "@mui/material";
 import MDBox from "components/MDBox";
-import { useEffect, useState } from "react";
-import { useGlobalStore } from "store";
+import { useState } from "react";
 import ThemedIconButton from "components/UI/ThemedIconButton";
-
 import FilterListIcon from "@mui/icons-material/FilterList";
 import MDTypography from "components/MDTypography";
+import { useGlobalStore } from "store";
 
-const FilterTransaction = () => {
+const FilterTableRow = ({ lov = [], handler }) => {
   const [menu, setMenu] = useState(null);
+  // const [filterVal, setFilterVal] = useState("All");
+  const { filterVal, setFilterVal } = useGlobalStore();
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
-  const { transactions, setFilteredTransactions, filterVal, setFilterVal } = useGlobalStore();
 
   const closeMenu = (type) => {
     setMenu(null);
-
-    if (type === "Default") return setFilteredTransactions(transactions);
     setFilterVal(type);
-    setFilteredTransactions(
-      transactions.filter((trx) => trx.type_transaction === type.toUpperCase())
-    );
+    handler({ type: type === "All" ? "" : type.toUpperCase() });
   };
-
-  useEffect(() => {
-    setFilterVal("Default");
-    setFilteredTransactions(transactions);
-  }, [setFilteredTransactions, transactions, setFilterVal]);
 
   const renderMenu = (
     <Menu
@@ -42,10 +33,11 @@ const FilterTransaction = () => {
       open={Boolean(menu)}
       onClose={() => setMenu(null)}
     >
-      <MenuItem onClick={() => closeMenu("Default")}>Default</MenuItem>
-      <MenuItem onClick={() => closeMenu("Deposit")}>Deposit</MenuItem>
-      <MenuItem onClick={() => closeMenu("Withdraw")}>Withdraw</MenuItem>
-      <MenuItem onClick={() => closeMenu("Bonus")}>Bonus</MenuItem>
+      {lov.map((l) => (
+        <MenuItem key={l} onClick={() => closeMenu(l)}>
+          {l}
+        </MenuItem>
+      ))}
     </Menu>
   );
   return (
@@ -60,7 +52,7 @@ const FilterTransaction = () => {
             },
           })}
         >
-          Filtered By {filterVal}
+          {filterVal === "All" ? "" : "Filtered By " + filterVal}
         </MDTypography>
         <ThemedIconButton sx={{ color: "#fff" }} onClick={!menu ? openMenu : () => {}}>
           <FilterListIcon />
@@ -72,4 +64,4 @@ const FilterTransaction = () => {
   );
 };
 
-export default FilterTransaction;
+export default FilterTableRow;

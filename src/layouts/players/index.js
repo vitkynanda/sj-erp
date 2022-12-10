@@ -25,8 +25,8 @@ function Players() {
   const { players: rows, getPlayers, addPlayer, setOpenModal } = useGlobalStore();
 
   useEffect(() => {
-    getPlayers();
-  }, [getPlayers]);
+    if (rows.length === 0) getPlayers();
+  }, [getPlayers, rows.length]);
 
   return (
     <>

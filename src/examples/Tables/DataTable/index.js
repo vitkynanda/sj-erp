@@ -42,6 +42,8 @@ function DataTable({
   withLimit = false,
   withPagination = false,
   withExport = false,
+  refetchFn = () => {},
+  totalData = 0,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
@@ -64,9 +66,9 @@ function DataTable({
     gotoPage,
     nextPage,
     previousPage,
+    headerGroups,
     getTableProps,
     getTableBodyProps,
-    headerGroups,
     prepareRow,
     rows,
     page,
@@ -76,11 +78,9 @@ function DataTable({
   } = tableInstance;
 
   const {
-    filterTransactions,
-    getTransactions,
     setParams,
-    totalTransactionsData,
-    defaulParamsTransaction: { limit, offset },
+    setFilterVal,
+    defaulParams: { limit, offset },
   } = useGlobalStore();
 
   // Set the default value for the entries per page when component mounts
@@ -100,7 +100,6 @@ function DataTable({
   // A function that sets the sorted value for the table
   const setSortedValue = (column) => {
     let sortedValue;
-
     if (isSorted && column.isSorted) {
       sortedValue = column.isSortedDesc ? "desc" : "asce";
     } else if (isSorted) {
@@ -108,7 +107,6 @@ function DataTable({
     } else {
       sortedValue = false;
     }
-
     return sortedValue;
   };
 
@@ -144,7 +142,7 @@ function DataTable({
   }
 
   const currentPage = Math.round(offset / limit + 1);
-  const nextPageCustom = totalTransactionsData > offset && limit === rows.length;
+  const nextPageCustom = totalData > offset && limit === rows.length;
   const prevPageCustom = currentPage > 1;
 
   return (
@@ -174,8 +172,9 @@ function DataTable({
               onChange={(_, newValue) => {
                 setEntriesPerPage(parseInt(newValue, 10));
                 if (withLimit) {
+                  setFilterVal("All");
                   setParams({ limit: Number(newValue), offset: 0 });
-                  getTransactions();
+                  refetchFn();
                 }
               }}
               size="small"
@@ -208,8 +207,9 @@ function DataTable({
                   onChange={(_, newValue) => {
                     setEntriesPerPage(parseInt(newValue, 10));
                     if (withLimit) {
+                      setFilterVal("All");
                       setParams({ limit: Number(newValue), offset: 0 });
-                      getTransactions();
+                      refetchFn();
                     }
                   }}
                   size="small"
@@ -227,7 +227,14 @@ function DataTable({
                 <>
                   <CustomDatePicker label="Start" type="start" width={150} />
                   <CustomDatePicker label="End" type="end" width={150} />
-                  <MDButton onClick={() => filterTransactions()} color="info" variant="gradient">
+                  <MDButton
+                    onClick={() => {
+                      setFilterVal("All");
+                      refetchFn();
+                    }}
+                    color="info"
+                    variant="gradient"
+                  >
                     Filter
                   </MDButton>
                 </>
@@ -332,7 +339,7 @@ function DataTable({
                 item
                 onClick={() => {
                   setParams({ limit, offset: offset - limit });
-                  getTransactions();
+                  refetchFn();
                 }}
               >
                 <Icon sx={{ fontWeight: "bold" }}>chevron_left</Icon>
@@ -344,7 +351,7 @@ function DataTable({
                 item
                 onClick={() => {
                   setParams({ limit, offset: offset + limit });
-                  getTransactions();
+                  refetchFn();
                 }}
               >
                 <Icon sx={{ fontWeight: "bold" }}>chevron_right</Icon>

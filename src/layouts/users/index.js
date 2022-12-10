@@ -26,8 +26,8 @@ function Users() {
   const { users: rows, getUsers, addUser, setOpenModal, roles } = useGlobalStore();
 
   useEffect(() => {
-    getUsers();
-  }, [getUsers]);
+    if (rows.length === 0) getUsers();
+  }, [getUsers, rows.length]);
 
   return (
     <>
