@@ -4,10 +4,11 @@ import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SelectOption from "examples/SelectOption";
+import { useGlobalStore } from "store";
 
-const T = ({
+const TrxForm = ({
   title,
   input = {},
   submitHandler,
@@ -16,6 +17,8 @@ const T = ({
   notRenderFields = [],
 }) => {
   const [values, setValues] = useState(input);
+
+  const { players } = useGlobalStore();
 
   const handlerChange = (e) => {
     const { name, value } = e.target;
@@ -28,10 +31,12 @@ const T = ({
     setValues({ ...values, ...newVal, [name]: value });
   };
 
-  const submitWithValidation = () => {
-    const isValidInput = validateInputField(values);
-    if (isValidInput) submitHandler(values);
-  };
+  const submitWithValidation = () => validateInputField(values) && submitHandler(values);
+
+  const findBank = useMemo(
+    () => players.find((p) => p.player_id === values.player_id),
+    [players, values.player_id]
+  );
 
   return (
     <MDBox
@@ -52,13 +57,23 @@ const T = ({
             <SelectOption
               key={key}
               label={key}
-              options={optionFieldList.find((opt) => opt.name === key).value}
+              options={
+                key === "bank_player_id"
+                  ? findBank
+                    ? findBank.bank_player.map((b) => ({
+                        key: b.bank_name + " - " + b.account_number,
+                        value: b.bank_player_id,
+                      }))
+                    : []
+                  : optionFieldList.find((opt) => opt.name === key).value
+              }
               onSelect={handlerChange}
               val={val}
               readOnly={
-                key === "status" &&
-                val === "COMPLETED" &&
-                values.type_id === "36ceafe0-609b-4b1e-93e2-382817b949cc"
+                (key === "status" &&
+                  val === "COMPLETED" &&
+                  values.type_id === "36ceafe0-609b-4b1e-93e2-382817b949cc") ||
+                (key === "bank_player_id" && values.player_id === "")
               }
             />
           ) : (
@@ -87,4 +102,4 @@ const T = ({
   );
 };
 
-export default T;
+export default TrxForm;

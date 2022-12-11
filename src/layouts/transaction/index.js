@@ -18,6 +18,12 @@ import ModalForm from "examples/ModalForm";
 import useData from "./data/transactionDataTable";
 
 import FilterTableRow from "examples/Actions/FilterTableRow";
+import { createTransaction } from "utils/input";
+import { Stack } from "@mui/material";
+import MDButton from "components/MDButton";
+
+import TrxForm from "examples/Forms/TrxForm";
+import CustomRow from "./components/CustomRow";
 
 function Transactions() {
   const { columns } = useData();
@@ -29,6 +35,12 @@ function Transactions() {
     filterTransactions,
     totalTransactionsData,
     setFilterVal,
+    addTransaction,
+    transactionsType,
+    banks,
+    setOpenModal,
+    getBanks,
+    getTransactionType,
   } = useGlobalStore();
 
   useEffect(() => {
@@ -37,6 +49,8 @@ function Transactions() {
     if (dateStorage?.start) params["dateFrom"] = dateStorage.start;
     if (dateStorage?.end) params["dateTo"] = dateStorage.end;
     if (rows.length === 0) getTransactions(params);
+    if (banks.length === 0) getBanks();
+    if (transactionsType.length === 0) getTransactionType();
     if (players.length === 0) getPlayers("only");
     setFilterVal("All");
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,10 +80,71 @@ function Transactions() {
                   <MDTypography variant="h6" color="white">
                     Transactions Table
                   </MDTypography>
-                  <FilterTableRow
-                    handler={getTransactions}
-                    lov={["All", "Deposit", "Withdraw", "Bonus"]}
-                  />
+                  <Stack direction="row" spacing={1}>
+                    <FilterTableRow
+                      handler={getTransactions}
+                      lov={["All", "Deposit", "Withdraw", "Bonus"]}
+                    />
+                    <MDButton
+                      variant="gradient"
+                      color="secondary"
+                      onClick={() => {
+                        setOpenModal({
+                          open: true,
+                          form: TrxForm,
+                          title: "CREATE TRANSACTION",
+                          handler: addTransaction,
+                          input: createTransaction,
+                          notRenderFields: ["account_number"],
+                          optionFields: [
+                            "player_id",
+                            "bank_player_id",
+                            "bank_id",
+                            "type_id",
+                            "status",
+                          ],
+                          optionFieldList: [
+                            {
+                              name: "player_id",
+                              value: players.map((p) => ({
+                                key: p.player_name + " - " + p.player_id,
+                                value: p.player_id,
+                              })),
+                            },
+                            {
+                              name: "bank_player_id",
+                              value: [],
+                            },
+                            {
+                              name: "bank_id",
+                              value: banks
+                                .filter((b) => b.active)
+                                .map((b) => ({
+                                  key: b.bank_name + " - " + b.account_number,
+                                  value: b.bank_id,
+                                })),
+                            },
+                            {
+                              name: "type_id",
+                              value: transactionsType.map((t) => ({
+                                key: t.type_transaction,
+                                value: t.type_id,
+                              })),
+                            },
+                            {
+                              name: "status",
+                              value: [
+                                { key: "PENDING", value: "PENDING" },
+                                { key: "COMPLETED", value: "COMPLETED" },
+                              ],
+                            },
+                          ],
+                        });
+                      }}
+                    >
+                      Create
+                    </MDButton>
+                  </Stack>
                 </MDBox>
                 <MDBox pt={3}>
                   <DataTable
@@ -86,6 +161,7 @@ function Transactions() {
                     filterFn={filterTransactions}
                     refetchFn={getTransactions}
                     totalData={totalTransactionsData}
+                    CustomRow={CustomRow}
                   />
                 </MDBox>
               </Card>

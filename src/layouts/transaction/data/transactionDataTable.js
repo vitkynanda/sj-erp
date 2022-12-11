@@ -6,8 +6,10 @@ import { formatDateID } from "utils";
 import { currencyFormat } from "utils";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import ThemedIconButton from "components/UI/ThemedIconButton";
+import TrxForm from "examples/Forms/TrxForm";
 export default function useData() {
   const { updateTransaction, players, setOpenModal } = useGlobalStore();
+
   return {
     columns: [
       {
@@ -117,31 +119,53 @@ export default function useData() {
                   <ThemedIconButton
                     disabled={row?.original?.status === "COMPLETED"}
                     onClick={() =>
-                      setOpenModal({
-                        open: true,
-                        form: CustomForm,
-                        title: "COMPLETED TRANSACTION",
-                        handler: updateTransaction,
-                        input: {
-                          bank_player_id: "",
-                          status: "COMPLETED",
-                          player_id: row.original.player_id,
-                          id: row.original.transaction_id,
-                        },
-                        notRenderFields: ["player_id", "status", "id"],
-                        optionFields: ["bank_player_id"],
-                        optionFieldList: [
-                          {
-                            name: "bank_player_id",
-                            value: banks
-                              ? banks.bank_player.map((b) => ({
+                      row.original.player_id
+                        ? setOpenModal({
+                            open: true,
+                            form: CustomForm,
+                            title: "COMPLETED TRANSACTION",
+                            handler: updateTransaction,
+                            input: {
+                              bank_player_id: "",
+                              status: "COMPLETED",
+                              player_id: row.original.player_id,
+                              id: row.original.transaction_id,
+                            },
+                            notRenderFields: ["player_id", "status", "id"],
+                            optionFields: ["bank_player_id"],
+                            optionFieldList: [
+                              {
+                                name: "bank_player_id",
+                                value: banks.bank_player.map((b) => ({
                                   key: b.bank_name + " - " + b.account_number,
                                   value: b.bank_player_id,
-                                }))
-                              : [],
-                          },
-                        ],
-                      })
+                                })),
+                              },
+                            ],
+                          })
+                        : setOpenModal({
+                            open: true,
+                            form: TrxForm,
+                            title: "COMPLETED TRANSACTION",
+                            handler: updateTransaction,
+                            input: {
+                              player_id: row.original.player_id || "",
+                              bank_player_id: "",
+                              status: "COMPLETED",
+                              id: row.original.transaction_id,
+                            },
+                            notRenderFields: ["status", "id"],
+                            optionFields: ["player_id", "bank_player_id"],
+                            optionFieldList: [
+                              {
+                                name: "player_id",
+                                value: players.map((p) => ({
+                                  key: p.player_name + " - " + p.player_id,
+                                  value: p.player_id,
+                                })),
+                              },
+                            ],
+                          })
                     }
                   >
                     <CreditScoreIcon />

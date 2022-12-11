@@ -33,8 +33,8 @@ export default function SelectOption({
         onChange={handleChange}
         label={formatKey(label)}
       >
-        {options.map((opt) => (
-          <MenuItem key={opt.key} value={opt.value}>
+        {options.map((opt, idx) => (
+          <MenuItem key={idx} value={opt.value}>
             {opt.key}
           </MenuItem>
         ))}
