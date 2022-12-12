@@ -7,6 +7,8 @@ import { validateInputField, inputType, formatKey } from "utils";
 import { useMemo, useState } from "react";
 import SelectOption from "examples/SelectOption";
 import { useGlobalStore } from "store";
+import FormattedInput from "components/UI/FormattedInput";
+import { currencyFormatList } from "utils";
 
 const TrxForm = ({
   title,
@@ -75,6 +77,20 @@ const TrxForm = ({
                   values.type_id === "36ceafe0-609b-4b1e-93e2-382817b949cc") ||
                 (key === "bank_player_id" && values.player_id === "")
               }
+            />
+          ) : currencyFormatList.includes(key) ? (
+            <FormattedInput
+              variant="outlined"
+              sx={{ my: 1 }}
+              placeholder={formatKey(key)}
+              label={formatKey(key)}
+              key={key}
+              name={key}
+              value={val}
+              type={inputType(key)}
+              size="small"
+              fullWidth
+              onChange={handlerChange}
             />
           ) : (
             <MDInput

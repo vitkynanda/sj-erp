@@ -21,7 +21,7 @@ const ActionCoin = ({ row }) => {
               title: userLoggedIn.role !== "ADMIN" ? "Add Coin Balance" : "Update Coin",
               input: {
                 coin_id: row.original.coin_id,
-                balance: "",
+                ammount: "",
                 type: userLoggedIn.role !== "ADMIN" ? "PLUS" : "",
               },
               form: BasicForm,

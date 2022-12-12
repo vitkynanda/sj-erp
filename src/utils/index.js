@@ -135,11 +135,13 @@ const countTotalBalance = (coins) => coins.reduce((acc, curr) => acc + curr.bala
 const filterNonAdminRoutes = (routes) =>
   routes.filter((route) => nonAdminRoutes.includes(route.route));
 
-const nonAdminRoutes = ["/transaction", "/players","/bank", "/coin"];
+const nonAdminRoutes = ["/transaction", "/players", "/bank", "/coin"];
 
 const themeStorage = localStorage.getItem("themeStorage");
 
 const successStatus = [200, 201];
+
+const currencyFormatList = ["ammount", "balance", "admin_fee"];
 
 export {
   formatDate,
@@ -155,6 +157,7 @@ export {
   currencyFormat,
   themeStorage,
   successStatus,
+  currencyFormatList,
   exportExcel,
   filterNonAdminRoutes,
   countTotalBalance,

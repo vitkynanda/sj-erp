@@ -193,7 +193,7 @@ export const useGlobalStore = create((set, get) => ({
 
   addBank: async (payload) => {
     set({ loading: { status: true, message: "Adding New Bank..." } });
-    const res = await addNewBank({ ...payload, balance: Number(payload.balance) });
+    const res = await addNewBank({ ...payload, balance: Number(payload.ammount) });
     if (successStatus.includes(res.statusCode)) {
       toast.success("New Bank added successfully");
       await get().getBanks();
@@ -217,7 +217,7 @@ export const useGlobalStore = create((set, get) => ({
 
   updateBalanceBank: async (payload) => {
     set({ loading: { status: true, message: "Updating Balance Account..." } });
-    const res = await updateBalanceBank({ ...payload, balance: Number(payload.balance) });
+    const res = await updateBalanceBank({ ...payload, balance: Number(payload.ammount) });
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Balance Account updated successfully");
@@ -231,7 +231,7 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: true, message: "Transfer Bank Amount..." } });
     const res = await transferBankAmount({
       ...payload,
-      balance: Number(payload.balance),
+      balance: Number(payload.ammount),
       admin_fee: Number(payload.admin_fee),
     });
     if (successStatus.includes(res.statusCode)) {
@@ -253,7 +253,7 @@ export const useGlobalStore = create((set, get) => ({
 
   updateBalanceCoin: async (payload) => {
     set({ loading: { status: true, message: "Updating Balance Coin..." } });
-    const res = await updateBalanceCoin({ ...payload, balance: Number(payload.balance) });
+    const res = await updateBalanceCoin({ ...payload, balance: Number(payload.ammount) });
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Balance Coin updated successfully");

@@ -6,6 +6,8 @@ import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
 import SelectOption from "examples/SelectOption";
+import { currencyFormatList } from "utils";
+import FormattedInput from "components/UI/FormattedInput";
 
 const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderFields = [] }) => {
   const [values, setValues] = useState(input);
@@ -46,6 +48,20 @@ const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderF
                 { key: "MINUS", value: "MINUS" },
               ]}
               onSelect={handlerChange}
+            />
+          ) : currencyFormatList.includes(key) ? (
+            <FormattedInput
+              variant="outlined"
+              sx={{ my: 1 }}
+              placeholder={formatKey(key)}
+              label={formatKey(key)}
+              key={key}
+              name={key}
+              value={val}
+              type={inputType(key)}
+              size="small"
+              fullWidth
+              onChange={handlerChange}
             />
           ) : (
             <MDInput

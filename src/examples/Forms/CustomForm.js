@@ -6,6 +6,8 @@ import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
 import SelectOption from "examples/SelectOption";
+import { currencyFormatList } from "utils";
+import FormattedInput from "components/UI/FormattedInput";
 
 const CustomForm = ({
   title,
@@ -19,6 +21,7 @@ const CustomForm = ({
 
   const handlerChange = (e) => {
     const { name, value } = e.target;
+    console.log(name, value);
     setValues({ ...values, [name]: value });
   };
 
@@ -48,6 +51,20 @@ const CustomForm = ({
               label={key}
               options={optionFieldList.find((opt) => opt.name === key).value}
               onSelect={handlerChange}
+            />
+          ) : currencyFormatList.includes(key) ? (
+            <FormattedInput
+              variant="outlined"
+              sx={{ my: 1 }}
+              placeholder={formatKey(key)}
+              label={formatKey(key)}
+              key={key}
+              name={key}
+              value={val}
+              type={inputType(key)}
+              size="small"
+              fullWidth
+              onChange={handlerChange}
             />
           ) : (
             <MDInput

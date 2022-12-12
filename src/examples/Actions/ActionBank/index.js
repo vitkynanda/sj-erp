@@ -24,33 +24,32 @@ const ActionBank = ({ row }) => {
 
   const closeMenu = (type) => {
     setMenu(null);
-    if (type === "update"){
+    if (type === "update") {
       setOpenModal({
         open: true,
         title: "Update Bank",
         input: row.original,
         form: BasicForm,
         handler: updateBank,
-  
+
         notRenderFields: ["bank_id", "balance"],
       });
     }
 
-    if(type === "balance"){
+    if (type === "balance") {
       setOpenModal({
         open: true,
         title: userLoggedIn.role === "ADMIN" ? "Update Balance" : "Tambah Balance",
         form: BasicForm,
         input: {
           bank_id: row.original.bank_id,
-          balance: "",
+          ammount: "",
           type: userLoggedIn.role === "ADMIN" ? "" : "PLUS",
         },
         notRenderFields: userLoggedIn.role === "ADMIN" ? ["bank_id"] : ["bank_id", "type"],
         handler: updateBalanceBank,
       });
     }
-      
   };
 
   const transferAmount = () =>
@@ -60,8 +59,8 @@ const ActionBank = ({ row }) => {
       input: {
         from_bank_id: row.original.bank_id,
         to_bank_id: "",
-        balance: "",
-        admin_fee: ""
+        ammount: "",
+        admin_fee: "",
       },
       form: CustomForm,
       handler: ta,
@@ -99,11 +98,12 @@ const ActionBank = ({ row }) => {
         <EditIcon sx={{ mr: 1 }} />
         {userLoggedIn.role === "ADMIN" ? "Update Balance" : "Tambah Balance"}
       </MenuItem>
-      {userLoggedIn.role === "ADMIN" && <MenuItem onClick={() => closeMenu("update")}>
-        <EditIcon sx={{ mr: 1 }} />
-        Update Bank Data
-      </MenuItem>
-      }
+      {userLoggedIn.role === "ADMIN" && (
+        <MenuItem onClick={() => closeMenu("update")}>
+          <EditIcon sx={{ mr: 1 }} />
+          Update Bank Data
+        </MenuItem>
+      )}
       <MenuItem onClick={transferAmount}>
         <CurrencyExchangeIcon sx={{ mr: 1 }} />
         Transfer Amount

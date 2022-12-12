@@ -10,7 +10,7 @@ export const createBank = {
   account_name: "",
   category: "",
   account_number: "",
-  balance: "",
+  ammount: "",
   ibanking: "",
   code_access: "",
   pin: "",
@@ -20,7 +20,7 @@ export const createBank = {
 export const updateBalanceBank = {
   bank_id: "",
   type: "",
-  balance: 100000,
+  ammount: "",
 };
 
 export const updateBankData = {

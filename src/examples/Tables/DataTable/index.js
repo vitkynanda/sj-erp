@@ -25,7 +25,7 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 import CustomDatePicker from "examples/DatePicker";
 import MDButton from "components/MDButton";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { Icon, Stack, TableCell } from "@mui/material";
+import { Icon, Stack } from "@mui/material";
 import { useGlobalStore } from "store";
 import { exportExcel } from "utils";
 import ThemedIconButton from "components/UI/ThemedIconButton";
