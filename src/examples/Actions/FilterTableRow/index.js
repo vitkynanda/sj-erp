@@ -8,7 +8,6 @@ import { useGlobalStore } from "store";
 
 const FilterTableRow = ({ lov = [], handler }) => {
   const [menu, setMenu] = useState(null);
-  // const [filterVal, setFilterVal] = useState("All");
   const { filterVal, setFilterVal } = useGlobalStore();
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
 
@@ -52,7 +51,7 @@ const FilterTableRow = ({ lov = [], handler }) => {
             },
           })}
         >
-          {filterVal === "All" ? "" : "Filtered By " + filterVal}
+          {filterVal === "All" ? "Filter Data" : "Filtered By " + filterVal}
         </MDTypography>
         <ThemedIconButton sx={{ color: "#fff" }} onClick={!menu ? openMenu : () => {}}>
           <FilterListIcon />

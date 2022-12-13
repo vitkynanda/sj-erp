@@ -194,7 +194,7 @@ function Sidenav({ color, brand, brandName, routes, ...rest }) {
           }}
         >
           <Icon sx={{ color: countTotalBalance < 0 ? "red" : "green", fontSize: 18 }}>paid</Icon>
-          <MDTypography sx={{ color: "inherit", fontSize: 18, fontWeight: "bold" }}>
+          <MDTypography sx={{ color: "inherit", fontSize: 16, fontWeight: "bold" }}>
             {loadBalance ? <Skeleton width={80} /> : currencyFormat("ID", countTotalBalance(coins))}
           </MDTypography>
         </Stack>

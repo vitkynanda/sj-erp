@@ -59,7 +59,8 @@ function Dashboard() {
                 color="dark"
                 icon="paid"
                 title="COIN GAME"
-                count={currencyFormat("ID", dashboards?.coin?.balance) || "-"}
+                count={1}
+                amount={currencyFormat("ID", dashboards?.coin?.balance) || "-"}
               />
             </MDBox>
           </Grid>
@@ -74,6 +75,10 @@ function Dashboard() {
                         ?.total || 0
                     : 0
                 }
+                amount={currencyFormat(
+                  "ID",
+                  dashboards?.top_player_deposit?.reduce((acc, curr) => acc + curr.total_deposit, 0)
+                )}
               />
             </MDBox>
           </Grid>
@@ -89,6 +94,13 @@ function Dashboard() {
                         ?.total || 0
                     : 0
                 }
+                amount={currencyFormat(
+                  "ID",
+                  dashboards?.top_player_withdraw?.reduce(
+                    (acc, curr) => acc + curr.total_withdraw,
+                    0
+                  )
+                )}
               />
             </MDBox>
           </Grid>

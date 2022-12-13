@@ -83,7 +83,7 @@ function Transactions() {
                   <Stack direction="row" spacing={1}>
                     <FilterTableRow
                       handler={getTransactions}
-                      lov={["All", "Deposit", "Withdraw", "Bonus"]}
+                      lov={["All", "Deposit", "Withdraw", "Bonus", "Completed", "Pending"]}
                     />
                     <MDButton
                       variant="gradient"
@@ -120,7 +120,7 @@ function Transactions() {
                               value: banks
                                 .filter((b) => b.active)
                                 .map((b) => ({
-                                  key: b.bank_name + " - " + b.account_number,
+                                  key: `${b.bank_name} - ${b.account_number} ${b.account_name}`,
                                   value: b.bank_id,
                                 })),
                             },

@@ -12,7 +12,7 @@ import MDTypography from "components/MDTypography";
 import { useGlobalStore } from "store";
 import { Skeleton } from "@mui/material";
 
-function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
+function ComplexStatisticsCard({ color, title, count, icon, amount }) {
   const { loading } = useGlobalStore();
   return (
     <Card>
@@ -42,18 +42,8 @@ function ComplexStatisticsCard({ color, title, count, percentage, icon }) {
         </MDBox>
       </MDBox>
       <Divider />
-      <MDBox pb={2} px={2}>
-        <MDTypography component="p" variant="button" color="text" display="flex">
-          <MDTypography
-            component="span"
-            variant="button"
-            fontWeight="bold"
-            color={percentage.color}
-          >
-            {percentage.amount || ""}
-          </MDTypography>
-          &nbsp;{percentage.label || ""}
-        </MDTypography>
+      <MDBox pb={2} px={2} textAlign="right">
+        <MDTypography variant="h6">{loading?.status ? <Skeleton /> : amount || "Rp0"}</MDTypography>
       </MDBox>
     </Card>
   );

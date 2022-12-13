@@ -137,7 +137,7 @@ export default function useData() {
                               {
                                 name: "bank_player_id",
                                 value: banks.bank_player.map((b) => ({
-                                  key: b.bank_name + " - " + b.account_number,
+                                  key: `${b.bank_name} - ${b.account_number} ${b.account_name}`,
                                   value: b.bank_player_id,
                                 })),
                               },

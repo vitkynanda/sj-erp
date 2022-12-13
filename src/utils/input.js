@@ -42,12 +42,14 @@ export const createTransaction = {
   bank_id: "",
   ammount: "",
   admin_fee: "",
+  note: "",
 };
 
 export const createPlayer = {
   player_id: "",
   player_name: "",
   bank_name: "",
+  account_name: "",
   account_number: "",
   category: "",
 };
@@ -55,6 +57,7 @@ export const createPlayer = {
 export const addBankPlayer = {
   // player_id: "",
   bank_name: "",
+  account_name: "",
   account_number: "",
   category: "",
 };
