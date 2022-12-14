@@ -5,10 +5,10 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 import { useMemo, useState } from "react";
-import SelectOption from "examples/SelectOption";
 import { useGlobalStore } from "store";
 import FormattedInput from "components/UI/FormattedInput";
 import { currencyFormatList } from "utils";
+import AutoCompleteInput from "components/UI/AutoCompleteInput";
 
 const TrxForm = ({
   title,
@@ -56,7 +56,7 @@ const TrxForm = ({
         ([key, val]) =>
           !notRenderFields.includes(key) &&
           (optionFields.includes(key) ? (
-            <SelectOption
+            <AutoCompleteInput
               key={key}
               label={key}
               options={

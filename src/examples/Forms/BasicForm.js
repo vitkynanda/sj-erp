@@ -5,9 +5,10 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
-import SelectOption from "examples/SelectOption";
+// import SelectOption from "examples/SelectOption";
 import { currencyFormatList } from "utils";
 import FormattedInput from "components/UI/FormattedInput";
+import AutoCompleteInput from "components/UI/AutoCompleteInput";
 
 const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderFields = [] }) => {
   const [values, setValues] = useState(input);
@@ -40,7 +41,7 @@ const BasicForm = ({ title, input, submitHandler, disableFields = [], notRenderF
               key={key}
             />
           ) : key === "type" ? (
-            <SelectOption
+            <AutoCompleteInput
               key={key}
               label={key}
               options={[

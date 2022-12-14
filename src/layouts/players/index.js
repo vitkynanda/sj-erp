@@ -22,10 +22,19 @@ import { createPlayer } from "utils/input";
 
 function Players() {
   const { columns } = playersDataTable();
-  const { players: rows, getPlayers, addPlayer, setOpenModal } = useGlobalStore();
+  const {
+    players: rows,
+    getPlayers,
+    addPlayer,
+    setOpenModal,
+    transactionsType,
+    getTransactionType,
+  } = useGlobalStore();
 
   useEffect(() => {
     if (rows.length === 0) getPlayers();
+    if (transactionsType.length === 0) getTransactionType();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getPlayers, rows.length]);
 
   return (
