@@ -31,7 +31,6 @@ function Dashboard() {
   return (
     <DashboardLayout>
       <DashboardNavbar />
-      <AutoCompleteInput />
       <MDBox py={3}>
         <MDBox
           sx={(theme) => ({
