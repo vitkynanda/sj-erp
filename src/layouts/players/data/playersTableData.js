@@ -8,7 +8,7 @@ import BasicForm from "examples/Forms/BasicForm";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 import { formatDateID } from "utils";
 import TrxForm from "examples/Forms/TrxForm";
-
+import EditIcon from "@mui/icons-material/Edit";
 export default function useData() {
   const { setOpenModal, addBankAccount, addTransaction, banks, transactionsType } =
     useGlobalStore();
@@ -81,7 +81,9 @@ export default function useData() {
                         {
                           name: "bank_player_id",
                           value: row.original.bank_player.map((b) => ({
-                            key: `${b.bank_name} - ${b.account_number} ${b.account_name}`,
+                            key: `${b.bank_name} - ${b.account_name.toUpperCase()} ${
+                              b.account_number
+                            }`,
                             value: b.bank_player_id,
                           })),
                         },
@@ -90,7 +92,9 @@ export default function useData() {
                           value: banks
                             .filter((b) => b.active)
                             .map((b) => ({
-                              key: `${b.bank_name} - ${b.account_number} ${b.account_name}`,
+                              key: `${b.bank_name} - ${b.account_name.toUpperCase()} ${
+                                b.account_number
+                              }`,
                               value: b.bank_id,
                             })),
                         },
@@ -129,6 +133,25 @@ export default function useData() {
                   }}
                 >
                   <AddCardIcon />
+                </ThemedIconButton>
+              </Tooltip>
+              <Tooltip title="Edit Player">
+                <ThemedIconButton
+                  onClick={() => {
+                    setOpenModal({
+                      open: true,
+                      title: "Edit Player",
+                      input: {
+                        ...row.original,
+                        bank_player: row.original.bank_player.map((b) => b.bank_name).join(", "),
+                      },
+                      form: BasicForm,
+                      handler: addBankAccount,
+                      notRenderFields: ["player_id", "created_at"],
+                    });
+                  }}
+                >
+                  <EditIcon />
                 </ThemedIconButton>
               </Tooltip>
             </>

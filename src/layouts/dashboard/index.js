@@ -17,7 +17,6 @@ import { currencyFormat } from "utils";
 import CustomDatePicker from "examples/DatePicker";
 import MDButton from "components/MDButton";
 import { Stack } from "@mui/material";
-import AutoCompleteInput from "components/UI/AutoCompleteInput";
 
 function Dashboard() {
   const { getLogs, getDashboard, dashboards } = useGlobalStore();

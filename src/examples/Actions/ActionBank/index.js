@@ -72,7 +72,7 @@ const ActionBank = ({ row }) => {
           value: banks
             .filter((b) => row.original.bank_id !== b.bank_id)
             .map((b) => ({
-              key: `${b.bank_name} - ${b.account_number} ${b.account_name}`,
+              key: `${b.bank_name} - ${b.account_name.toUpperCase()} ${b.account_number}`,
               value: b.bank_id,
             })),
         },
@@ -98,12 +98,12 @@ const ActionBank = ({ row }) => {
         <EditIcon sx={{ mr: 1 }} />
         {userLoggedIn.role === "ADMIN" ? "Update Balance" : "Tambah Balance"}
       </MenuItem>
-      {userLoggedIn.role === "ADMIN" && (
-        <MenuItem onClick={() => closeMenu("update")}>
-          <EditIcon sx={{ mr: 1 }} />
-          Update Bank Data
-        </MenuItem>
-      )}
+
+      <MenuItem onClick={() => closeMenu("update")}>
+        <EditIcon sx={{ mr: 1 }} />
+        Update Bank Data
+      </MenuItem>
+
       <MenuItem onClick={transferAmount}>
         <CurrencyExchangeIcon sx={{ mr: 1 }} />
         Transfer Amount

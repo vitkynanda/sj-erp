@@ -120,7 +120,9 @@ function Transactions() {
                               value: banks
                                 .filter((b) => b.active)
                                 .map((b) => ({
-                                  key: `${b.bank_name} - ${b.account_number} ${b.account_name}`,
+                                  key: `${b.bank_name} - ${b.account_name.toUpperCase()} ${
+                                    b.account_number
+                                  }`,
                                   value: b.bank_id,
                                 })),
                             },
