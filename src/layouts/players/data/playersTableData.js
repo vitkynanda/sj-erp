@@ -143,11 +143,10 @@ export default function useData() {
                       title: "Edit Player",
                       input: {
                         ...row.original,
-                        bank_player: row.original.bank_player.map((b) => b.bank_name).join(", "),
                       },
                       form: BasicForm,
                       handler: addBankAccount,
-                      notRenderFields: ["player_id", "created_at"],
+                      notRenderFields: ["player_id", "created_at", "bank_player"],
                     });
                   }}
                 >

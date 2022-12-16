@@ -5,13 +5,14 @@ const callApi = async ({ url, method, payload, customURL }) => {
   let body;
   const headers = {};
 
-  if (url !== "/login") {
+  if (url !== "/login")
     headers["Authorization"] = `${convertBase64("decode", Cookies.get("token"))}`;
-  }
 
   if (["POST", "PUT"].includes(method)) {
-    headers["Content-Type"] = "application/json";
-    body = JSON.stringify(payload);
+    if (payload) {
+      headers["Content-Type"] = "application/json";
+      body = JSON.stringify(payload);
+    }
   }
 
   try {

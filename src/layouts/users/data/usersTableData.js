@@ -6,9 +6,10 @@ import { formatDateID } from "utils";
 import DeleteIcon from "@mui/icons-material/Delete";
 import KeyIcon from "@mui/icons-material/Key";
 import BasicForm from "examples/Forms/BasicForm";
+import LockResetIcon from "@mui/icons-material/LockReset";
 
 export default function useData() {
-  const { removeUser, setOpenModal, changePassword } = useGlobalStore();
+  const { removeUser, setOpenModal, changePassword, resetPassword } = useGlobalStore();
   return {
     columns: [
       {
@@ -55,6 +56,11 @@ export default function useData() {
                   }
                 >
                   <KeyIcon />
+                </ThemedIconButton>
+              </Tooltip>
+              <Tooltip title="Reset Password">
+                <ThemedIconButton onClick={() => resetPassword(row.original.user_id)}>
+                  <LockResetIcon />
                 </ThemedIconButton>
               </Tooltip>
             </Stack>

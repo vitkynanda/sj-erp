@@ -11,4 +11,6 @@ const changePassword = (payload) =>
 
 const deleteUser = (id) => callApi({ url: `/user/${id}`, method: "DELETE" });
 
-export { getAllUsers, addNewUser, getAllRoles, deleteUser, changePassword };
+const resetPassword = (id) => callApi({ url: `/user/reset-password/${id}`, method: "POST" });
+
+export { getAllUsers, addNewUser, getAllRoles, deleteUser, changePassword, resetPassword };

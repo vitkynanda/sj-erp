@@ -4,22 +4,32 @@ import jwt_decode from "jwt-decode";
 import { login } from "services/api/auth";
 import create from "zustand";
 import { convertBase64, toastErrorMessage, successStatus, formatDate } from "utils";
-import { getAllUsers, addNewUser, deleteUser, getAllRoles } from "services/api/users";
-import { getAllBanks, addNewBank, updateBalanceBank, updateBankData } from "services/api/bank";
+import {
+  getAllUsers,
+  addNewUser,
+  deleteUser,
+  getAllRoles,
+  changePassword,
+  resetPassword,
+} from "services/api/users";
+import {
+  getAllBanks,
+  addNewBank,
+  updateBalanceBank,
+  updateBankData,
+  getMutations,
+  transferBankAmount,
+} from "services/api/bank";
 import { getAllPlayers, addBankAccountPlayer, addNewPlayer } from "services/api/players";
 import { getAllCoins, updateBalanceCoin } from "services/api/coin";
 import { getDashboardData, getLogData } from "services/api/dashboard";
 import {
   getAllTransactions,
   addNewTransaction,
+  updateTransaction,
   getTransactionType,
 } from "services/api/transaction";
-import { transferBankAmount } from "services/api/bank";
-import { updateTransaction } from "services/api/transaction";
-import { changePassword } from "services/api/users";
-import { getMutations } from "services/api/bank";
-import { getBonuses } from "services/api/bonus";
-import { addBonus } from "services/api/bonus";
+import { getBonuses, addBonus } from "services/api/bonus";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -167,6 +177,18 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("User password changed successfully");
+      await get().getUsers();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  resetPassword: async (id) => {
+    set({ loading: { status: true, message: "Reset User Password..." } });
+    const res = await resetPassword(id);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("User password reset to default successfully");
       await get().getUsers();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
