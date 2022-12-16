@@ -32,7 +32,6 @@ function Bonuses() {
     totalBonusesData,
     addBonus,
     setOpenModal,
-    setFilterVal,
   } = useGlobalStore();
 
   useEffect(() => {
@@ -42,7 +41,7 @@ function Bonuses() {
     if (dateStorage?.end) params["dateTo"] = dateStorage.end;
     if (rows.length === 0) getBonuses(params);
     if (players.length === 0) getPlayers("only");
-    setFilterVal("All");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getBonuses, getPlayers]);
 
@@ -71,7 +70,12 @@ function Bonuses() {
                     Bonus Table
                   </MDTypography>
                   <Stack spacing={1} direction="row">
-                    <FilterTableRow handler={getBonuses} lov={["All", "Rolling", "Cashback"]} />
+                    <FilterTableRow
+                      filterType="Bonus Type"
+                      data={rows}
+                      handler={getBonuses}
+                      lov={["All", "Rolling", "Cashback"]}
+                    />
                     <MDButton
                       onClick={() =>
                         setOpenModal({

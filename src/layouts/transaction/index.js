@@ -34,7 +34,7 @@ function Transactions() {
     getPlayers,
     filterTransactions,
     totalTransactionsData,
-    setFilterVal,
+
     addTransaction,
     transactionsType,
     banks,
@@ -52,7 +52,7 @@ function Transactions() {
     if (banks.length === 0) getBanks();
     if (transactionsType.length === 0) getTransactionType();
     if (players.length === 0) getPlayers("only");
-    setFilterVal("All");
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getTransactions, getPlayers]);
 
@@ -82,8 +82,16 @@ function Transactions() {
                   </MDTypography>
                   <Stack direction="row" spacing={1}>
                     <FilterTableRow
+                      data={rows}
+                      filterType="Transaction"
                       handler={getTransactions}
                       lov={["All", "Deposit", "Withdraw", "Bonus", "Completed", "Pending"]}
+                    />
+                    <FilterTableRow
+                      data={rows}
+                      filterType="Status"
+                      handler={getTransactions}
+                      lov={["All", "Completed", "Pending", "Canceled"]}
                     />
                     <MDButton
                       variant="gradient"

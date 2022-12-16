@@ -48,7 +48,7 @@ const initialState = {
   dashboards: {},
   totalTransactionsData: 0,
   openMutation: false,
-  filterVal: "All",
+  changeFilter: false,
   modal: {
     open: false,
     handler: () => {},
@@ -80,7 +80,7 @@ export const useGlobalStore = create((set, get) => ({
   setMutations: (payload) => set({ mutations: payload }),
   setOpenMutation: (payload) => set({ openMutation: payload }),
   setBonuses: (payload) => set({ bonuses: payload }),
-  setFilterVal: (payload) => set({ filterVal: payload }),
+  setChangeFilter: () => set({ changeFilter: !get().changeFilter }),
   setParams: (payload) => set({ defaulParams: { ...payload } }),
   setOpenModal: (payload) =>
     set({
@@ -301,7 +301,6 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode))
       set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
-
     set({ loading: { status: false, message: "" } });
   },
 

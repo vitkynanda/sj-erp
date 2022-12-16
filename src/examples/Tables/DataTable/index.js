@@ -80,7 +80,7 @@ function DataTable({
 
   const {
     setParams,
-    setFilterVal,
+    setChangeFilter,
     defaulParams: { limit, offset },
   } = useGlobalStore();
 
@@ -173,7 +173,7 @@ function DataTable({
               onChange={(_, newValue) => {
                 setEntriesPerPage(parseInt(newValue, 10));
                 if (withLimit) {
-                  setFilterVal("All");
+                  setChangeFilter();
                   setParams({ limit: Number(newValue), offset: 0 });
                   refetchFn();
                 }
@@ -208,7 +208,7 @@ function DataTable({
                   onChange={(_, newValue) => {
                     setEntriesPerPage(parseInt(newValue, 10));
                     if (withLimit) {
-                      setFilterVal("All");
+                      setChangeFilter();
                       setParams({ limit: Number(newValue), offset: 0 });
                       refetchFn();
                     }
@@ -230,7 +230,7 @@ function DataTable({
                   <CustomDatePicker label="End" type="end" width={150} />
                   <MDButton
                     onClick={() => {
-                      setFilterVal("All");
+                      setChangeFilter();
                       refetchFn();
                     }}
                     color="info"

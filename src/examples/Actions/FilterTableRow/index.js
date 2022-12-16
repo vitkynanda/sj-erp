@@ -1,21 +1,32 @@
 import { Menu, MenuItem, Stack } from "@mui/material";
 import MDBox from "components/MDBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import MDTypography from "components/MDTypography";
 import { useGlobalStore } from "store";
+// import { useGlobalStore } from "store";
 
-const FilterTableRow = ({ lov = [], handler }) => {
+const FilterTableRow = ({ filterType, lov = [], handler, data }) => {
   const [menu, setMenu] = useState(null);
-  const { filterVal, setFilterVal } = useGlobalStore();
+  const [filterVal, setFilterVal] = useState("All");
   const openMenu = ({ currentTarget }) => setMenu(currentTarget);
+  const { changeFilter } = useGlobalStore();
 
   const closeMenu = (type) => {
     setMenu(null);
     setFilterVal(type);
-    handler({ type: type === "All" ? "" : type.toUpperCase() });
+    handler(
+      filterType === "Status"
+        ? { status: type === "All" ? "" : type.toUpperCase() }
+        : { type: type === "All" ? "" : type.toUpperCase() }
+    );
   };
+
+  useEffect(() => {
+    filterVal !== "All" && setFilterVal("All");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [changeFilter]);
 
   const renderMenu = (
     <Menu
@@ -51,7 +62,7 @@ const FilterTableRow = ({ lov = [], handler }) => {
             },
           })}
         >
-          {filterVal === "All" ? "Filter Data" : "Filtered By " + filterVal}
+          {filterVal === "All" ? "Filter " + filterType : "Filtered By " + filterVal}
         </MDTypography>
         <ThemedIconButton sx={{ color: "#fff" }} onClick={!menu ? openMenu : () => {}}>
           <FilterListIcon />
