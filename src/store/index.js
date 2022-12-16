@@ -30,6 +30,7 @@ import {
   getTransactionType,
 } from "services/api/transaction";
 import { getBonuses, addBonus } from "services/api/bonus";
+import { updatePlayer } from "services/api/players";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -386,6 +387,18 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Player added successfully");
+      await get().getPlayers();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  updatePlayer: async (payload) => {
+    set({ loading: { status: true, message: "Updating New Player..." } });
+    const res = await updatePlayer(payload);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Player updated successfully");
       await get().getPlayers();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));

@@ -10,7 +10,7 @@ import { formatDateID } from "utils";
 import TrxForm from "examples/Forms/TrxForm";
 import EditIcon from "@mui/icons-material/Edit";
 export default function useData() {
-  const { setOpenModal, addBankAccount, addTransaction, banks, transactionsType } =
+  const { setOpenModal, updatePlayer, addBankAccount, addTransaction, banks, transactionsType } =
     useGlobalStore();
 
   return {
@@ -142,11 +142,12 @@ export default function useData() {
                       open: true,
                       title: "Edit Player",
                       input: {
-                        ...row.original,
+                        player_id: row.original.player_id,
+                        player_name: row.original.player_name,
                       },
                       form: BasicForm,
-                      handler: addBankAccount,
-                      notRenderFields: ["player_id", "created_at", "bank_player"],
+                      handler: updatePlayer,
+                      notRenderFields: ["player_id"],
                     });
                   }}
                 >
