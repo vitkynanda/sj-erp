@@ -31,6 +31,7 @@ import {
 } from "services/api/transaction";
 import { getBonuses, addBonus } from "services/api/bonus";
 import { updatePlayer } from "services/api/players";
+import { editBonus } from "services/api/bonus";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -46,6 +47,7 @@ const initialState = {
   transactionsType: [],
   mutations: [],
   dashboards: {},
+  typeStatus: {},
   totalTransactionsData: 0,
   openMutation: false,
   changeFilter: false,
@@ -82,6 +84,7 @@ export const useGlobalStore = create((set, get) => ({
   setBonuses: (payload) => set({ bonuses: payload }),
   setChangeFilter: () => set({ changeFilter: !get().changeFilter }),
   setParams: (payload) => set({ defaulParams: { ...payload } }),
+  setTypeStatus: (payload) => set({ typeStatus: { ...payload } }),
   setOpenModal: (payload) =>
     set({
       modal: {
@@ -96,8 +99,12 @@ export const useGlobalStore = create((set, get) => ({
 
   filterTransactions: async () => {
     let paramsVal = {};
-    if (get().date.start) paramsVal["dateFrom"] = get().date.start;
-    if (get().date.end) paramsVal["dateTo"] = get().date.end;
+    const { start, end } = get().date;
+    const { type, status } = get().typeStatus;
+    if (start) paramsVal["dateFrom"] = start;
+    if (end) paramsVal["dateTo"] = end;
+    if (type) paramsVal["type"] = type;
+    if (status) paramsVal["status"] = status;
     await get().getTransactions(paramsVal);
   },
 
@@ -439,6 +446,21 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("New Bonus added successfully");
+      await get().getBonuses();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
+  editBonus: async (payload) => {
+    set({ loading: { status: true, message: "Updating Bonus..." } });
+    const res = await editBonus(
+      { type: payload.type, ammount: Number(payload.ammount) },
+      payload.bonus_id
+    );
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Bonus updated successfully");
       await get().getBonuses();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));

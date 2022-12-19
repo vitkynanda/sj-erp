@@ -17,7 +17,6 @@ import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
 import useData from "./data/transactionDataTable";
 
-import FilterTableRow from "examples/Actions/FilterTableRow";
 import { createTransaction } from "utils/input";
 import { Stack } from "@mui/material";
 import MDButton from "components/MDButton";
@@ -81,18 +80,6 @@ function Transactions() {
                     Transactions Table
                   </MDTypography>
                   <Stack direction="row" spacing={1}>
-                    <FilterTableRow
-                      data={rows}
-                      filterType="Transaction"
-                      handler={getTransactions}
-                      lov={["All", "Deposit", "Withdraw", "Bonus", "Completed", "Pending"]}
-                    />
-                    <FilterTableRow
-                      data={rows}
-                      filterType="Status"
-                      handler={getTransactions}
-                      lov={["All", "Completed", "Pending", "Canceled"]}
-                    />
                     <MDButton
                       variant="gradient"
                       color="secondary"
@@ -167,7 +154,6 @@ function Transactions() {
                     withPagination={true}
                     withLimit={true}
                     withExport={true}
-                    canSearch={true}
                     filterFn={filterTransactions}
                     refetchFn={getTransactions}
                     totalData={totalTransactionsData}

@@ -25,10 +25,11 @@ import DataTableBodyCell from "examples/Tables/DataTable/DataTableBodyCell";
 import CustomDatePicker from "examples/DatePicker";
 import MDButton from "components/MDButton";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import { Icon, Stack } from "@mui/material";
+import { Icon } from "@mui/material";
 import { useGlobalStore } from "store";
 import { exportExcel } from "utils";
 import ThemedIconButton from "components/UI/ThemedIconButton";
+import FilterTypeStatus from "examples/Actions/FilterTypeStatus";
 
 function DataTable({
   showTotalEntries,
@@ -43,6 +44,7 @@ function DataTable({
   withPagination = false,
   withExport = false,
   refetchFn = () => {},
+  filterFn,
   totalData = 0,
   CustomRow = false,
 }) {
@@ -80,7 +82,6 @@ function DataTable({
 
   const {
     setParams,
-    setChangeFilter,
     defaulParams: { limit, offset },
   } = useGlobalStore();
 
@@ -163,8 +164,7 @@ function DataTable({
             />
           </MDBox>
         )}
-
-        {entriesPerPage && (
+        {(entriesPerPage || withLimit) && (
           <MDBox display="flex" alignItems="center">
             <Autocomplete
               disableClearable
@@ -173,7 +173,6 @@ function DataTable({
               onChange={(_, newValue) => {
                 setEntriesPerPage(parseInt(newValue, 10));
                 if (withLimit) {
-                  setChangeFilter();
                   setParams({ limit: Number(newValue), offset: 0 });
                   refetchFn();
                 }
@@ -187,67 +186,27 @@ function DataTable({
             </MDTypography>
           </MDBox>
         )}
-
-        {(withLimit || withDateFilter) && (
-          <Stack
-            spacing={3}
-            direction="row"
-            alignItems="center"
-            sx={(theme) => ({
-              [theme.breakpoints.down("md")]: {
-                display: "none",
-              },
-            })}
-          >
-            {withLimit && canSearch && (
-              <MDBox display="flex" alignItems="center">
-                <Autocomplete
-                  disableClearable
-                  value={pageSize.toString()}
-                  options={entries}
-                  onChange={(_, newValue) => {
-                    setEntriesPerPage(parseInt(newValue, 10));
-                    if (withLimit) {
-                      setChangeFilter();
-                      setParams({ limit: Number(newValue), offset: 0 });
-                      refetchFn();
-                    }
-                  }}
-                  size="small"
-                  sx={{ width: "5rem" }}
-                  renderInput={(params) => <MDInput {...params} />}
-                />
-                <MDTypography variant="caption" color="secondary">
-                  &nbsp;&nbsp;entries per page
-                </MDTypography>
-              </MDBox>
-            )}
-
-            <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
-              {withDateFilter && (
-                <>
-                  <CustomDatePicker label="Start" type="start" width={150} />
-                  <CustomDatePicker label="End" type="end" width={150} />
-                  <MDButton
-                    onClick={() => {
-                      setChangeFilter();
-                      refetchFn();
-                    }}
-                    color="info"
-                    variant="gradient"
-                  >
-                    Filter
-                  </MDButton>
-                </>
-              )}
-              {withExport && (
-                <ThemedIconButton onClick={() => exportExcel(table.rows)}>
-                  <FileDownloadIcon sx={{ color: "inherit" }} />
-                </ThemedIconButton>
-              )}
-            </MDBox>
-          </Stack>
-        )}
+        <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
+          {withDateFilter && (
+            <>
+              <FilterTypeStatus />
+              <CustomDatePicker label="Start" type="start" width={150} />
+              <CustomDatePicker label="End" type="end" width={150} />
+              <MDButton
+                onClick={() => (filterFn ? filterFn() : refetchFn())}
+                color="info"
+                variant="gradient"
+              >
+                Filter
+              </MDButton>
+            </>
+          )}
+          {withExport && (
+            <ThemedIconButton onClick={() => exportExcel(table.rows)}>
+              <FileDownloadIcon sx={{ color: "inherit" }} />
+            </ThemedIconButton>
+          )}
+        </MDBox>
       </MDBox>
       <MDBox sx={{ width: "100%", overflow: "auto", height: "100%" }}>
         <Table {...getTableProps()} width={100}>

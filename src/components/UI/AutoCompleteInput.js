@@ -13,7 +13,7 @@ const AutoCompleteInput = ({
   const [value, setValue] = useState(null);
   const handleChange = (_, newVal) => {
     setValue(newVal || null);
-    onSelect({ target: { name: label, value: newVal?.value || "" } });
+    onSelect({ target: { name: label.toLowerCase(), value: newVal?.value || "" } });
   };
 
   useEffect(() => {
@@ -24,7 +24,6 @@ const AutoCompleteInput = ({
     <Autocomplete
       {...restProps}
       disablePortal
-      id="id"
       onChange={handleChange}
       options={options}
       defaultValue=""

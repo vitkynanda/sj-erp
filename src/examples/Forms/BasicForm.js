@@ -5,7 +5,6 @@ import MDInput from "components/MDInput";
 import MDTypography from "components/MDTypography";
 import { validateInputField, inputType, formatKey } from "utils";
 import { useState } from "react";
-// import SelectOption from "examples/SelectOption";
 import { currencyFormatList } from "utils";
 import FormattedInput from "components/UI/FormattedInput";
 import AutoCompleteInput from "components/UI/AutoCompleteInput";
