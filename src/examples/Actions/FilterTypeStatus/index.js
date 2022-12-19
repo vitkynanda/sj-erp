@@ -8,7 +8,6 @@ const FilterTypeStatus = () => {
     const { name, value } = e.target;
     setTypeStatus({ ...typeStatus, [name]: value });
   };
-  console.log(typeStatus);
   return (
     <MDBox display="flex" gap={2} alignItems="center" width={300}>
       <AutoCompleteInput
