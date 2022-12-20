@@ -47,6 +47,7 @@ function DataTable({
   filterFn,
   totalData = 0,
   CustomRow = false,
+  withTypeStatus = false,
 }) {
   const defaultValue = entriesPerPage.defaultValue ? entriesPerPage.defaultValue : 10;
   const entries = entriesPerPage.entries
@@ -187,20 +188,24 @@ function DataTable({
           </MDBox>
         )}
         <MDBox display="flex" justifyContent="end" alignItems="center" gap={2}>
+          {withTypeStatus && <FilterTypeStatus />}
+
           {withDateFilter && (
             <>
-              <FilterTypeStatus />
               <CustomDatePicker label="Start" type="start" width={150} />
               <CustomDatePicker label="End" type="end" width={150} />
-              <MDButton
-                onClick={() => (filterFn ? filterFn() : refetchFn())}
-                color="info"
-                variant="gradient"
-              >
-                Filter
-              </MDButton>
             </>
           )}
+          {(withTypeStatus || withDateFilter) && (
+            <MDButton
+              onClick={() => (filterFn ? filterFn() : refetchFn())}
+              color="info"
+              variant="gradient"
+            >
+              Filter
+            </MDButton>
+          )}
+
           {withExport && (
             <ThemedIconButton onClick={() => exportExcel(table.rows)}>
               <FileDownloadIcon sx={{ color: "inherit" }} />

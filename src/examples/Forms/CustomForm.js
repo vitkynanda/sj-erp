@@ -21,7 +21,6 @@ const CustomForm = ({
 
   const handlerChange = (e) => {
     const { name, value } = e.target;
-
     setValues({ ...values, [name]: value });
   };
 

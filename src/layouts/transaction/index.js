@@ -154,6 +154,7 @@ function Transactions() {
                     withPagination={true}
                     withLimit={true}
                     withExport={true}
+                    withTypeStatus={true}
                     filterFn={filterTransactions}
                     refetchFn={getTransactions}
                     totalData={totalTransactionsData}
