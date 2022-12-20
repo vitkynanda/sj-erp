@@ -12,18 +12,18 @@ export default function useData() {
 
   return {
     columns: [
-      // {
-      //   Header: "PLAYER ID",
-      //   accessor: "player_id",
-      //   align: "left",
-      //   Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
-      // },
       {
-        Header: "PLAYER NAME",
-        accessor: "player_name",
+        Header: "PLAYER ID",
+        accessor: "player_id",
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
+      // {
+      //   Header: "PLAYER NAME",
+      //   accessor: "player_name",
+      //   align: "left",
+      //   Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
+      // },
       {
         Header: "REKENING PLAYER",
         accessor: "bank_player_name",
