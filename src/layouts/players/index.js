@@ -17,8 +17,8 @@ import { useGlobalStore } from "store";
 import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
 import MDButton from "components/MDButton";
-import BasicForm from "examples/Forms/BasicForm";
 import { createPlayer } from "utils/input";
+import CustomForm from "examples/Forms/CustomForm";
 
 function Players() {
   const { columns } = playersDataTable();
@@ -65,10 +65,21 @@ function Players() {
                     onClick={() =>
                       setOpenModal({
                         open: true,
-                        form: BasicForm,
+                        form: CustomForm,
                         title: "Create",
                         handler: addPlayer,
                         input: createPlayer,
+                        optionFields: ["category"],
+                        optionFieldList: [
+                          {
+                            name: "category",
+                            value: [
+                              { key: "E-WALLET", value: "E-WALLET" },
+                              { key: "BANK", value: "BANK" },
+                              { key: "PULSA", value: "PULSA" },
+                            ],
+                          },
+                        ],
                       })
                     }
                     variant="gradient"

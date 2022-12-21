@@ -9,6 +9,7 @@ import ThemedIconButton from "components/UI/ThemedIconButton";
 import { formatDateID } from "utils";
 import TrxForm from "examples/Forms/TrxForm";
 import EditIcon from "@mui/icons-material/Edit";
+import CustomForm from "examples/Forms/CustomForm";
 export default function useData() {
   const { setOpenModal, updatePlayer, addBankAccount, addTransaction, banks, transactionsType } =
     useGlobalStore();
@@ -132,9 +133,20 @@ export default function useData() {
                       open: true,
                       title: "Add Bank Account",
                       input: { ...addBankPlayer, player_id: row.original.player_id },
-                      form: BasicForm,
+                      form: CustomForm,
                       handler: addBankAccount,
                       notRenderFields: ["player_id"],
+                      optionFields: ["category"],
+                      optionFieldList: [
+                        {
+                          name: "category",
+                          value: [
+                            { key: "E-WALLET", value: "E-WALLET" },
+                            { key: "BANK", value: "BANK" },
+                            { key: "PULSA", value: "PULSA" },
+                          ],
+                        },
+                      ],
                     });
                   }}
                 >

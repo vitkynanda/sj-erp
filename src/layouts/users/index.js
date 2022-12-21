@@ -19,12 +19,11 @@ import ModalForm from "examples/ModalForm";
 import MDButton from "components/MDButton";
 import CustomForm from "examples/Forms/CustomForm";
 import { createUser } from "utils/input";
+import DialogInfo from "components/UI/DialogInfo";
 
 function Users() {
   const { columns } = usersTableData();
-
   const { users: rows, getUsers, addUser, setOpenModal, roles } = useGlobalStore();
-
   useEffect(() => {
     if (rows.length === 0) getUsers();
   }, [getUsers, rows.length]);
@@ -32,6 +31,7 @@ function Users() {
   return (
     <>
       <ModalForm />
+      <DialogInfo />
       <DashboardLayout>
         <DashboardNavbar />
         <MDBox pt={6} pb={3}>

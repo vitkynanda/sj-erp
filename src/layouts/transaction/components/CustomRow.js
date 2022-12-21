@@ -6,7 +6,7 @@ import { currencyFormat } from "utils";
 
 const CustomRow = () => {
   const [controller] = useMaterialUIController();
-  const { transactions } = useGlobalStore();
+  const { txAdditionalInfo } = useGlobalStore();
   const { darkMode } = controller;
   return (
     <>
@@ -17,7 +17,7 @@ const CustomRow = () => {
           sx={{ background: darkMode ? "rgba(26, 32, 53, 0.8)" : "lightgrey" }}
         >
           <MDTypography fontSize={14} fontWeight="bold">
-            Sub Total :
+            Total Withdraw :
           </MDTypography>
         </TableCell>
         <TableCell
@@ -26,10 +26,7 @@ const CustomRow = () => {
           sx={{ background: darkMode ? "rgba(26, 32, 53, 0.8)" : "lightgrey" }}
         >
           <MDTypography fontSize={14} fontWeight="bold">
-            {currencyFormat(
-              "ID",
-              transactions.reduce((curr, tx) => curr + tx.ammount, 0)
-            )}
+            {currencyFormat("ID", txAdditionalInfo?.total_withdraw || 0)}
           </MDTypography>
         </TableCell>
       </TableRow>
@@ -40,7 +37,7 @@ const CustomRow = () => {
           sx={{ background: darkMode ? "rgba(26, 32, 53, 0.8)" : "lightgrey" }}
         >
           <MDTypography fontSize={14} fontWeight="bold">
-            Grand Total :
+            Total Deposit :
           </MDTypography>
         </TableCell>
         <TableCell
@@ -49,10 +46,27 @@ const CustomRow = () => {
           sx={{ background: darkMode ? "rgba(26, 32, 53, 0.8)" : "lightgrey" }}
         >
           <MDTypography fontSize={14} fontWeight="bold">
-            {currencyFormat(
-              "ID",
-              transactions.reduce((curr, tx) => curr + tx.ammount, 0)
-            )}
+            {currencyFormat("ID", txAdditionalInfo?.total_deposit || 0)}
+          </MDTypography>
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell
+          colSpan={4}
+          align="right"
+          sx={{ background: darkMode ? "rgba(26, 32, 53, 0.8)" : "lightgrey" }}
+        >
+          <MDTypography fontSize={14} fontWeight="bold">
+            Total Bonus :
+          </MDTypography>
+        </TableCell>
+        <TableCell
+          colSpan={8}
+          align="left"
+          sx={{ background: darkMode ? "rgba(26, 32, 53, 0.8)" : "lightgrey" }}
+        >
+          <MDTypography fontSize={14} fontWeight="bold">
+            {currencyFormat("ID", txAdditionalInfo?.total_bonus || 0)}
           </MDTypography>
         </TableCell>
       </TableRow>

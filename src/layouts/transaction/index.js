@@ -33,7 +33,6 @@ function Transactions() {
     getPlayers,
     filterTransactions,
     totalTransactionsData,
-
     addTransaction,
     transactionsType,
     banks,

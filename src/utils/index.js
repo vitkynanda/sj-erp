@@ -89,10 +89,7 @@ const formatKey = (key) =>
     .join(" ");
 
 const inputType = (val) => {
-  return val.includes("id") ||
-    val.includes("index") ||
-    val.includes("number") ||
-    val.includes("balance")
+  return val.includes("index") || val.includes("number") || val.includes("balance")
     ? "number"
     : val.includes("password")
     ? "password"

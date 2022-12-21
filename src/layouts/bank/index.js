@@ -17,10 +17,10 @@ import { useEffect } from "react";
 import ModalForm from "examples/ModalForm";
 import MDButton from "components/MDButton";
 import useData from "./data/bankTableData";
-import BasicForm from "examples/Forms/BasicForm";
 import { createBank } from "utils/input";
 import { Stack } from "@mui/material";
 import ModalMutation from "examples/ModalMutation";
+import CustomForm from "examples/Forms/CustomForm";
 
 function Banks() {
   const { columns } = useData();
@@ -75,10 +75,21 @@ function Banks() {
                         onClick={() =>
                           setOpenModal({
                             open: true,
-                            form: BasicForm,
+                            form: CustomForm,
                             title: "Create",
                             handler: addBank,
                             input: createBank,
+                            optionFields: ["category"],
+                            optionFieldList: [
+                              {
+                                name: "category",
+                                value: [
+                                  { key: "E-WALLET", value: "E-WALLET" },
+                                  { key: "BANK", value: "BANK" },
+                                  { key: "PULSA", value: "PULSA" },
+                                ],
+                              },
+                            ],
                           })
                         }
                         variant="gradient"

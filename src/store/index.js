@@ -51,6 +51,7 @@ const initialState = {
   totalTransactionsData: 0,
   openMutation: false,
   changeFilter: false,
+  txAdditionalInfo: {},
   modal: {
     open: false,
     handler: () => {},
@@ -60,6 +61,12 @@ const initialState = {
     disableFields: [],
     notRenderFields: [],
     optionFields: [],
+  },
+  dialog: {
+    open: false,
+    handler: () => {},
+    title: "",
+    content: "",
   },
   date: JSON.parse(localStorage.getItem("date")) || { start: "", end: "" },
   selectedData: {},
@@ -116,10 +123,10 @@ export const useGlobalStore = create((set, get) => ({
   },
 
   logoutHandler: (cb) => {
-    set({ ...initialState });
     Cookies.remove("token");
     localStorage.removeItem("date");
-    localStorage.removeItem("themeStorage");
+    // localStorage.removeItem("themeStorage");
+    set({ ...initialState });
     cb();
   },
 
@@ -196,7 +203,15 @@ export const useGlobalStore = create((set, get) => ({
     const res = await resetPassword(id);
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
-      toast.success("User password reset to default successfully");
+      set({
+        dialog: {
+          open: true,
+          handler: () => set({ dialog: { open: false } }),
+          title: "Password has been reset.",
+          content: `Your password has been reset to ${res.data.new_password}, feel free to update your password`,
+        },
+      });
+      toast.success("Reset user password successfully");
       await get().getUsers();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
@@ -306,7 +321,11 @@ export const useGlobalStore = create((set, get) => ({
     const res = await getAllTransactions(new URLSearchParams(params).toString());
     if (res.statusCode === 404) set({ transactions: [], totalTransactionsData: 0 });
     if (successStatus.includes(res.statusCode))
-      set({ transactions: res.data.transaction, totalTransactionsData: res.data.total });
+      set({
+        transactions: res.data.transaction,
+        totalTransactionsData: res.data.total,
+        txAdditionalInfo: { ...res.data },
+      });
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
     set({ loading: { status: false, message: "" } });
   },
@@ -331,6 +350,7 @@ export const useGlobalStore = create((set, get) => ({
     if (successStatus.includes(res.statusCode)) {
       set({ modal: { open: false } });
       toast.success("Transaction added successfully");
+      await get().getCoins();
       await get().getTransactions();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
