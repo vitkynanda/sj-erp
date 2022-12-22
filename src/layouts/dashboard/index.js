@@ -17,6 +17,7 @@ import { currencyFormat } from "utils";
 import CustomDatePicker from "examples/DatePicker";
 import MDButton from "components/MDButton";
 import { Stack } from "@mui/material";
+import TopPlayerInfo from "./components/TopPlayersInfo";
 
 function Dashboard() {
   const { getLogs, getDashboard, dashboards } = useGlobalStore();
@@ -122,8 +123,11 @@ function Dashboard() {
         </Grid>
         <MDBox>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={12} lg={12}>
+            <Grid item xs={12} md={6} lg={6}>
               <LogsActivity />
+            </Grid>
+            <Grid item xs={12} md={6} lg={6}>
+              <TopPlayerInfo />
             </Grid>
           </Grid>
         </MDBox>
