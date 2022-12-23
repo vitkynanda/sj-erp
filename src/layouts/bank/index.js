@@ -107,6 +107,7 @@ function Banks() {
                     entriesPerPage={false}
                     showTotalEntries={false}
                     noEndBorder
+                    canSearch={true}
                   />
                 </MDBox>
               </Card>

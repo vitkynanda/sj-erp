@@ -43,7 +43,9 @@ function ComplexStatisticsCard({ color, title, count, icon, amount }) {
       </MDBox>
       <Divider />
       <MDBox pb={2} px={2} textAlign="right">
-        <MDTypography variant="h6">{loading?.status ? <Skeleton /> : amount || "Rp0"}</MDTypography>
+        <MDTypography variant="h6">
+          {loading?.status ? <Skeleton /> : amount || "Rp0,00"}
+        </MDTypography>
       </MDBox>
     </Card>
   );
