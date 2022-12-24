@@ -14,7 +14,7 @@ import DataTable from "examples/Tables/DataTable";
 // Data
 import playersDataTable from "./data/playersTableData";
 import { useGlobalStore } from "store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ModalForm from "examples/ModalForm";
 import MDButton from "components/MDButton";
 import { createPlayer } from "utils/input";
@@ -22,9 +22,11 @@ import CustomForm from "examples/Forms/CustomForm";
 
 function Players() {
   const { columns } = playersDataTable();
+  const [search, setSearch] = useState("");
   const {
     players: rows,
     getPlayers,
+    totalPlayersData,
     addPlayer,
     setOpenModal,
     transactionsType,
@@ -92,11 +94,15 @@ function Players() {
                   <DataTable
                     table={{ columns, rows }}
                     isSorted={false}
-                    entriesPerPage={true}
+                    entriesPerPage={false}
                     showTotalEntries={false}
                     noEndBorder
-                    pagination={{}}
-                    canSearch={true}
+                    withPagination={true}
+                    canSearch={false}
+                    withLimit={true}
+                    refetchFn={getPlayers}
+                    totalData={totalPlayersData}
+                    canSearchPlayer={true}
                   />
                 </MDBox>
               </Card>

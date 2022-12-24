@@ -30,11 +30,13 @@ import { useGlobalStore } from "store";
 import { exportExcel } from "utils";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 import FilterTypeStatus from "examples/Actions/FilterTypeStatus";
+import SearchPlayerID from "examples/Actions/SearchPlayerID";
 
 function DataTable({
   showTotalEntries,
   entriesPerPage,
   canSearch,
+  canSearchPlayer,
   table,
   isSorted,
   noEndBorder,
@@ -164,6 +166,9 @@ function DataTable({
               }}
             />
           </MDBox>
+        )}
+        {canSearchPlayer && (
+          <SearchPlayerID refetchFn={refetchFn} />
         )}
         {(entriesPerPage || withLimit) && (
           <MDBox display="flex" alignItems="center">
@@ -334,6 +339,7 @@ function DataTable({
 DataTable.defaultProps = {
   entriesPerPage: { defaultValue: 10, entries: [5, 10, 15, 20, 25] },
   canSearch: false,
+  canSearchPlayer: false,
   showTotalEntries: true,
   pagination: { variant: "gradient", color: "info" },
   isSorted: true,

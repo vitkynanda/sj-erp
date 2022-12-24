@@ -49,6 +49,8 @@ const initialState = {
   dashboards: {},
   typeStatus: {},
   totalTransactionsData: 0,
+  totalPlayersData : 0,
+  searchPlayer: "",
   openMutation: false,
   changeFilter: false,
   txAdditionalInfo: {},
@@ -92,6 +94,7 @@ export const useGlobalStore = create((set, get) => ({
   setChangeFilter: () => set({ changeFilter: !get().changeFilter }),
   setParams: (payload) => set({ defaulParams: { ...payload } }),
   setTypeStatus: (payload) => set({ typeStatus: { ...payload } }),
+  setSearchPlayer: (payload) => set({ searchPlayer: payload }),
   setOpenModal: (payload) =>
     set({
       modal: {
@@ -396,14 +399,18 @@ export const useGlobalStore = create((set, get) => ({
   },
 
   getPlayers: async (type) => {
+    const params = {
+      ...get().defaulParams,
+      q: get().searchPlayer
+    };
     set({ loading: { status: true, message: "Getting Players Data..." } });
-    const res = await getAllPlayers();
+    const res = await getAllPlayers(new URLSearchParams(params).toString());
     if (successStatus.includes(res.statusCode)) {
       if (get().transactionsType.length === 0 && !type) await get().getTransactionType();
       if (get().banks.length === 0 && !type) await get().getBanks();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
-    if (successStatus.includes(res.statusCode)) set({ players: res.data.list_player });
+    if (successStatus.includes(res.statusCode)) set({ players: res.data.list_player, totalPlayersData: res.data.total });
     set({ loading: { status: false, message: "" } });
   },
 
