@@ -62,9 +62,9 @@ export default function useData() {
             {currencyFormat(
               "ID",
               row.original.type_transaction === "DEPOSIT"
-                ? row.original.last_balance_bank + row.original.ammount
+                ? row.original.last_balance_bank + row.original.ammount + row.original.admin_fee
                 : row.original.type_transaction === "WITHDRAW"
-                ? row.original.last_balance_bank - row.original.ammount
+                ? row.original.last_balance_bank - row.original.ammount - row.original.admin_fee
                 : row.original.last_balance_bank
             )}
           </MDTypography>
@@ -92,6 +92,14 @@ export default function useData() {
             color={value === "COMPLETED" ? "success" : "warning"}
             sx={{ color: value ? "#fff" : "inherit" }}
           />
+        ),
+      },
+      {
+        Header: "NOTE",
+        accessor: "note",
+        align: "left",
+        Cell: ({ value }) => (
+          <MDTypography fontSize={13}>{value}</MDTypography>
         ),
       },
       {
