@@ -31,7 +31,6 @@ const ActionBank = ({ row }) => {
         input: row.original,
         form: BasicForm,
         handler: updateBank,
-
         notRenderFields: ["bank_id", "balance"],
       });
     }

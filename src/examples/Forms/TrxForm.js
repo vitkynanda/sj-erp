@@ -1,4 +1,4 @@
-import { Divider } from "@mui/material";
+import { Checkbox, Divider, FormControlLabel } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDButton from "components/MDButton";
 import MDInput from "components/MDInput";
@@ -55,7 +55,15 @@ const TrxForm = ({
       {Object.entries(values).map(
         ([key, val]) =>
           !notRenderFields.includes(key) &&
-          (optionFields.includes(key) ? (
+          (key === "active" ? (
+            <FormControlLabel
+              control={<Checkbox checked={val} />}
+              label={formatKey(key)}
+              onChange={handlerChange}
+              name={key}
+              key={key}
+            />
+          ) : optionFields.includes(key) ? (
             <AutoCompleteInput
               key={key}
               label={key}

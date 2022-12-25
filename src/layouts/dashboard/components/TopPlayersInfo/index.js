@@ -1,4 +1,4 @@
-import { Card, Divider } from "@mui/material";
+import { Stack, Card, Divider } from "@mui/material";
 import MDBox from "components/MDBox";
 import MDTypography from "components/MDTypography";
 import { useGlobalStore } from "store";
@@ -15,7 +15,7 @@ const TopPlayerInfo = () => {
         </MDTypography>
       </MDBox>
       <Divider />
-      <MDBox px={3} pt={2} gap={2}>
+      <Stack px={3} pt={1} spacing={1}>
         {dashboards?.top_player_deposit?.length === 0 ? (
           <MDTypography fontSize={15} textAlign="center">
             No Data Available
@@ -37,14 +37,14 @@ const TopPlayerInfo = () => {
             </Card>
           ))
         )}
-      </MDBox>
+      </Stack>
       <MDBox pt={3} px={3}>
         <MDTypography variant="h6" fontWeight="medium">
           Top Player Widthdraw
         </MDTypography>
       </MDBox>
       <Divider />
-      <MDBox px={3} pt={2} gap={2}>
+      <Stack px={3} pt={1} spacing={1}>
         {dashboards?.top_player_withdraw?.length === 0 ? (
           <MDTypography fontSize={15} textAlign="center">
             No Data Available
@@ -66,7 +66,7 @@ const TopPlayerInfo = () => {
             </Card>
           ))
         )}
-      </MDBox>
+      </Stack>
     </Card>
   );
 };
