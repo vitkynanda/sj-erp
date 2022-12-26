@@ -22,7 +22,7 @@ const TopPlayerInfo = () => {
           </MDTypography>
         ) : (
           dashboards?.top_player_deposit?.map((player, idx) => (
-            <Card>
+            <Card key={idx}>
               <MDBox p={2} display="flex" alignItems="center" justifyContent="space-between">
                 <MDTypography fontSize={15}>
                   {idx + 1}
@@ -51,7 +51,7 @@ const TopPlayerInfo = () => {
           </MDTypography>
         ) : (
           dashboards?.top_player_withdraw?.map((player, idx) => (
-            <Card>
+            <Card key={idx}>
               <MDBox p={2} display="flex" alignItems="center" justifyContent="space-between">
                 <MDTypography fontSize={15}>
                   {idx + 1}

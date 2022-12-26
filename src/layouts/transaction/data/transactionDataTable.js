@@ -7,8 +7,12 @@ import { currencyFormat } from "utils";
 import CreditScoreIcon from "@mui/icons-material/CreditScore";
 import ThemedIconButton from "components/UI/ThemedIconButton";
 import TrxForm from "examples/Forms/TrxForm";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import { useMemo } from "react";
 export default function useData() {
-  const { updateTransaction, players, setOpenModal } = useGlobalStore();
+  const { updateTransaction, players, setOpenModal, cancelTransaction, userLoggedIn } =
+    useGlobalStore();
+  const allowedCancel = useMemo(() => ["COMPLETED", "PENDING"], []);
 
   return {
     columns: [
@@ -18,12 +22,6 @@ export default function useData() {
         align: "left",
         Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
       },
-      // {
-      //   Header: "PLAYER NAME",
-      //   accessor: "player_name",
-      //   align: "left",
-      //   Cell: ({ value }) => <MDTypography fontSize={13}>{value}</MDTypography>,
-      // },
       {
         Header: "REKENING PLAYER",
         accessor: "bank_player_name",
@@ -80,7 +78,9 @@ export default function useData() {
           <Chip
             size="small"
             label={value.toLowerCase()}
-            color={value === "COMPLETED" ? "success" : "warning"}
+            color={
+              value === "COMPLETED" ? "success" : value === "CANCELED" ? "secondary" : "warning"
+            }
             sx={{ color: value ? "#fff" : "inherit" }}
           />
         ),
@@ -110,7 +110,7 @@ export default function useData() {
         Cell: ({ row }) => {
           const banks = players.find((pl) => pl.player_id === row.original.player_id);
           return (
-            <Stack>
+            <Stack direction="row" spacing={1}>
               <Tooltip title="Update Transaction Status">
                 <span>
                   <ThemedIconButton
@@ -171,6 +171,18 @@ export default function useData() {
                   </ThemedIconButton>
                 </span>
               </Tooltip>
+              {userLoggedIn.role === "ADMIN" && (
+                <Tooltip title="Cancel Transaction">
+                  <span>
+                    <ThemedIconButton
+                      disabled={!allowedCancel.includes(row?.original?.status)}
+                      onClick={() => cancelTransaction(row?.original?.transaction_id)}
+                    >
+                      <DeleteForeverIcon />
+                    </ThemedIconButton>
+                  </span>
+                </Tooltip>
+              )}
             </Stack>
           );
         },

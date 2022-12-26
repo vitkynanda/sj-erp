@@ -20,18 +20,22 @@ import {
   getMutations,
   transferBankAmount,
 } from "services/api/bank";
-import { getAllPlayers, addBankAccountPlayer, addNewPlayer } from "services/api/players";
+import {
+  getAllPlayers,
+  addBankAccountPlayer,
+  addNewPlayer,
+  updatePlayer,
+} from "services/api/players";
 import { getAllCoins, updateBalanceCoin } from "services/api/coin";
 import { getDashboardData, getLogData } from "services/api/dashboard";
 import {
   getAllTransactions,
   addNewTransaction,
   updateTransaction,
+  cancelTransaction,
   getTransactionType,
 } from "services/api/transaction";
-import { getBonuses, addBonus } from "services/api/bonus";
-import { updatePlayer } from "services/api/players";
-import { editBonus } from "services/api/bonus";
+import { getBonuses, addBonus, editBonus } from "services/api/bonus";
 
 const initialState = {
   loading: { status: false, message: "" },
@@ -49,7 +53,7 @@ const initialState = {
   dashboards: {},
   typeStatus: {},
   totalTransactionsData: 0,
-  totalPlayersData : 0,
+  totalPlayersData: 0,
   searchPlayer: "",
   openMutation: false,
   changeFilter: false,
@@ -360,6 +364,19 @@ export const useGlobalStore = create((set, get) => ({
     set({ loading: { status: false, message: "" } });
   },
 
+  cancelTransaction: async (id) => {
+    set({ loading: { status: true, message: "Canceling Transaction..." } });
+    const res = await cancelTransaction(id);
+    if (successStatus.includes(res.statusCode)) {
+      set({ modal: { open: false } });
+      toast.success("Transaction canceled successfully");
+      await get().getCoins();
+      await get().getTransactions();
+    }
+    if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
+    set({ loading: { status: false, message: "" } });
+  },
+
   updateTransaction: async (payload) => {
     set({ loading: { status: true, message: "Updating transaction status..." } });
     const res = await updateTransaction({ ...payload, id: undefined }, payload.id);
@@ -401,7 +418,7 @@ export const useGlobalStore = create((set, get) => ({
   getPlayers: async (type) => {
     const params = {
       ...get().defaulParams,
-      q: get().searchPlayer
+      q: get().searchPlayer,
     };
     set({ loading: { status: true, message: "Getting Players Data..." } });
     const res = await getAllPlayers(new URLSearchParams(params).toString());
@@ -410,7 +427,8 @@ export const useGlobalStore = create((set, get) => ({
       if (get().banks.length === 0 && !type) await get().getBanks();
     }
     if (!successStatus.includes(res.statusCode)) toast.error(toastErrorMessage(res));
-    if (successStatus.includes(res.statusCode)) set({ players: res.data.list_player, totalPlayersData: res.data.total });
+    if (successStatus.includes(res.statusCode))
+      set({ players: res.data.list_player, totalPlayersData: res.data.total });
     set({ loading: { status: false, message: "" } });
   },
 

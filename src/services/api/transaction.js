@@ -5,5 +5,12 @@ const getTransactionType = () => callApi({ url: `/type-transaction`, method: "GE
 const addNewTransaction = (payload) => callApi({ url: "/transaction", method: "POST", payload });
 const updateTransaction = (payload, id) =>
   callApi({ url: `/transaction/${id}`, method: "PUT", payload });
+const cancelTransaction = (id) => callApi({ url: `/cancel-transaction/${id}`, method: "POST" });
 
-export { getAllTransactions, addNewTransaction, getTransactionType, updateTransaction };
+export {
+  getAllTransactions,
+  addNewTransaction,
+  getTransactionType,
+  updateTransaction,
+  cancelTransaction,
+};
