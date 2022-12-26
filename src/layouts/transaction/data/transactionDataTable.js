@@ -78,9 +78,7 @@ export default function useData() {
           <Chip
             size="small"
             label={value.toLowerCase()}
-            color={
-              value === "COMPLETED" ? "success" : value === "CANCELED" ? "secondary" : "warning"
-            }
+            color={value === "COMPLETED" ? "success" : value === "CANCELED" ? "error" : "warning"}
             sx={{ color: value ? "#fff" : "inherit" }}
           />
         ),
