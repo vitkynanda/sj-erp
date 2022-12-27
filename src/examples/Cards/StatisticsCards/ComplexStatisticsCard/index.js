@@ -12,6 +12,8 @@ import MDTypography from "components/MDTypography";
 import { useGlobalStore } from "store";
 import { Skeleton } from "@mui/material";
 
+import PlaylistAddCheckIcon from "@mui/icons-material/PlaylistAddCheck";
+
 function ComplexStatisticsCard({ color, title, count, icon, amount }) {
   const { loading } = useGlobalStore();
   return (
@@ -30,9 +32,13 @@ function ComplexStatisticsCard({ color, title, count, icon, amount }) {
           height="4rem"
           mt={-3}
         >
-          <Icon fontSize="medium" color="inherit">
-            {icon}
-          </Icon>
+          {typeof icon === "string" ? (
+            <Icon fontSize="medium" color="inherit">
+              {icon}
+            </Icon>
+          ) : (
+            icon
+          )}
         </MDBox>
         <MDBox textAlign="right" lineHeight={1.25}>
           <MDTypography variant="button" fontWeight="light" color="text">
