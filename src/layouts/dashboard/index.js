@@ -11,7 +11,7 @@ import ComplexStatisticsCard from "examples/Cards/StatisticsCards/ComplexStatist
 
 // Dashboard components
 import LogsActivity from "layouts/dashboard/components/LogsActivity";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useGlobalStore } from "store";
 import { currencyFormat } from "utils";
 import CustomDatePicker from "examples/DatePicker";
@@ -27,6 +27,18 @@ function Dashboard() {
     if (!dashboards?.coin) getDashboard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getLogs, getDashboard]);
+
+  const isTransactionExists = useMemo(
+    () => dashboards?.transaction_value?.length > 0,
+    [dashboards]
+  );
+
+  const trasanctionData = useMemo(() => {
+    const txVal = {};
+    if (!isTransactionExists) return txVal;
+    for (const tx of dashboards.transaction_value) txVal[tx.value] = { ...tx };
+    return txVal;
+  }, [dashboards]);
 
   return (
     <DashboardLayout>
@@ -52,7 +64,6 @@ function Dashboard() {
             Filter
           </MDButton>
         </MDBox>
-
         <Grid container spacing={3}>
           <Grid item xs={12} md={6} lg={3}>
             <MDBox mb={1.5}>
@@ -70,16 +81,8 @@ function Dashboard() {
               <ComplexStatisticsCard
                 icon="wallet"
                 title="DEPOSIT"
-                count={
-                  dashboards?.transaction_value?.length > 0
-                    ? dashboards?.transaction_value.find((item) => item.value === "DEPOSIT")
-                        ?.total || 0
-                    : 0
-                }
-                amount={currencyFormat(
-                  "ID",
-                  dashboards?.top_player_deposit?.reduce((acc, curr) => acc + curr.total_deposit, 0)
-                )}
+                count={trasanctionData?.DEPOSIT?.total || 0}
+                amount={currencyFormat("ID", trasanctionData?.DEPOSIT?.total_ammount || 0)}
               />
             </MDBox>
           </Grid>
@@ -89,19 +92,8 @@ function Dashboard() {
                 color="success"
                 icon="wallet"
                 title="WITHDRAW"
-                count={
-                  dashboards?.transaction_value?.length > 0
-                    ? dashboards?.transaction_value.find((item) => item.value === "WITHDRAW")
-                        ?.total || 0
-                    : 0
-                }
-                amount={currencyFormat(
-                  "ID",
-                  dashboards?.top_player_withdraw?.reduce(
-                    (acc, curr) => acc + curr.total_withdraw,
-                    0
-                  )
-                )}
+                count={trasanctionData?.WITHDRAW?.total || 0}
+                amount={currencyFormat("ID", trasanctionData?.WITHDRAW?.total_ammount || 0)}
               />
             </MDBox>
           </Grid>
@@ -111,12 +103,8 @@ function Dashboard() {
                 color="primary"
                 icon="money"
                 title="BONUS"
-                count={
-                  dashboards?.transaction_value?.length > 0
-                    ? dashboards?.transaction_value.find((item) => item.value === "BONUS")?.total ||
-                      0
-                    : 0
-                }
+                count={trasanctionData?.BONUS?.total || 0}
+                amount={currencyFormat("ID", trasanctionData?.BONUS?.total_ammount || 0)}
               />
             </MDBox>
           </Grid>

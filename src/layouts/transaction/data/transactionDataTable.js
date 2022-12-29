@@ -13,6 +13,7 @@ export default function useData() {
   const { updateTransaction, players, setOpenModal, cancelTransaction, userLoggedIn } =
     useGlobalStore();
   const allowedCancel = useMemo(() => ["COMPLETED", "PENDING"], []);
+  const disableCancel = useMemo(() => ["COMPLETED", "CANCELED"], []);
 
   return {
     columns: [
@@ -112,7 +113,7 @@ export default function useData() {
               <Tooltip title="Update Transaction Status">
                 <span>
                   <ThemedIconButton
-                    disabled={row?.original?.status === "COMPLETED"}
+                    disabled={disableCancel.includes(row?.original?.status)}
                     onClick={() =>
                       row.original.player_id
                         ? setOpenModal({

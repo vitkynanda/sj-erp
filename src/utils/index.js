@@ -132,7 +132,7 @@ const countTotalBalance = (coins) => coins.reduce((acc, curr) => acc + curr.bala
 const filterNonAdminRoutes = (routes) =>
   routes.filter((route) => nonAdminRoutes.includes(route.route));
 
-const nonAdminRoutes = ["/transaction", "/players", "/bank", "/coin"];
+const nonAdminRoutes = ["/transaction", "/players", "/bank", "/coin", "/bonus"];
 
 const themeStorage = localStorage.getItem("themeStorage");
 
