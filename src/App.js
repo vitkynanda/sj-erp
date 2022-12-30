@@ -45,11 +45,7 @@ import {
   setSidenavColor,
   setDarkMode,
 } from "context";
-import Transactions from "layouts/transaction";
-import Players from "layouts/players";
 import { filterNonAdminRoutes } from "utils";
-import Coins from "layouts/coin";
-import Banks from "layouts/bank";
 
 export default function App() {
   useAuthListener();
@@ -120,27 +116,21 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getRoutes = (allRoutes) =>
-    userLoggedIn.role === "ADMIN" ? (
-      allRoutes.map((route) => {
-        if (route.route) {
-          return (
-            <Route element={<ProtectedRoute />} key={route.key}>
-              <Route exact path={route.route} element={route.component} />
-            </Route>
-          );
-        }
-
-        return null;
-      })
-    ) : (
-      <Route element={<ProtectedRoute />}>
-        <Route exact path="/players" element={<Players />} />
-        <Route exact path="/coin" element={<Coins />} />
-        <Route exact path="/bank" element={<Banks />} />
-        <Route exact path="/transaction" element={<Transactions />} />
-      </Route>
-    );
+  const getRoutes = (allRoutes) => (
+    <Route element={<ProtectedRoute />}>
+      {userLoggedIn.role === "ADMIN"
+        ? allRoutes.map((route) =>
+            route.route ? (
+              <Route exact path={route.route} element={route.component} key={route.route} />
+            ) : null
+          )
+        : filterNonAdminRoutes(allRoutes).map((route) =>
+            route.route ? (
+              <Route exact path={route.route} element={route.component} key={route.route} />
+            ) : null
+          )}
+    </Route>
+  );
 
   const configsButton = (
     <MDBox
